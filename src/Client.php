@@ -2,32 +2,14 @@
 
 namespace Laravel\Passport;
 
-use Illuminate\Database\Eloquent\Model;
+use MongolidLaravel\MongolidModel as Model;
 
 class Client extends Model
 {
     /**
-     * The database table used by the model.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $table = 'oauth_clients';
-
-    /**
-     * The guarded attributes on the model.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'secret',
-    ];
+    protected $collection = 'oauth_clients';
 
     /**
      * The attributes that should be cast to native types.

@@ -47,7 +47,7 @@ class ClientController
     {
         $userId = $request->user()->getKey();
 
-        return $this->clients->activeForUser($userId)->makeVisible('secret');
+        return $this->clients->activeForUser($userId);
     }
 
     /**
@@ -65,7 +65,7 @@ class ClientController
 
         return $this->clients->create(
             $request->user()->getKey(), $request->name, $request->redirect
-        )->makeVisible('secret');
+        );
     }
 
     /**

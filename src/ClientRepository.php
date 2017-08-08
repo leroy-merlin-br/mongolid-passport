@@ -94,7 +94,9 @@ class ClientRepository
      */
     public function create($userId, $name, $redirect, $personalAccess = false, $password = false)
     {
-        $client = (new Client)->forceFill([
+        $client = new Client();
+
+        $client->fill([
             'user_id' => $userId,
             'name' => $name,
             'secret' => str_random(40),
@@ -102,7 +104,7 @@ class ClientRepository
             'personal_access_client' => $personalAccess,
             'password_client' => $password,
             'revoked' => false,
-        ]);
+        ], true);
 
         $client->save();
 
@@ -145,9 +147,11 @@ class ClientRepository
      */
     public function update(Client $client, $name, $redirect)
     {
-        $client->forceFill([
+        $client->fill([
             'name' => $name, 'redirect' => $redirect,
-        ])->save();
+        ], true);
+
+        $client->save();
 
         return $client;
     }
@@ -160,9 +164,11 @@ class ClientRepository
      */
     public function regenerateSecret(Client $client)
     {
-        $client->forceFill([
+        $client->fill([
             'secret' => str_random(40),
-        ])->save();
+        ], true);
+
+        $client->save();
 
         return $client;
     }
@@ -190,6 +196,7 @@ class ClientRepository
     {
         $client->tokens()->update(['revoked' => true]);
 
-        $client->forceFill(['revoked' => true])->save();
+        $client->fill(['revoked' => true], true);
+        $client->save();
     }
 }

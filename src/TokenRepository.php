@@ -3,7 +3,7 @@
 namespace Laravel\Passport;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use MongolidLaravel\MongolidModel as Model;
 
 class TokenRepository
 {
@@ -109,7 +109,7 @@ class TokenRepository
     /**
      * Find a valid token for the given user and client.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  Model  $user
      * @param  \Laravel\Passport\Client  $client
      * @return \Laravel\Passport\Token|null
      */

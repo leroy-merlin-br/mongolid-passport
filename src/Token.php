@@ -2,16 +2,14 @@
 
 namespace Laravel\Passport;
 
-use Illuminate\Database\Eloquent\Model;
+use MongolidLaravel\MongolidModel as Model;
 
 class Token extends Model
 {
     /**
-     * The database table used by the model.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $table = 'oauth_access_tokens';
+    protected $collection = 'oauth_access_tokens';
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -105,7 +103,8 @@ class Token extends Model
      */
     public function revoke()
     {
-        $this->forceFill(['revoked' => true])->save();
+        $this->fill(['revoked' => true], true);
+        $this->save();
     }
 
     /**
