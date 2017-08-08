@@ -103,7 +103,7 @@ class AuthorizationController
      * Approve the authorization request.
      *
      * @param  \League\OAuth2\Server\RequestTypes\AuthorizationRequest  $authRequest
-     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  Model  $user
      * @return \Psr\Http\Message\ResponseInterface
      */
     protected function approveRequest($authRequest, $user)
