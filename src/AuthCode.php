@@ -4,7 +4,6 @@ namespace Laravel\Passport;
 
 use MongolidLaravel\MongolidModel as Model;
 
-
 class AuthCode extends Model
 {
     /**
@@ -33,10 +32,10 @@ class AuthCode extends Model
     /**
      * Get the client that owns the authentication code.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return Client|null
      */
     public function client()
     {
-        return $this->hasMany(Client::class);
+        return $this->referencesOne(Client::class, 'client_id');
     }
 }

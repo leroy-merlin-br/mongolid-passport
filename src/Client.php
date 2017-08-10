@@ -25,21 +25,21 @@ class Client extends Model
     /**
      * Get all of the authentication codes for the client.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Mongolid\Cursor\Cursor
      */
     public function authCodes()
     {
-        return $this->hasMany(AuthCode::class, 'client_id');
+        return AuthCode::where(['client_id' => $this->_id]);
     }
 
     /**
      * Get all of the tokens that belong to the client.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Mongolid\Cursor\Cursor
      */
     public function tokens()
     {
-        return $this->hasMany(Token::class, 'client_id');
+        return Token::where(['client_id' => $this->_id]);
     }
 
     /**
