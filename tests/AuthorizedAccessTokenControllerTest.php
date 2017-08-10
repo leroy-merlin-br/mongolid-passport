@@ -69,7 +69,7 @@ class AuthorizedAccessTokenControllerTest extends PHPUnit_Framework_TestCase
         $request = Request::create('/', 'GET');
 
         $token1 = Mockery::mock(Laravel\Passport\Token::class.'[revoke]');
-        $token1->id = 1;
+        $token1->_id = 1;
         $token1->shouldReceive('revoke')->once();
 
         $this->tokenRepository->shouldReceive('findForUser')->andReturn($token1);

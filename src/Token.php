@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use MongolidLaravel\MongolidModel as Model;
 
 class Token extends Model
@@ -54,23 +55,23 @@ class Token extends Model
     /**
      * Get the client that the token belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return Client|null
      */
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->referencesOne(Client::class, 'client_id');
     }
 
     /**
      * Get the user that the token belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return Authenticatable|null
      */
     public function user()
     {
         $provider = config('auth.guards.api.provider');
 
-        return $this->belongsTo(config('auth.providers.'.$provider.'.model'));
+        return $this->referencesOne(config('auth.providers.'.$provider.'.model'), 'user_id');
     }
 
     /**

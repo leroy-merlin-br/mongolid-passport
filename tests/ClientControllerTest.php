@@ -169,9 +169,9 @@ class ClientControllerTest extends PHPUnit_Framework_TestCase
 
 class ClientControllerFakeUser
 {
-    public $id = 1;
+    public $_id = 1;
     public function getKey()
     {
-        return $this->id;
+        return $this->_id;
     }
 }

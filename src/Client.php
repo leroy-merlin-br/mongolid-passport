@@ -35,11 +35,15 @@ class Client extends Model
     /**
      * Get all of the tokens that belong to the client.
      *
+     * @param array $query
+     *
      * @return \Mongolid\Cursor\Cursor
      */
-    public function tokens()
+    public function tokens(array $query = [])
     {
-        return Token::where(['client_id' => $this->_id]);
+        return Token::where(
+            array_merge($query, ['client_id' => $this->_id])
+        );
     }
 
     /**

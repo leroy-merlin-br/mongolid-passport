@@ -21,10 +21,10 @@ class PersonalAccessClient extends Model
     /**
      * Get all of the authentication codes for the client.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return Client|null
      */
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->referencesOne(Client::class, 'client_id');
     }
 }
