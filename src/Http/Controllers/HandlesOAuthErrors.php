@@ -27,6 +27,7 @@ trait HandlesOAuthErrors
             return $callback();
         } catch (OAuthServerException $e) {
             $this->exceptionHandler()->report($e);
+            $psr7Response = $e->generateHttpResponse(new Psr7Response);
 
             return $this->convertResponse(
                 $e->generateHttpResponse(new Psr7Response)

@@ -2,23 +2,14 @@
 
 namespace Laravel\Passport;
 
-use Illuminate\Database\Eloquent\Model;
+use MongolidLaravel\MongolidModel as Model;
 
 class AuthCode extends Model
 {
     /**
-     * The database table used by the model.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $table = 'oauth_auth_codes';
-
-    /**
-     * The guarded attributes on the model.
-     *
-     * @var array
-     */
-    protected $guarded = [];
+    protected $collection = 'oauth_auth_codes';
 
     /**
      * The attributes that should be cast to native types.
@@ -41,10 +32,10 @@ class AuthCode extends Model
     /**
      * Get the client that owns the authentication code.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return Client|null
      */
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->referencesOne(Client::class, 'client_id');
     }
 }

@@ -35,12 +35,12 @@ class PersonalAccessTokenFactoryTest extends PHPUnit_Framework_TestCase
 
 class PersonalAccessTokenFactoryTestClientStub
 {
-    public $id = 1;
+    public $_id = 1;
     public $secret = 'something';
 }
 
 class PersonalAccessTokenFactoryTestModelStub extends Laravel\Passport\Token
 {
-    public $id = 1;
+    public $_id = 1;
     public $secret = 'something';
 }

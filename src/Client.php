@@ -2,32 +2,14 @@
 
 namespace Laravel\Passport;
 
-use Illuminate\Database\Eloquent\Model;
+use MongolidLaravel\MongolidModel as Model;
 
 class Client extends Model
 {
     /**
-     * The database table used by the model.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $table = 'oauth_clients';
-
-    /**
-     * The guarded attributes on the model.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'secret',
-    ];
+    protected $collection = 'oauth_clients';
 
     /**
      * The attributes that should be cast to native types.
@@ -43,21 +25,25 @@ class Client extends Model
     /**
      * Get all of the authentication codes for the client.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Mongolid\Cursor\Cursor
      */
     public function authCodes()
     {
-        return $this->hasMany(AuthCode::class, 'client_id');
+        return AuthCode::where(['client_id' => $this->_id]);
     }
 
     /**
      * Get all of the tokens that belong to the client.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @param array $query
+     *
+     * @return \Mongolid\Cursor\Cursor
      */
-    public function tokens()
+    public function tokens(array $query = [])
     {
-        return $this->hasMany(Token::class, 'client_id');
+        return Token::where(
+            array_merge($query, ['client_id' => $this->_id])
+        );
     }
 
     /**

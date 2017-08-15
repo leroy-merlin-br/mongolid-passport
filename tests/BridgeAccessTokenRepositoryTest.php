@@ -18,7 +18,7 @@ class BridgeAccessTokenRepositoryTest extends PHPUnit_Framework_TestCase
         $events = Mockery::mock('Illuminate\Contracts\Events\Dispatcher');
 
         $tokenRepository->shouldReceive('create')->once()->andReturnUsing(function ($array) use ($expiration) {
-            $this->assertEquals(1, $array['id']);
+            $this->assertEquals(1, $array['_id']);
             $this->assertEquals(2, $array['user_id']);
             $this->assertEquals('client-id', $array['client_id']);
             $this->assertEquals(['scopes'], $array['scopes']);
