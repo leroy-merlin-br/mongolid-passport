@@ -35,21 +35,17 @@ class AuthorizedAccessTokenControllerTest extends PHPUnit_Framework_TestCase
     {
         $request = Request::create('/', 'GET');
 
-        $token1 = new Laravel\Passport\Token;
-        $token2 = new Laravel\Passport\Token;
+        $token1 = Mockery::mock(Laravel\Passport\Token::class)->makePartial();
+        $token2 = Mockery::mock(Laravel\Passport\Token::class)->makePartial();
 
-        $userTokens = Mockery::mock();
         $client1 = new Client;
         $client1->personal_access_client = true;
         $client2 = new Client;
         $client2->personal_access_client = false;
-        $token1->client = $client1;
-        $token2->client = $client2;
-        $userTokens->shouldReceive('load')->with('client')->andReturn(collect([
-            $token1, $token2,
-        ]));
+        $token1->shouldReceive('client')->once()->andReturn($client1);
+        $token2->shouldReceive('client')->once()->andReturn($client2);
 
-        $this->tokenRepository->shouldReceive('forUser')->andReturn($userTokens);
+        $this->tokenRepository->shouldReceive('forUser')->andReturn([$token1, $token2]);
 
         $request->setUserResolver(function () use ($token1, $token2) {
             $user = Mockery::mock();
