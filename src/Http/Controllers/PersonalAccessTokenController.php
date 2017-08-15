@@ -84,8 +84,7 @@ class PersonalAccessTokenController
      *
      * @param  Request $request
      * @param  string  $tokenId
-     *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $tokenId)
     {

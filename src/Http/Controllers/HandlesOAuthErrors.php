@@ -13,6 +13,8 @@ use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 trait HandlesOAuthErrors
 {
+    use ConvertsPsrResponses;
+
     /**
      * Perform the given callback with exception handling.
      *
@@ -27,10 +29,8 @@ trait HandlesOAuthErrors
             $this->exceptionHandler()->report($e);
             $psr7Response = $e->generateHttpResponse(new Psr7Response);
 
-            return new Response(
-                $psr7Response->getBody(),
-                $psr7Response->getStatusCode(),
-                $psr7Response->getHeaders()
+            return $this->convertResponse(
+                $e->generateHttpResponse(new Psr7Response)
             );
         } catch (Exception $e) {
             $this->exceptionHandler()->report($e);
