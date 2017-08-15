@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport;
 
+use Mongolid\Util\LocalDateTime;
 use MongolidLaravel\MongolidModel as Model;
 
 class Client extends Model
@@ -54,5 +55,23 @@ class Client extends Model
     public function firstParty()
     {
         return $this->personal_access_client || $this->password_client;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray()
+    {
+        return [
+            'id' => (string) $this->_id,
+            'user_id' => (string) $this->user_id,
+            'name' => $this->name,
+            'redirect' => $this->redirect,
+            'personal_access_client' => (bool) $this->personal_access_client,
+            'password_client' => (bool) $this->password_client,
+            'revoked' => (bool) $this->revoked,
+            'created_at' => LocalDateTime::format($this->created_at, 'Y-m-d H:i:s'),
+            'updated_at' => LocalDateTime::format($this->updated_at, 'Y-m-d H:i:s'),
+        ];
     }
 }

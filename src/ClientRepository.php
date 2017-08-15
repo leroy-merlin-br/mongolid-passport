@@ -70,6 +70,10 @@ class ClientRepository
             function ($client) {
                 return (bool) $client->revoked;
             }
+        )->map(
+            function ($client) {
+                return $client->toArray();
+            }
         )->values();
     }
 
