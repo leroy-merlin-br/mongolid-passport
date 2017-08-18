@@ -46,7 +46,7 @@ class TokenRepository
      */
     public function findForUser($id, $userId)
     {
-        return Token::first(['_id' => $id, 'user_id' => $userId]);
+        return Token::first(['_id' => (string) $id, 'user_id' => (string) $userId]);
     }
 
     /**
@@ -58,7 +58,7 @@ class TokenRepository
      */
     public function forUser($userId)
     {
-        return Token::where(['user_id' => $userId]);
+        return Token::where(['user_id' => (string) $userId]);
     }
 
     /**
@@ -73,7 +73,7 @@ class TokenRepository
     {
         return $client->tokens(
             [
-                'user_id' => $user->getKey(),
+                'user_id' => (string) $user->getKey(),
                 'revoked' => 0,
                 'expires_at' => ['$gt' => new UTCDateTime()],
             ]
@@ -102,10 +102,13 @@ class TokenRepository
      */
     public function revokeAccessToken($id)
     {
-        $token = Token::first($id);
-        $token->revoked = true;
+        if ($token = $this->find($id)) {
+            $token->revoked = true;
 
-        return $token->update();
+            return $token->update();
+        }
+
+        return true;
     }
 
     /**
@@ -136,7 +139,7 @@ class TokenRepository
     {
         return $client->tokens(
             [
-                'user_id' => $user->getKey(),
+                'user_id' => (string) $user->getKey(),
                 'revoked' => 0,
                 'expires_at' => ['$gt' => new UTCDateTime()],
             ]

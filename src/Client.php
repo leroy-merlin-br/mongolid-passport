@@ -13,24 +13,13 @@ class Client extends Model
     protected $collection = 'oauth_clients';
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'personal_access_client' => 'bool',
-        'password_client' => 'bool',
-        'revoked' => 'bool',
-    ];
-
-    /**
      * Get all of the authentication codes for the client.
      *
      * @return \Mongolid\Cursor\Cursor
      */
     public function authCodes()
     {
-        return AuthCode::where(['client_id' => $this->_id]);
+        return AuthCode::where(['client_id' => (string) $this->_id]);
     }
 
     /**
@@ -43,7 +32,7 @@ class Client extends Model
     public function tokens(array $query = [])
     {
         return Token::where(
-            array_merge($query, ['client_id' => $this->_id])
+            array_merge($query, ['client_id' => (string) $this->_id])
         );
     }
 

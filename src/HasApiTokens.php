@@ -20,7 +20,7 @@ trait HasApiTokens
      */
     public function clients()
     {
-        return Client::where(['user_id' => $this->_id]);
+        return Client::where(['user_id' => (string) $this->_id]);
     }
 
     /**
@@ -30,7 +30,7 @@ trait HasApiTokens
      */
     public function tokens()
     {
-        return Token::where(['user_id' => $this->_id])
+        return Token::where(['user_id' => (string) $this->_id])
             ->sort(['created_at' => -1]);
     }
 

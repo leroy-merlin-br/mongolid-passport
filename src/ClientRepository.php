@@ -41,7 +41,7 @@ class ClientRepository
      */
     public function findForUser($clientId, $userId)
     {
-        return Client::first(['_id' => $clientId, 'user_id' => $userId]);
+        return Client::first(['_id' => (string) $clientId, 'user_id' => (string) $userId]);
     }
 
     /**
@@ -53,7 +53,7 @@ class ClientRepository
      */
     public function forUser($userId)
     {
-        return Client::where(['user_id' => $userId])
+        return Client::where(['user_id' => (string) $userId])
             ->sort(['name' => 1]);
     }
 
