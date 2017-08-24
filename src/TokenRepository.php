@@ -74,7 +74,7 @@ class TokenRepository
         return $client->tokens(
             [
                 'user_id' => (string) $user->getKey(),
-                'revoked' => 0,
+                'revoked' => false,
                 'expires_at' => ['$gt' => new UTCDateTime()],
             ]
         )
@@ -140,7 +140,7 @@ class TokenRepository
         return $client->tokens(
             [
                 'user_id' => (string) $user->getKey(),
-                'revoked' => 0,
+                'revoked' => false,
                 'expires_at' => ['$gt' => new UTCDateTime()],
             ]
         )
