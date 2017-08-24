@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use MongoDB\BSON\UTCDateTime;
 
 class BridgeAccessTokenRepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -23,9 +24,10 @@ class BridgeAccessTokenRepositoryTest extends PHPUnit_Framework_TestCase
             $this->assertEquals('client-id', $array['client_id']);
             $this->assertEquals(['scopes'], $array['scopes']);
             $this->assertEquals(false, $array['revoked']);
-            $this->assertInstanceOf('DateTime', $array['created_at']);
-            $this->assertInstanceOf('DateTime', $array['updated_at']);
-            $this->assertEquals($expiration, $array['expires_at']);
+            $this->assertInstanceOf(UTCDateTime::class, $array['created_at']);
+            $this->assertInstanceOf(UTCDateTime::class, $array['updated_at']);
+            $this->assertInstanceOf(UTCDateTime::class, $array['expires_at']);
+            $this->assertEquals(new UTCDateTime($expiration), $array['expires_at']);
         });
 
         $events->shouldReceive('dispatch')->once();

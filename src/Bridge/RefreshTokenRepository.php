@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport\Bridge;
 
+use MongoDB\BSON\UTCDateTime;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Passport\Events\RefreshTokenCreated;
 use Laravel\Passport\RefreshToken as RefreshTokenModel;
@@ -59,7 +60,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
                 '_id' => $id = $refreshTokenEntity->getIdentifier(),
                 'access_token_id' => $accessTokenId = $refreshTokenEntity->getAccessToken()->getIdentifier(),
                 'revoked' => false,
-                'expires_at' => $refreshTokenEntity->getExpiryDateTime(),
+                'expires_at' => new UTCDateTime($refreshTokenEntity->getExpiryDateTime()),
             ]
         );
 
