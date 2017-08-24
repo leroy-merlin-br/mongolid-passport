@@ -32,7 +32,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
                 'client_id' => $authCodeEntity->getClient()->getIdentifier(),
                 'scopes' => $this->formatScopesForStorage($authCodeEntity->getScopes()),
                 'revoked' => false,
-                'expires_at' => $authCodeEntity->getExpiryDateTime(),
+                'expires_at' => new UTCDateTime($authCodeEntity->getExpiryDateTime()),
             ]
         );
 

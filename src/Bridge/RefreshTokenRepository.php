@@ -59,7 +59,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
                 '_id' => $id = $refreshTokenEntity->getIdentifier(),
                 'access_token_id' => $accessTokenId = $refreshTokenEntity->getAccessToken()->getIdentifier(),
                 'revoked' => false,
-                'expires_at' => $refreshTokenEntity->getExpiryDateTime(),
+                'expires_at' => new UTCDateTime($refreshTokenEntity->getExpiryDateTime()),
             ]
         );
 
