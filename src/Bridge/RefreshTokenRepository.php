@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport\Bridge;
 
+use MongoDB\BSON\UTCDateTime;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Passport\Events\RefreshTokenCreated;
 use Laravel\Passport\RefreshToken as RefreshTokenModel;
