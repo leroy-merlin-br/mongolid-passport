@@ -11,7 +11,6 @@ class ClientRepository
      *
      * @return \Laravel\Passport\Client|null
      */
-
     public function find($id)
     {
         return Client::first($id);
@@ -86,12 +85,12 @@ class ClientRepository
     {
         if (Passport::$personalAccessClient) {
             return $this->find(Passport::$personalAccessClient);
-        } else {
-            return PersonalAccessClient::all()
-                ->sort(['created_at' => -1])
-                ->first()
-                ->client();
         }
+
+        return PersonalAccessClient::all()
+            ->sort(['created_at' => -1])
+            ->first()
+            ->client();
     }
 
     /**
