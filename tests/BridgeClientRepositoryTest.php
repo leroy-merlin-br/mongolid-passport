@@ -34,6 +34,32 @@ class BridgeClientRepositoryTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Laravel\Passport\Bridge\Client', $repository->getClientEntity(1, 'client_credentials', 'secret', true));
         $this->assertNull($repository->getClientEntity(1, 'authorization_code', 'secret', true));
     }
+
+    public function test_should_get_client_with_allowed_scopes()
+    {
+        $clients = Mockery::mock('Laravel\Passport\ClientRepository');
+        $client = new BridgeClientRepositoryTestClientStub;
+        $client->allowed_scopes = 'foo,bar';
+        $clients->shouldReceive('findActive')->with(1)->andReturn($client);
+        $repository = new ClientRepository($clients);
+
+        $client = $repository->getClientEntity(1, 'client_credentials', 'secret', true);
+
+        $this->assertSame(['foo', 'bar'], $client->getAllowedScopes());
+    }
+
+    public function test_should_get_client_with_allowed_scopes_as_array()
+    {
+        $clients = Mockery::mock('Laravel\Passport\ClientRepository');
+        $client = new BridgeClientRepositoryTestClientStub;
+        $client->allowed_scopes = ['foo', 'bar'];
+        $clients->shouldReceive('findActive')->with(1)->andReturn($client);
+        $repository = new ClientRepository($clients);
+
+        $client = $repository->getClientEntity(1, 'client_credentials', 'secret', true);
+
+        $this->assertSame(['foo', 'bar'], $client->getAllowedScopes());
+    }
 }
 
 class BridgeClientRepositoryTestClientStub
@@ -43,6 +69,7 @@ class BridgeClientRepositoryTestClientStub
     public $secret = 'secret';
     public $personal_access_client = false;
     public $password_client = false;
+    public $allowed_scopes = null;
     public function firstParty()
     {
         return $this->personal_access_client || $this->password_client;

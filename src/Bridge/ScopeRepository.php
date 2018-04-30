@@ -4,6 +4,7 @@ namespace Laravel\Passport\Bridge;
 
 use Laravel\Passport\Passport;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class ScopeRepository implements ScopeRepositoryInterface
@@ -25,6 +26,8 @@ class ScopeRepository implements ScopeRepositoryInterface
         array $scopes, $grantType,
         ClientEntityInterface $clientEntity, $userIdentifier = null)
     {
+        $this->validateClientScopes($scopes, $grantType, $clientEntity);
+
         if (! in_array($grantType, ['password', 'personal_access'])) {
             $scopes = collect($scopes)->reject(function ($scope) {
                 return trim($scope->getIdentifier()) === '*';
@@ -34,5 +37,37 @@ class ScopeRepository implements ScopeRepositoryInterface
         return collect($scopes)->filter(function ($scope) {
             return Passport::hasScope($scope->getIdentifier());
         })->values()->all();
+    }
+
+    /**
+     * Checks if the requested scopes match with
+     * scopes allowed for the client.
+     *
+     * @throws OAuthServerException
+     *
+     * @param array                 $scopes
+     * @param                       $grantType
+     * @param ClientEntityInterface $clientEntity
+     *
+     * @return bool
+     */
+    protected function validateClientScopes(
+        array $scopes,
+        $grantType,
+        ClientEntityInterface $clientEntity
+    ) {
+        if (!$clientAllowedScopes = $clientEntity->getAllowedScopes()) {
+            return true;
+        }
+
+        collect($scopes)->each(function ($scope) use ($clientAllowedScopes) {
+            $scopeIdentifier = trim($scope->getIdentifier());
+
+            if (!in_array($scopeIdentifier, $clientAllowedScopes)) {
+                throw OAuthServerException::invalidScope($scopeIdentifier);
+            }
+        });
+
+        return true;
     }
 }
