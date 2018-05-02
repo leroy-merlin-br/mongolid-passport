@@ -51,7 +51,7 @@ class ScopeRepository implements ScopeRepositoryInterface
      *
      * @return bool
      */
-    protected function validateClientScopes(
+    public function validateClientScopes(
         array $scopes,
         $grantType,
         ClientEntityInterface $clientEntity
