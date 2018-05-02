@@ -35,6 +35,8 @@ class Client implements ScopedClientInterface
 
     /**
      * Get the client's allowed scopes.
+     * If this is empty, the client will be able to request
+     * all scopes (no restriction).
      *
      * @return array
      */
@@ -46,6 +48,8 @@ class Client implements ScopedClientInterface
     /**
      * Set allowed scopes attributes converting optional
      * param $allowedScopes to array.
+     * If the client has no allowed scopes defined or the string '*',
+     * it means the client has no scope restrictions.
      *
      * @param mixed $allowedScopes
      */
