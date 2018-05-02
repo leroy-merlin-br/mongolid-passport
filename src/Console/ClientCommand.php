@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport\Console;
 
+use Laravel\Passport\Passport;
 use Illuminate\Console\Command;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\PersonalAccessClient;
