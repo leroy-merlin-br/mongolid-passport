@@ -53,9 +53,9 @@ class Client implements ScopedClientInterface
      *
      * @param mixed $allowedScopes
      */
-    protected function setAllowedScopes($allowedScopes = nul)
+    protected function setAllowedScopes($allowedScopes = null)
     {
-        if (!$allowedScopes) {
+        if (!$allowedScopes || '*' === $allowedScopes) {
             $this->allowedScopes = [];
 
             return;
