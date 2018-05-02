@@ -115,7 +115,8 @@ class ClientCommand extends Command
         );
 
         $allowedScopes = $this->ask(
-            'Which scopes does the client need? Available: '.$this->getAvailableScopes()
+            'Which scopes does the client need? Available: '.$this->getAvailableScopes(),
+            '*'
         );
 
         $client = $clients->create(
