@@ -26,7 +26,7 @@ class ScopeRepository implements ScopeRepositoryInterface
         array $scopes, $grantType,
         ClientEntityInterface $clientEntity, $userIdentifier = null)
     {
-        $this->validateClientScopes($scopes, $grantType, $clientEntity);
+        $this->validateClientScopes($scopes, $clientEntity);
 
         if (! in_array($grantType, ['password', 'personal_access'])) {
             $scopes = collect($scopes)->reject(function ($scope) {
@@ -46,14 +46,12 @@ class ScopeRepository implements ScopeRepositoryInterface
      * @throws OAuthServerException
      *
      * @param array                 $scopes
-     * @param                       $grantType
      * @param ClientEntityInterface $clientEntity
      *
      * @return bool
      */
     public function validateClientScopes(
         array $scopes,
-        $grantType,
         ClientEntityInterface $clientEntity
     ) {
         if (!$clientAllowedScopes = $clientEntity->getAllowedScopes()) {

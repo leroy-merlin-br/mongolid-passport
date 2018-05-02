@@ -73,7 +73,6 @@ class AuthorizationController
 
             $scopeRepository->validateClientScopes(
                 $authRequest->getScopes(),
-                $authRequest->getGrantTypeId(),
                 $authRequest->getClient()
             );
 

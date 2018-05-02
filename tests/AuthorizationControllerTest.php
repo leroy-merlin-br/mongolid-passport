@@ -32,7 +32,7 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
         $request->shouldReceive('user')->andReturn('user');
 
         $authRequest->shouldReceive('getClient')->andReturn($clientEntity = Mockery::mock(ClientEntityInterface::class));
-        $authRequest->shouldReceive('getScopes')->andReturn([new Laravel\Passport\Bridge\Scope('scope-1')]);
+        $authRequest->shouldReceive('getScopes')->andReturn($scopes = [new Laravel\Passport\Bridge\Scope('scope-1')]);
         $authRequest->shouldReceive('getGrantTypeId')->andReturn('authorization_code');
 
         $clientEntity->shouldReceive('getIdentifier')->andReturn(1);
@@ -53,7 +53,7 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
         $tokens->shouldReceive('findValidToken')->with('user', 'client')->andReturnNull();
 
         $scopeRepository = Mockery::mock('Laravel\Passport\Bridge\ScopeRepository');
-        $scopeRepository->shouldReceive('validateClientScopes')->withAnyArgs()->andReturn(true);
+        $scopeRepository->shouldReceive('validateClientScopes')->with($scopes, $clientEntity)->andReturn(true);
 
         $this->assertEquals('view', $controller->authorize(
             Mockery::mock('Psr\Http\Message\ServerRequestInterface'), $request, $clients, $tokens, $scopeRepository
@@ -110,7 +110,7 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
         $request->shouldNotReceive('session');
 
         $authRequest->shouldReceive('getClient')->andReturn($clientEntity = Mockery::mock(ClientEntityInterface::class));
-        $authRequest->shouldReceive('getScopes')->twice()->andReturn([new Laravel\Passport\Bridge\Scope('scope-1')]);
+        $authRequest->shouldReceive('getScopes')->twice()->andReturn($scopes = [new Laravel\Passport\Bridge\Scope('scope-1')]);
         $authRequest->shouldReceive('setUser')->once()->andReturnNull();
         $authRequest->shouldReceive('setAuthorizationApproved')->once()->with(true);
         $authRequest->shouldReceive('getGrantTypeId')->andReturn('authorization_code');
@@ -125,7 +125,7 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
         $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['scope-1']);
 
         $scopeRepository = Mockery::mock('Laravel\Passport\Bridge\ScopeRepository');
-        $scopeRepository->shouldReceive('validateClientScopes')->withAnyArgs()->andReturn(true);
+        $scopeRepository->shouldReceive('validateClientScopes')->with($scopes, $clientEntity)->andReturn(true);
 
         $this->assertEquals('approved', $controller->authorize(
             Mockery::mock('Psr\Http\Message\ServerRequestInterface'), $request, $clients, $tokens, $scopeRepository
