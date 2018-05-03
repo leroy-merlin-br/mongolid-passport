@@ -60,6 +60,19 @@ class BridgeClientRepositoryTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame(['foo', 'bar'], $client->getAllowedScopes());
     }
+
+    public function test_should_restrict_scopes_for_client_with_wild_card()
+    {
+        $clients = Mockery::mock('Laravel\Passport\ClientRepository');
+        $client = new BridgeClientRepositoryTestClientStub;
+        $client->allowed_scopes = '*';
+        $clients->shouldReceive('findActive')->with(1)->andReturn($client);
+        $repository = new ClientRepository($clients);
+
+        $client = $repository->getClientEntity(1, 'client_credentials', 'secret', true);
+
+        $this->assertSame([], $client->getAllowedScopes());
+    }
 }
 
 class BridgeClientRepositoryTestClientStub

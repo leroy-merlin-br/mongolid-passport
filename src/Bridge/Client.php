@@ -48,14 +48,14 @@ class Client implements ScopedClientInterface
     /**
      * Set allowed scopes attributes converting optional
      * param $allowedScopes to array.
-     * If the client has no allowed scopes defined or the string '*',
-     * it means the client has no scope restrictions.
+     * When the client has no scopes restrictions, an empty array is
+     * set, every scope requested will be allowed.
      *
      * @param mixed $allowedScopes
      */
     protected function setAllowedScopes($allowedScopes = null)
     {
-        if (!$allowedScopes || '*' === $allowedScopes) {
+        if (!$this->hasScopeRestrictions($allowedScopes)) {
             $this->allowedScopes = [];
 
             return;
@@ -68,5 +68,20 @@ class Client implements ScopedClientInterface
         }
 
         array_walk($this->allowedScopes, 'trim');
+    }
+
+    /**
+     * If the client has no allowed scopes defined or the string '*',
+     * it means the client has no scope restrictions.
+     * Allowing all scopes for a client that has no allowed scopes definied
+     * is intended to maintain compatibility with the original behavior.
+     *
+     * @param mixed $allowedScopes
+     *
+     * @return bool
+     */
+    protected function hasScopeRestrictions($allowedScopes = null)
+    {
+        return !empty($allowedScopes) && '*' !== $allowedScopes;
     }
 }
