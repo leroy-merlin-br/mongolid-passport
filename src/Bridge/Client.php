@@ -66,6 +66,6 @@ class Client implements ScopedClientInterface
             $this->allowedScopes = explode(',', trim($allowedScopes));
         }
 
-        array_walk($this->allowedScopes, 'trim');
+        $this->allowedScopes = array_map('trim', $this->allowedScopes);
     }
 }
