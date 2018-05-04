@@ -114,10 +114,15 @@ class ClientCommand extends Command
             url('/auth/callback')
         );
 
-        $allowedScopes = $this->ask(
-            'Which scopes does the client need? Available: '.$this->getAvailableScopes(),
-            '*'
-        );
+        $this->line('Available scopes:');
+        $this->table(['id', 'description'], Passport::scopes()->toArray());
+
+        do {
+            $allowedScopes = $this->ask(
+                'Which scopes does the client need? Valid options: all / none / [comma separated scopes]',
+                'all'
+            );
+        } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
 
         $client = $clients->create(
             $userId, $name, $redirect, false, false, $allowedScopes
@@ -142,5 +147,42 @@ class ClientCommand extends Command
         }
 
         return implode(',', $scopes);
+    }
+
+    /**
+     * Check if allowed scopes option is valid.
+     *
+     * @param string $allowedScopes
+     *
+     * @return string|bool
+     */
+    protected function parseAllowedScopes($allowedScopes)
+    {
+        if ('all' === $allowedScopes) {
+            return '*';
+        }
+
+        if ('none' === $allowedScopes) {
+            return null;
+        }
+
+        if (!empty($allowedScopes)) {
+            $scopes = explode(',', $allowedScopes);
+
+            foreach ($scopes as $scope) {
+                $scope = trim($scope);
+                if (!Passport::hasScope($scope)) {
+                    $this->warn("Invalid scope option {$scope}.");
+
+                    return false;
+                }
+            }
+
+            return $allowedScopes;
+        }
+
+        $this->warn('Invalid scope option.');
+
+        return false;
     }
 }

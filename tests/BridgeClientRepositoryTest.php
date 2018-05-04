@@ -71,7 +71,7 @@ class BridgeClientRepositoryTest extends PHPUnit_Framework_TestCase
 
         $client = $repository->getClientEntity(1, 'client_credentials', 'secret', true);
 
-        $this->assertSame([], $client->getAllowedScopes());
+        $this->assertSame(['*'], $client->getAllowedScopes());
     }
 }
 

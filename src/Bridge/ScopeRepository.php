@@ -54,7 +54,9 @@ class ScopeRepository implements ScopeRepositoryInterface
         array $scopes,
         ClientEntityInterface $clientEntity
     ) {
-        if (!$clientAllowedScopes = $clientEntity->getAllowedScopes()) {
+        $clientAllowedScopes = $clientEntity->getAllowedScopes();
+
+        if (in_array('*', $clientAllowedScopes)) {
             return true;
         }
 
