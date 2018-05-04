@@ -120,7 +120,7 @@ class ClientCommand extends Command
         do {
             $allowedScopes = $this->ask(
                 'Which scopes does the client need? Valid options: all / none / [comma separated scopes]',
-                'all'
+                'none'
             );
         } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
 
