@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport\Console;
 
+use Laravel\Passport\Passport;
 use Illuminate\Console\Command;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\PersonalAccessClient;
@@ -113,12 +114,75 @@ class ClientCommand extends Command
             url('/auth/callback')
         );
 
+        $this->line('Available scopes:');
+        $this->table(['id', 'description'], Passport::scopes()->toArray());
+
+        do {
+            $allowedScopes = $this->ask(
+                'Which scopes does the client need? Valid options: all / none / [comma separated scopes]',
+                'none'
+            );
+        } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
+
         $client = $clients->create(
-            $userId, $name, $redirect
+            $userId, $name, $redirect, false, false, $allowedScopes
         );
 
         $this->info('New client created successfully.');
         $this->line('<comment>Client ID:</comment> '.$client->_id);
         $this->line('<comment>Client secret:</comment> '.$client->secret);
+    }
+
+    /**
+     * Get available scopes keys as string.
+     *
+     * @return string
+     */
+    protected function getAvailableScopes()
+    {
+        $scopes = [];
+
+        foreach (Passport::scopes() as $scope) {
+            $scopes[] = $scope->id;
+        }
+
+        return implode(',', $scopes);
+    }
+
+    /**
+     * Check if allowed scopes option is valid.
+     *
+     * @param string $allowedScopes
+     *
+     * @return string|bool
+     */
+    protected function parseAllowedScopes($allowedScopes)
+    {
+        if ('all' === $allowedScopes) {
+            return '*';
+        }
+
+        if ('none' === $allowedScopes) {
+            return null;
+        }
+
+        if (!empty($allowedScopes)) {
+            $scopes = explode(',', $allowedScopes);
+
+            foreach ($scopes as $scope) {
+                $scope = trim($scope);
+                if (!Passport::hasScope($scope)) {
+                    $this->warn("Invalid scope option {$scope}.");
+
+                    return false;
+                }
+            }
+
+            return $allowedScopes;
+        }
+
+        $this->warn('Invalid scope option.');
+
+        return false;
     }
 }

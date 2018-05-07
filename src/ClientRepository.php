@@ -101,10 +101,11 @@ class ClientRepository
      * @param  string $redirect
      * @param  bool   $personalAccess
      * @param  bool   $password
+     * @param  string $allowedScopes
      *
      * @return \Laravel\Passport\Client
      */
-    public function create($userId, $name, $redirect, $personalAccess = false, $password = false)
+    public function create($userId, $name, $redirect, $personalAccess = false, $password = false, $allowedScopes = null)
     {
         $client = new Client();
 
@@ -117,6 +118,7 @@ class ClientRepository
                 'personal_access_client' => $personalAccess,
                 'password_client' => $password,
                 'revoked' => false,
+                'allowed_scopes' => $allowedScopes,
             ],
             true
         );
