@@ -69,12 +69,6 @@ class CheckClientCredentialsForAnyScope
             return true;
         }
 
-        foreach ($scopes as $scope) {
-            if (in_array($scope, $tokenScopes)) {
-                return true;
-            }
-        }
-
-        return false;
+        return (bool) array_intersect($scopes, $tokenScopes);
     }
 }
