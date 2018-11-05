@@ -2,7 +2,7 @@
 
 namespace Laravel\Passport\Bridge;
 
-use DateTime;
+use MongoDB\BSON\UTCDateTime;
 use Laravel\Passport\TokenRepository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Passport\Events\AccessTokenCreated;
@@ -54,14 +54,14 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
         $this->tokenRepository->create([
-            'id' => $accessTokenEntity->getIdentifier(),
+            '_id' => $accessTokenEntity->getIdentifier(),
             'user_id' => $accessTokenEntity->getUserIdentifier(),
             'client_id' => $accessTokenEntity->getClient()->getIdentifier(),
             'scopes' => $this->scopesToArray($accessTokenEntity->getScopes()),
             'revoked' => false,
-            'created_at' => new DateTime,
-            'updated_at' => new DateTime,
-            'expires_at' => $accessTokenEntity->getExpiryDateTime(),
+            'created_at' => new UTCDateTime,
+            'updated_at' => new UTCDateTime,
+            'expires_at' => new UTCDateTime($accessTokenEntity->getExpiryDateTime()),
         ]);
 
         $this->events->dispatch(new AccessTokenCreated(

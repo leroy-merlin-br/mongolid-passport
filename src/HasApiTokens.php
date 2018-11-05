@@ -16,21 +16,22 @@ trait HasApiTokens
     /**
      * Get all of the user's registered OAuth clients.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Mongolid\Cursor\Cursor
      */
     public function clients()
     {
-        return $this->hasMany(Client::class, 'user_id');
+        return Client::where(['user_id' => (string) $this->_id]);
     }
 
     /**
      * Get all of the access tokens for the user.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Mongolid\Cursor\Cursor
      */
     public function tokens()
     {
-        return $this->hasMany(Token::class, 'user_id')->orderBy('created_at', 'desc');
+        return Token::where(['user_id' => (string) $this->_id])
+            ->sort(['created_at' => -1]);
     }
 
     /**

@@ -68,7 +68,7 @@
                                 {{ csrf_field() }}
 
                                 <input type="hidden" name="state" value="{{ $request->state }}">
-                                <input type="hidden" name="client_id" value="{{ $client->id }}">
+                                <input type="hidden" name="client_id" value="{{ (string) $client->_id }}">
                                 <button type="submit" class="btn btn-success btn-approve">Authorize</button>
                             </form>
 
@@ -78,7 +78,7 @@
                                 {{ method_field('DELETE') }}
 
                                 <input type="hidden" name="state" value="{{ $request->state }}">
-                                <input type="hidden" name="client_id" value="{{ $client->id }}">
+                                <input type="hidden" name="client_id" value="{{ (string) $client->_id }}">
                                 <button class="btn btn-danger">Cancel</button>
                             </form>
                         </div>

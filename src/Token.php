@@ -2,77 +2,36 @@
 
 namespace Laravel\Passport;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
+use MongolidLaravel\MongolidModel as Model;
 
 class Token extends Model
 {
     /**
-     * The database table used by the model.
-     *
-     * @var string
+     * {@inheritdoc}
      */
-    protected $table = 'oauth_access_tokens';
-
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = false;
-
-    /**
-     * The guarded attributes on the model.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'scopes' => 'array',
-        'revoked' => 'bool',
-    ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'expires_at',
-    ];
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+    protected $collection = 'oauth_access_tokens';
 
     /**
      * Get the client that the token belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return Client|null
      */
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->referencesOne(Client::class, 'client_id');
     }
 
     /**
      * Get the user that the token belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return Authenticatable|null
      */
     public function user()
     {
         $provider = config('auth.guards.api.provider');
 
-        return $this->belongsTo(config('auth.providers.'.$provider.'.model'));
+        return $this->referencesOne(config('auth.providers.'.$provider.'.model'), 'user_id');
     }
 
     /**
@@ -105,7 +64,8 @@ class Token extends Model
      */
     public function revoke()
     {
-        $this->forceFill(['revoked' => true])->save();
+        $this->fill(['revoked' => true], true);
+        $this->save();
     }
 
     /**

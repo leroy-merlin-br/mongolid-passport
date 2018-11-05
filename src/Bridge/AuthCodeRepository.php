@@ -2,31 +2,14 @@
 
 namespace Laravel\Passport\Bridge;
 
-use Illuminate\Database\Connection;
+use MongoDB\BSON\UTCDateTime;
+use Laravel\Passport\AuthCode as AuthCodeModel;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
     use FormatsScopesForStorage;
-
-    /**
-     * The database connection.
-     *
-     * @var \Illuminate\Database\Connection
-     */
-    protected $database;
-
-    /**
-     * Create a new repository instance.
-     *
-     * @param  \Illuminate\Database\Connection  $database
-     * @return void
-     */
-    public function __construct(Connection $database)
-    {
-        $this->database = $database;
-    }
 
     /**
      * {@inheritdoc}
@@ -41,14 +24,20 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
-        $this->database->table('oauth_auth_codes')->insert([
-            'id' => $authCodeEntity->getIdentifier(),
-            'user_id' => $authCodeEntity->getUserIdentifier(),
-            'client_id' => $authCodeEntity->getClient()->getIdentifier(),
-            'scopes' => $this->formatScopesForStorage($authCodeEntity->getScopes()),
-            'revoked' => false,
-            'expires_at' => $authCodeEntity->getExpiryDateTime(),
-        ]);
+        $authCode = new AuthCodeModel();
+
+        $authCode->fill(
+            [
+                '_id' => $authCodeEntity->getIdentifier(),
+                'user_id' => $authCodeEntity->getUserIdentifier(),
+                'client_id' => $authCodeEntity->getClient()->getIdentifier(),
+                'scopes' => $this->formatScopesForStorage($authCodeEntity->getScopes()),
+                'revoked' => false,
+                'expires_at' => new UTCDateTime($authCodeEntity->getExpiryDateTime()),
+            ]
+        );
+
+        $authCode->save();
     }
 
     /**
@@ -56,8 +45,11 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function revokeAuthCode($codeId)
     {
-        $this->database->table('oauth_auth_codes')
-                    ->where('id', $codeId)->update(['revoked' => true]);
+        if ($authCode = AuthCodeModel::first($codeId)) {
+            $authCode->revoked = true;
+
+            $authCode->save();
+        }
     }
 
     /**
@@ -65,7 +57,8 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function isAuthCodeRevoked($codeId)
     {
-        return $this->database->table('oauth_auth_codes')
-                    ->where('id', $codeId)->where('revoked', 1)->exists();
+        $authCode = AuthCodeModel::first($codeId);
+
+        return $authCode && $authCode->revoked;
     }
 }

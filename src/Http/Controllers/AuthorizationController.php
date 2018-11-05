@@ -7,7 +7,8 @@ use Laravel\Passport\Passport;
 use Laravel\Passport\Bridge\User;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\ClientRepository;
-use Illuminate\Database\Eloquent\Model;
+use MongolidLaravel\MongolidModel as Model;
+use Laravel\Passport\Bridge\ScopeRepository;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response as Psr7Response;
 use League\OAuth2\Server\AuthorizationServer;
@@ -57,9 +58,10 @@ class AuthorizationController
     public function authorize(ServerRequestInterface $psrRequest,
                               Request $request,
                               ClientRepository $clients,
-                              TokenRepository $tokens)
+                              TokenRepository $tokens,
+                              ScopeRepository $scopeRepository)
     {
-        return $this->withErrorHandling(function () use ($psrRequest, $request, $clients, $tokens) {
+        return $this->withErrorHandling(function () use ($psrRequest, $request, $clients, $tokens, $scopeRepository) {
             $authRequest = $this->server->validateAuthorizationRequest($psrRequest);
 
             $scopes = $this->parseScopes($authRequest);
@@ -67,6 +69,11 @@ class AuthorizationController
             $token = $tokens->findValidToken(
                 $user = $request->user(),
                 $client = $clients->find($authRequest->getClient()->getIdentifier())
+            );
+
+            $scopeRepository->validateClientScopes(
+                $authRequest->getScopes(),
+                $authRequest->getClient()
             );
 
             if ($token && $token->scopes === collect($scopes)->pluck('id')->all()) {
@@ -103,7 +110,7 @@ class AuthorizationController
      * Approve the authorization request.
      *
      * @param  \League\OAuth2\Server\RequestTypes\AuthorizationRequest  $authRequest
-     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  \MongolidLaravel\MongolidModel  $user
      * @return \Illuminate\Http\Response
      */
     protected function approveRequest($authRequest, $user)

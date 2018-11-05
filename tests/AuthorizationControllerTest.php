@@ -4,6 +4,7 @@ use Illuminate\Container\Container;
 use League\OAuth2\Server\AuthorizationServer;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 
 class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
 {
@@ -30,8 +31,11 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
         $session->shouldReceive('put')->with('authRequest', $authRequest);
         $request->shouldReceive('user')->andReturn('user');
 
-        $authRequest->shouldReceive('getClient->getIdentifier')->andReturn(1);
-        $authRequest->shouldReceive('getScopes')->andReturn([new Laravel\Passport\Bridge\Scope('scope-1')]);
+        $authRequest->shouldReceive('getClient')->andReturn($clientEntity = Mockery::mock(ClientEntityInterface::class));
+        $authRequest->shouldReceive('getScopes')->andReturn($scopes = [new Laravel\Passport\Bridge\Scope('scope-1')]);
+        $authRequest->shouldReceive('getGrantTypeId')->andReturn('authorization_code');
+
+        $clientEntity->shouldReceive('getIdentifier')->andReturn(1);
 
         $response->shouldReceive('view')->once()->andReturnUsing(function ($view, $data) use ($authRequest) {
             $this->assertEquals('passport::authorize', $view);
@@ -48,8 +52,11 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
         $tokens = Mockery::mock('Laravel\Passport\TokenRepository');
         $tokens->shouldReceive('findValidToken')->with('user', 'client')->andReturnNull();
 
+        $scopeRepository = Mockery::mock('Laravel\Passport\Bridge\ScopeRepository');
+        $scopeRepository->shouldReceive('validateClientScopes')->with($scopes, $clientEntity)->andReturn(true);
+
         $this->assertEquals('view', $controller->authorize(
-            Mockery::mock('Psr\Http\Message\ServerRequestInterface'), $request, $clients, $tokens
+            Mockery::mock('Psr\Http\Message\ServerRequestInterface'), $request, $clients, $tokens, $scopeRepository
         ));
     }
 
@@ -72,8 +79,10 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
 
         $tokens = Mockery::mock('Laravel\Passport\TokenRepository');
 
+        $scopeRepository = Mockery::mock('Laravel\Passport\Bridge\ScopeRepository');
+
         $this->assertEquals('whoops', $controller->authorize(
-            Mockery::mock('Psr\Http\Message\ServerRequestInterface'), $request, $clients, $tokens
+            Mockery::mock('Psr\Http\Message\ServerRequestInterface'), $request, $clients, $tokens, $scopeRepository
         )->getContent());
     }
 
@@ -100,10 +109,13 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
         $user->shouldReceive('getKey')->andReturn(1);
         $request->shouldNotReceive('session');
 
-        $authRequest->shouldReceive('getClient->getIdentifier')->once()->andReturn(1);
-        $authRequest->shouldReceive('getScopes')->once()->andReturn([new Laravel\Passport\Bridge\Scope('scope-1')]);
+        $authRequest->shouldReceive('getClient')->andReturn($clientEntity = Mockery::mock(ClientEntityInterface::class));
+        $authRequest->shouldReceive('getScopes')->twice()->andReturn($scopes = [new Laravel\Passport\Bridge\Scope('scope-1')]);
         $authRequest->shouldReceive('setUser')->once()->andReturnNull();
         $authRequest->shouldReceive('setAuthorizationApproved')->once()->with(true);
+        $authRequest->shouldReceive('getGrantTypeId')->andReturn('authorization_code');
+
+        $clientEntity->shouldReceive('getIdentifier')->andReturn(1);
 
         $clients = Mockery::mock('Laravel\Passport\ClientRepository');
         $clients->shouldReceive('find')->with(1)->andReturn('client');
@@ -112,8 +124,11 @@ class AuthorizationControllerTest extends PHPUnit_Framework_TestCase
         $tokens->shouldReceive('findValidToken')->with($user, 'client')->andReturn($token = Mockery::mock('Laravel\Passport\Token'));
         $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['scope-1']);
 
+        $scopeRepository = Mockery::mock('Laravel\Passport\Bridge\ScopeRepository');
+        $scopeRepository->shouldReceive('validateClientScopes')->with($scopes, $clientEntity)->andReturn(true);
+
         $this->assertEquals('approved', $controller->authorize(
-            Mockery::mock('Psr\Http\Message\ServerRequestInterface'), $request, $clients, $tokens
+            Mockery::mock('Psr\Http\Message\ServerRequestInterface'), $request, $clients, $tokens, $scopeRepository
         )->getContent());
     }
 }

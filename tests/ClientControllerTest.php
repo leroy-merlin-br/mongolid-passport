@@ -13,7 +13,6 @@ class ClientControllerTest extends PHPUnit_Framework_TestCase
     {
         $clients = Mockery::mock('Laravel\Passport\ClientRepository');
         $clients->shouldReceive('activeForUser')->once()->with(1)->andReturn($client = Mockery::mock());
-        $client->shouldReceive('makeVisible')->with('secret')->andReturn($client);
 
         $request = Mockery::mock('Illuminate\Http\Request');
         $request->shouldReceive('user')->andReturn(new ClientControllerFakeUser);
@@ -170,9 +169,9 @@ class ClientControllerTest extends PHPUnit_Framework_TestCase
 
 class ClientControllerFakeUser
 {
-    public $id = 1;
+    public $_id = 1;
     public function getKey()
     {
-        return $this->id;
+        return $this->_id;
     }
 }

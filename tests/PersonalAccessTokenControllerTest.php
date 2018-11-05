@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Laravel\Passport\Client;
 use Laravel\Passport\Passport;
 use Laravel\Passport\TokenRepository;
 
@@ -15,18 +16,18 @@ class PersonalAccessTokenControllerTest extends PHPUnit_Framework_TestCase
     {
         $request = Request::create('/', 'GET');
 
-        $token1 = new Laravel\Passport\Token;
-        $token2 = new Laravel\Passport\Token;
+        $token1 = Mockery::mock(Laravel\Passport\Token::class)->makePartial();
+        $token2 = Mockery::mock(Laravel\Passport\Token::class)->makePartial();
 
-        $userTokens = Mockery::mock();
-        $token1->client = (object) ['personal_access_client' => true];
-        $token2->client = (object) ['personal_access_client' => false];
-        $userTokens->shouldReceive('load')->with('client')->andReturn(collect([
-            $token1, $token2,
-        ]));
-
+        $client1 = new Client;
+        $client1->personal_access_client = true;
+        $client2 = new Client;
+        $client2->personal_access_client = false;
+        $token1->shouldReceive('client')->atLeast()->once()->andReturn($client1);
+        $token2->shouldReceive('client')->atLeast()->once()->andReturn($client2);
         $tokenRepository = Mockery::mock(TokenRepository::class);
-        $tokenRepository->shouldReceive('forUser')->andReturn($userTokens);
+
+        $tokenRepository->shouldReceive('forUser')->andReturn([$token1, $token2]);
 
         $request->setUserResolver(function () use ($token1, $token2) {
             $user = Mockery::mock();
@@ -79,7 +80,7 @@ class PersonalAccessTokenControllerTest extends PHPUnit_Framework_TestCase
         $request = Request::create('/', 'GET');
 
         $token1 = Mockery::mock(Laravel\Passport\Token::class.'[revoke]');
-        $token1->id = 1;
+        $token1->_id = 1;
         $token1->shouldReceive('revoke')->once();
 
         $tokenRepository = Mockery::mock(TokenRepository::class);
