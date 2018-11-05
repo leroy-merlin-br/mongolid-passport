@@ -1,15 +1,17 @@
 language: php
 
 php:
-  - 5.6
-  - 7.0
   - 7.1
+  - 7.2
 
-sudo: false
+services: mongodb
 
 before_install:
-  - if [[ $TRAVIS_PHP_VERSION != 7.1 ]] ; then phpenv config-rm xdebug.ini; fi
+  - if [[ $TRAVIS_PHP_VERSION != 7.2 ]]; then pecl install mongodb; fi
+  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
-install: travis_retry composer install --no-interaction --prefer-dist --no-suggest
+before_script:
+  - composer install --no-interaction
 
-script: vendor/bin/phpunit --verbose
+script:
+  - vendor/bin/phpunit -c phpunit.xml.dist
