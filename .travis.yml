@@ -3,6 +3,7 @@ language: php
 php:
   - 7.1
   - 7.2
+  - 7.3
 
 services: mongodb
 
@@ -15,3 +16,7 @@ before_script:
 
 script:
   - vendor/bin/phpunit -c phpunit.xml.dist
+
+matrix:
+  allow_failures:
+    - php: 7.3
