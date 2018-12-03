@@ -12,6 +12,41 @@ class Client extends Model
      */
     protected $collection = 'oauth_clients';
 
+    protected $guarded = [];
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'secret',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'grant_types' => 'array',
+        'personal_access_client' => 'bool',
+        'password_client' => 'bool',
+        'revoked' => 'bool',
+    ];
+
+    /**
+     * Get the user that the client belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(
+            config('auth.providers.'.config('auth.guards.api.provider').'.model')
+        );
+    }
+
     /**
      * Get all of the authentication codes for the client.
      *

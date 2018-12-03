@@ -26,7 +26,7 @@ class Client implements ScopedClientInterface
      */
     public function __construct($identifier, $name, $redirectUri, $allowedScopes = null)
     {
-        $this->setIdentifier($identifier);
+        $this->setIdentifier((string) $identifier); // @todo check if it conflicts (string)
         $this->setAllowedScopes($allowedScopes);
 
         $this->name = $name;

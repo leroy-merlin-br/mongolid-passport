@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Http\Request;
+use PHPUnit\Framework\TestCase;
 use Laravel\Passport\Http\Middleware\CheckClientCredentialsForAnyScope;
 
-class CheckClientCredentialsForAnyScopeTest extends PHPUnit_Framework_TestCase
+class CheckClientCredentialsForAnyScopeTest extends TestCase
 {
     public function tearDown()
     {

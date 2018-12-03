@@ -13,7 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response as Psr7Response;
 use League\OAuth2\Server\AuthorizationServer;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
 class AuthorizationController
 {
@@ -102,7 +101,7 @@ class AuthorizationController
         return Passport::scopesFor(
             collect($authRequest->getScopes())->map(function ($scope) {
                 return $scope->getIdentifier();
-            })->all()
+            })->unique()->all()
         );
     }
 

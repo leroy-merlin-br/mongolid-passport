@@ -137,14 +137,12 @@ class TokenRepository
      */
     public function findValidToken($user, $client)
     {
-        return $client->tokens(
-            [
-                'user_id' => (string) $user->getKey(),
-                'revoked' => false,
-                'expires_at' => ['$gt' => new UTCDateTime()],
-            ]
-        )
-            ->sort(['expires_at' => -1])
-            ->first();
+        $where = [
+            'user_id' => (string) $user->getKey(),
+            'revoked' => false,
+            'expires_at' => ['$gt' => new UTCDateTime()],
+        ];
+
+        return $client->tokens($where)->sort(['expires_at' => -1])->first();
     }
 }

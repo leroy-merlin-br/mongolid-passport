@@ -36,7 +36,14 @@ class Passport
      *
      * @var int
      */
-    public static $personalAccessClient;
+    public static $personalAccessClientId;
+
+    /**
+     * The default scope.
+     *
+     * @var string
+     */
+    public static $defaultScope;
 
     /**
      * All of the scopes defined for the application.
@@ -69,6 +76,13 @@ class Passport
     public static $cookie = 'laravel_token';
 
     /**
+     * Indicates if Passport should ignore incoming CSRF tokens.
+     *
+     * @var bool
+     */
+    public static $ignoreCsrfToken = false;
+
+    /**
      * The storage location of the encryption keys.
      *
      * @var string
@@ -76,11 +90,46 @@ class Passport
     public static $keyPath;
 
     /**
+     * The auth code model class name.
+     *
+     * @var string
+     */
+    public static $authCodeModel = 'Laravel\Passport\AuthCode';
+
+    /**
+     * The client model class name.
+     *
+     * @var string
+     */
+    public static $clientModel = 'Laravel\Passport\Client';
+
+    /**
+     * The personal access client model class name.
+     *
+     * @var string
+     */
+    public static $personalAccessClientModel = 'Laravel\Passport\PersonalAccessClient';
+
+    /**
+     * The token model class name.
+     *
+     * @var string
+     */
+    public static $tokenModel = 'Laravel\Passport\Token';
+
+    /**
      * Indicates if Passport migrations will be run.
      *
      * @var bool
      */
     public static $runsMigrations = true;
+
+    /**
+     * Indicates if Passport should unserializes cookies.
+     *
+     * @var bool
+     */
+    public static $unserializesCookies = false;
 
     /**
      * Enable the implicit grant type.
@@ -149,11 +198,22 @@ class Passport
      * @param  int  $clientId
      * @return static
      */
-    public static function personalAccessClient($clientId)
+    public static function personalAccessClientId($clientId)
     {
-        static::$personalAccessClient = $clientId;
+        static::$personalAccessClientId = $clientId;
 
         return new static;
+    }
+
+    /**
+     * Set the default scope(s). Multiple scopes may be an array or specified delimited by spaces.
+     *
+     * @param  array|string  $scope
+     * @return void
+     */
+    public static function setDefaultScope($scope)
+    {
+        static::$defaultScope = is_array($scope) ? implode(' ', $scope) : $scope;
     }
 
     /**
@@ -273,16 +333,29 @@ class Passport
     }
 
     /**
+     * Indicate that Passport should ignore incoming CSRF tokens.
+     *
+     * @param  bool  $ignoreCsrfToken
+     * @return static
+     */
+    public static function ignoreCsrfToken($ignoreCsrfToken = true)
+    {
+        static::$ignoreCsrfToken = $ignoreCsrfToken;
+
+        return new static;
+    }
+
+    /**
      * Set the current user for the application with the given scopes.
      *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable|\Laravel\Passport\HasApiTokens  $user
      * @param  array  $scopes
      * @param  string  $guard
-     * @return void
+     * @return \Illuminate\Contracts\Auth\Authenticatable
      */
     public static function actingAs($user, $scopes = [], $guard = 'api')
     {
-        $token = Mockery::mock(Token::class)->shouldIgnoreMissing(false);
+        $token = Mockery::mock(Passport::tokenModel())->shouldIgnoreMissing(false);
 
         foreach ($scopes as $scope) {
             $token->shouldReceive('can')->with($scope)->andReturn(true);
@@ -293,6 +366,8 @@ class Passport
         app('auth')->guard($guard)->setUser($user);
 
         app('auth')->shouldUse($guard);
+
+        return $user;
     }
 
     /**
@@ -322,6 +397,130 @@ class Passport
     }
 
     /**
+     * Set the auth code model class name.
+     *
+     * @param  string  $authCodeModel
+     * @return void
+     */
+    public static function useAuthCodeModel($authCodeModel)
+    {
+        static::$authCodeModel = $authCodeModel;
+    }
+
+    /**
+     * Get the auth code model class name.
+     *
+     * @return string
+     */
+    public static function authCodeModel()
+    {
+        return static::$authCodeModel;
+    }
+
+    /**
+     * Get a new auth code model instance.
+     *
+     * @return \Laravel\Passport\AuthCode
+     */
+    public static function authCode()
+    {
+        return new static::$authCodeModel;
+    }
+
+    /**
+     * Set the client model class name.
+     *
+     * @param  string  $clientModel
+     * @return void
+     */
+    public static function useClientModel($clientModel)
+    {
+        static::$clientModel = $clientModel;
+    }
+
+    /**
+     * Get the client model class name.
+     *
+     * @return string
+     */
+    public static function clientModel()
+    {
+        return static::$clientModel;
+    }
+
+    /**
+     * Get a new client model instance.
+     *
+     * @return \Laravel\Passport\Client
+     */
+    public static function client()
+    {
+        return new static::$clientModel;
+    }
+
+    /**
+     * Set the personal access client model class name.
+     *
+     * @param  string  $clientModel
+     * @return void
+     */
+    public static function usePersonalAccessClientModel($clientModel)
+    {
+        static::$personalAccessClientModel = $clientModel;
+    }
+
+    /**
+     * Get the personal access client model class name.
+     *
+     * @return string
+     */
+    public static function personalAccessClientModel()
+    {
+        return static::$personalAccessClientModel;
+    }
+
+    /**
+     * Get a new personal access client model instance.
+     *
+     * @return \Laravel\Passport\PersonalAccessClient
+     */
+    public static function personalAccessClient()
+    {
+        return new static::$personalAccessClientModel;
+    }
+
+    /**
+     * Set the token model class name.
+     *
+     * @param  string  $tokenModel
+     * @return void
+     */
+    public static function useTokenModel($tokenModel)
+    {
+        static::$tokenModel = $tokenModel;
+    }
+
+    /**
+     * Get the token model class name.
+     *
+     * @return string
+     */
+    public static function tokenModel()
+    {
+        return static::$tokenModel;
+    }
+
+    /**
+     * Get a new personal access client model instance.
+     *
+     * @return \Laravel\Passport\Token
+     */
+    public static function token()
+    {
+        return new static::$tokenModel;
+    }
+
+    /**
      * Configure Passport to not register its migrations.
      *
      * @return static
@@ -329,6 +528,30 @@ class Passport
     public static function ignoreMigrations()
     {
         static::$runsMigrations = false;
+
+        return new static;
+    }
+
+    /**
+     * Instruct Passport to enable cookie serialization.
+     *
+     * @return static
+     */
+    public static function withCookieSerialization()
+    {
+        static::$unserializesCookies = true;
+
+        return new static;
+    }
+
+    /**
+     * Instruct Passport to disable cookie serialization.
+     *
+     * @return static
+     */
+    public static function withoutCookieSerialization()
+    {
+        static::$unserializesCookies = false;
 
         return new static;
     }

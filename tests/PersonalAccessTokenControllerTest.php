@@ -3,9 +3,10 @@
 use Illuminate\Http\Request;
 use Laravel\Passport\Client;
 use Laravel\Passport\Passport;
+use PHPUnit\Framework\TestCase;
 use Laravel\Passport\TokenRepository;
 
-class PersonalAccessTokenControllerTest extends PHPUnit_Framework_TestCase
+class PersonalAccessTokenControllerTest extends TestCase
 {
     public function tearDown()
     {
@@ -39,7 +40,7 @@ class PersonalAccessTokenControllerTest extends PHPUnit_Framework_TestCase
         $validator = Mockery::mock('Illuminate\Contracts\Validation\Factory');
         $controller = new Laravel\Passport\Http\Controllers\PersonalAccessTokenController($tokenRepository, $validator);
 
-        $this->assertEquals(1, count($controller->forUser($request)));
+        $this->assertCount(1, $controller->forUser($request));
         $this->assertEquals($token1, $controller->forUser($request)[0]);
     }
 
