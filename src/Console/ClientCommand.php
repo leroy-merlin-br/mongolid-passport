@@ -102,8 +102,18 @@ class ClientCommand extends Command
             'What should we name the client?'
         );
 
+        $this->line('Available scopes:');
+        $this->table(['id', 'description'], Passport::scopes()->toArray());
+
+        do {
+            $allowedScopes = $this->ask(
+                'Which scopes does the client need? Valid options: all / none / [comma separated scopes]',
+                'none'
+            );
+        } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
+
         $client = $clients->create(
-            null, $name, ''
+            null, $name, '', false, false, $allowedScopes
         );
 
         $this->info('New client created successfully.');
@@ -132,15 +142,7 @@ class ClientCommand extends Command
             url('/auth/callback')
         );
 
-        $this->line('Available scopes:');
-        $this->table(['id', 'description'], Passport::scopes()->toArray());
-
-        do {
-            $allowedScopes = $this->ask(
-                'Which scopes does the client need? Valid options: all / none / [comma separated scopes]',
-                'none'
-            );
-        } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
+        $allowedScopes = config('auth.authorization_code.allowed_scopes');
 
         $client = $clients->create(
             $userId, $name, $redirect, false, false, $allowedScopes
