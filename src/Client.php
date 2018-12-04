@@ -38,12 +38,13 @@ class Client extends Model
     /**
      * Get the user that the client belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Mongolid\ActiveRecord
      */
     public function user()
     {
-        return $this->belongsTo(
-            config('auth.providers.'.config('auth.guards.api.provider').'.model')
+        $this->referencesOne(
+            config('auth.providers.'.config('auth.guards.api.provider').'.model'),
+            'user_id'
         );
     }
 
