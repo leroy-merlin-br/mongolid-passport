@@ -2,7 +2,6 @@
 
 namespace Laravel\Passport;
 
-use Illuminate\Support\Facades\Request;
 use Mongolid\Util\LocalDateTime;
 use MongolidLaravel\MongolidModel as Model;
 
@@ -63,14 +62,5 @@ class Client extends Model
             'created_at' => LocalDateTime::format($this->created_at, 'Y-m-d H:i:s'),
             'updated_at' => LocalDateTime::format($this->updated_at, 'Y-m-d H:i:s'),
         ];
-    }
-
-    /**
-     * A client is considered trusted when its redirect url and the application
-     * have the same domain.
-     */
-    public function isTrusted(): bool
-    {
-        return Request::getHost() === parse_url($this->redirect, PHP_URL_HOST);
     }
 }
