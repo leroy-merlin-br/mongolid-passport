@@ -223,7 +223,7 @@ class Passport
      */
     public static function scopeIds()
     {
-        return static::scopes()->pluck('id')->values()->all();
+        return static::scopes()->pluck('_id')->values()->all();
     }
 
     /**

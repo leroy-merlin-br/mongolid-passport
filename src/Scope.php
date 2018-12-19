@@ -12,7 +12,7 @@ class Scope implements Arrayable, Jsonable
      *
      * @var string
      */
-    public $id;
+    public $_id;
 
     /**
      * The scope description.
@@ -30,7 +30,7 @@ class Scope implements Arrayable, Jsonable
      */
     public function __construct($id, $description)
     {
-        $this->id = $id;
+        $this->_id = $id;
         $this->description = $description;
     }
 
@@ -42,7 +42,7 @@ class Scope implements Arrayable, Jsonable
     public function toArray()
     {
         return [
-            'id' => $this->id,
+            'id' => (string) $this->_id,
             'description' => $this->description,
         ];
     }

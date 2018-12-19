@@ -161,7 +161,7 @@ class ClientCommand extends Command
      */
     protected function outputClientDetails(Client $client)
     {
-        $this->line('<comment>Client ID:</comment> '.$client->id);
+        $this->line('<comment>Client ID:</comment> '.$client->_id);
         $this->line('<comment>Client secret:</comment> '.$client->secret);
     }
 
@@ -175,7 +175,7 @@ class ClientCommand extends Command
         $scopes = [];
 
         foreach (Passport::scopes() as $scope) {
-            $scopes[] = $scope->id;
+            $scopes[] = $scope->_id;
         }
 
         return implode(',', $scopes);
