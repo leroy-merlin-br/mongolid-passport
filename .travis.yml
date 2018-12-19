@@ -10,14 +10,9 @@ services: mongodb
 before_install:
   - if [[ $(phpenv version-name) = "7.1" ]]; then pecl install mongodb; fi
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - phpenv config-rm xdebug.ini || true
 
 before_script:
   - composer install --no-interaction
 
 script:
   - vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
-
-matrix:
-  allow_failures:
-    - php: 7.3
