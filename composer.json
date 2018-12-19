@@ -48,7 +48,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "6.0-dev"
+            "dev-master": "7.0-dev"
         },
         "laravel": {
             "providers": [
@@ -60,7 +60,7 @@
         "sort-packages": true
     },
     "replace": {
-        "laravel/passport": "3.*"
+        "laravel/passport": "7.*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
