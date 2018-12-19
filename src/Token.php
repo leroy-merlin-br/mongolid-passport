@@ -60,12 +60,13 @@ class Token extends Model
     /**
      * Revoke the token instance.
      *
-     * @return void
+     * @return bool
      */
     public function revoke()
     {
         $this->fill(['revoked' => true], true);
-        $this->save();
+
+        return $this->save();
     }
 
     /**

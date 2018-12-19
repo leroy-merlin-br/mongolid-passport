@@ -13,7 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response as Psr7Response;
 use League\OAuth2\Server\AuthorizationServer;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 
 class AuthorizationController
 {
@@ -76,7 +75,7 @@ class AuthorizationController
                 $authRequest->getClient()
             );
 
-            if ($token && $token->scopes === collect($scopes)->pluck('id')->all()) {
+            if ($token && $token->scopes === collect($scopes)->pluck('_id')->all()) {
                 return $this->approveRequest($authRequest, $user);
             }
 
@@ -102,7 +101,7 @@ class AuthorizationController
         return Passport::scopesFor(
             collect($authRequest->getScopes())->map(function ($scope) {
                 return $scope->getIdentifier();
-            })->all()
+            })->unique()->all()
         );
     }
 

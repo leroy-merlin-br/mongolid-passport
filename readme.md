@@ -12,7 +12,7 @@ ported for [Mongolid Laravel](https://github.com/leroy-merlin-br/mongolid-larave
 
 ## Official Documentation
 
-Documentation for Passport can be found on the [Laravel website](http://laravel.com/docs/master/passport).
+Documentation for Passport can be found on the [Laravel website](https://laravel.com/docs/master/passport).
 
 ## License
 

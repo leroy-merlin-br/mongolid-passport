@@ -3,10 +3,11 @@
 use Mockery\Mock;
 use Illuminate\Http\Request;
 use Laravel\Passport\Client;
+use PHPUnit\Framework\TestCase;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController;
 
-class AuthorizedAccessTokenControllerTest extends PHPUnit_Framework_TestCase
+class AuthorizedAccessTokenControllerTest extends TestCase
 {
     /**
      * @var Mock|TokenRepository
@@ -56,7 +57,7 @@ class AuthorizedAccessTokenControllerTest extends PHPUnit_Framework_TestCase
 
         $tokens = $this->controller->forUser($request);
 
-        $this->assertEquals(1, count($tokens));
+        $this->assertCount(1, $tokens);
         $this->assertEquals($token2, $tokens[0]);
     }
 
