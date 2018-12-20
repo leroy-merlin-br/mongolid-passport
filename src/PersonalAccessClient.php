@@ -2,7 +2,7 @@
 
 namespace Laravel\Passport;
 
-use MongolidLaravel\MongolidModel as Model;
+use Mongolid\Laravel\AbstractModel as Model;
 
 class PersonalAccessClient extends Model
 {

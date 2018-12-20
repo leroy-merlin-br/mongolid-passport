@@ -51,7 +51,7 @@ class PersonalAccessTokenController
 
         return collect($tokens)->filter(
             function ($token) {
-                return !$token->revoked && $token->client()->personal_access_client;
+                return !$token->revoked && $token->client->personal_access_client;
             }
         )->values();
     }

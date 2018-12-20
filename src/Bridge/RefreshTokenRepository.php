@@ -54,8 +54,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-        $refreshToken = new RefreshTokenModel();
-        $refreshToken->fill(
+        $refreshToken = RefreshTokenModel::fill(
             [
                 '_id' => $id = $refreshTokenEntity->getIdentifier(),
                 'access_token_id' => $accessTokenId = $refreshTokenEntity->getAccessToken()->getIdentifier(),

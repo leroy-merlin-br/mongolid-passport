@@ -100,7 +100,7 @@ class ClientRepository
         return PersonalAccessClient::all()
             ->sort(['created_at' => -1])
             ->first()
-            ->client();
+            ->client;
     }
 
     /**
@@ -117,9 +117,7 @@ class ClientRepository
      */
     public function create($userId, $name, $redirect, $personalAccess = false, $password = false, $allowedScopes = null)
     {
-        $client = new Client();
-
-        $client->fill(
+        $client = Client::fill(
             [
                 'user_id' => $userId,
                 'name' => $name,
@@ -130,6 +128,7 @@ class ClientRepository
                 'revoked' => false,
                 'allowed_scopes' => $allowedScopes,
             ],
+            null,
             true
         );
 
@@ -181,11 +180,12 @@ class ClientRepository
      */
     public function update(Client $client, $name, $redirect)
     {
-        $client->fill(
+        $client = $client::fill(
             [
                 'name' => $name,
                 'redirect' => $redirect,
             ],
+            $client,
             true
         );
 
@@ -203,10 +203,11 @@ class ClientRepository
      */
     public function regenerateSecret(Client $client)
     {
-        $client->fill(
+        $client = $client::fill(
             [
                 'secret' => str_random(40),
             ],
+            $client,
             true
         );
 

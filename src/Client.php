@@ -3,7 +3,7 @@
 namespace Laravel\Passport;
 
 use Mongolid\Util\LocalDateTime;
-use MongolidLaravel\MongolidModel as Model;
+use Mongolid\Laravel\AbstractModel as Model;
 
 class Client extends Model
 {
@@ -85,7 +85,7 @@ class Client extends Model
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => (string) $this->_id,

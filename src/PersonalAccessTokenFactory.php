@@ -72,10 +72,10 @@ class PersonalAccessTokenFactory
         );
 
         $token = tap($this->findAccessToken($response), function ($token) use ($userId, $name) {
-            $token->fill([
+            $token = $token::fill([
                 'user_id' => (string) $userId,
                 'name' => $name,
-            ], true);
+            ], $token, true);
 
             $this->tokens->save($token);
         });

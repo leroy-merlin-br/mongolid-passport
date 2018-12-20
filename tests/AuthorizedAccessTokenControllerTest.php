@@ -43,8 +43,8 @@ class AuthorizedAccessTokenControllerTest extends TestCase
         $client1->personal_access_client = true;
         $client2 = new Client;
         $client2->personal_access_client = false;
-        $token1->shouldReceive('client')->once()->andReturn($client1);
-        $token2->shouldReceive('client')->once()->andReturn($client2);
+        $token1->client = $client1;
+        $token2->client = $client2;
 
         $this->tokenRepository->shouldReceive('forUser')->andReturn([$token1, $token2]);
 

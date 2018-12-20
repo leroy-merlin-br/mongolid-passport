@@ -7,7 +7,7 @@ use Laravel\Passport\Passport;
 use Laravel\Passport\Bridge\User;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\ClientRepository;
-use MongolidLaravel\MongolidModel as Model;
+use Mongolid\Laravel\AbstractModel as Model;
 use Laravel\Passport\Bridge\ScopeRepository;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response as Psr7Response;
@@ -109,7 +109,7 @@ class AuthorizationController
      * Approve the authorization request.
      *
      * @param  \League\OAuth2\Server\RequestTypes\AuthorizationRequest  $authRequest
-     * @param  \MongolidLaravel\MongolidModel  $user
+     * @param  \Mongolid\Laravel\AbstractModel $user
      * @return \Illuminate\Http\Response
      */
     protected function approveRequest($authRequest, $user)

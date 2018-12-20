@@ -123,7 +123,7 @@ class AuthorizationControllerTest extends TestCase
 
         $tokens = Mockery::mock('Laravel\Passport\TokenRepository');
         $tokens->shouldReceive('findValidToken')->with($user, 'client')->andReturn($token = Mockery::mock('Laravel\Passport\Token'));
-        $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['scope-1']);
+        $token->shouldReceive('getDocumentAttribute')->with('scopes')->andReturn(['scope-1']);
 
         $scopeRepository = Mockery::mock('Laravel\Passport\Bridge\ScopeRepository');
         $scopeRepository->shouldReceive('validateClientScopes')->with($scopes, $clientEntity)->andReturn(true);

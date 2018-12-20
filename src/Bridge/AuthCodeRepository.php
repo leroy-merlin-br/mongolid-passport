@@ -26,9 +26,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
-        $authCode = new AuthCodeModel();
-
-        $authCode->fill(
+        $authCode = AuthCodeModel::fill(
             [
                 '_id' => $authCodeEntity->getIdentifier(),
                 'user_id' => $authCodeEntity->getUserIdentifier(),

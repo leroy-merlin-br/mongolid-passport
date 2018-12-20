@@ -3,7 +3,7 @@
 namespace Laravel\Passport;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use MongolidLaravel\MongolidModel as Model;
+use Mongolid\Laravel\AbstractModel as Model;
 
 class Token extends Model
 {
@@ -64,9 +64,7 @@ class Token extends Model
      */
     public function revoke()
     {
-        $this->fill(['revoked' => true], true);
-
-        return $this->save();
+        return static::fill(['revoked' => true], $this, true)->save();
     }
 
     /**

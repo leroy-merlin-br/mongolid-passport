@@ -3,7 +3,7 @@
 namespace Laravel\Passport;
 
 use MongoDB\BSON\UTCDateTime;
-use MongolidLaravel\MongolidModel as Model;
+use Mongolid\Laravel\AbstractModel as Model;
 
 class TokenRepository
 {
@@ -16,9 +16,7 @@ class TokenRepository
      */
     public function create($attributes)
     {
-        $token = new Token();
-
-        $token->fill($attributes);
+        $token = Token::fill($attributes);
         $token->save();
 
         return $token;
