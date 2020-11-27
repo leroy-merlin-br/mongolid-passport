@@ -65,8 +65,8 @@ class PassportTest extends TestCase
 
 class PersonalAccessClientStub
 {
-    public function exists()
+    public function first()
     {
-        return false;
+        return null;
     }
 }
