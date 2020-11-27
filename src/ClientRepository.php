@@ -93,7 +93,7 @@ class ClientRepository
 
         $client = Passport::personalAccessClient();
 
-        if (! $client->exists()) {
+        if (! $client->first()) {
             throw new RuntimeException('Personal access client not found. Please create one.');
         }
 
