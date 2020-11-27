@@ -6,7 +6,7 @@ use Laravel\Passport\ApiTokenCookieFactory;
 
 class ApiTokenCookieFactoryTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

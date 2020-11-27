@@ -5,7 +5,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 class TransientTokenControllerTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

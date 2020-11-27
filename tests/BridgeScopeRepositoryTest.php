@@ -1,6 +1,7 @@
 <?php
 
 use Laravel\Passport\Passport;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use PHPUnit\Framework\TestCase;
 use Laravel\Passport\Bridge\Scope;
 use Laravel\Passport\Bridge\Client;
@@ -74,11 +75,9 @@ class BridgeScopeRepositoryTest extends TestCase
         $this->assertEquals($rawScopes, $scopes);
     }
 
-    /**
-     * @expectedException League\OAuth2\Server\Exception\OAuthServerException
-     */
     public function test_validate_client_allowed_scopes_should_throw_exception()
     {
+        $this->expectException(OAuthServerException::class);
         Passport::tokensCan([
             'scope-1' => 'description',
         ]);
@@ -90,11 +89,9 @@ class BridgeScopeRepositoryTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException League\OAuth2\Server\Exception\OAuthServerException
-     */
     public function test_validate_client_allowed_scopes_should_throw_exception_for_a_client_with_no_allowed_scope()
     {
+        $this->expectException(OAuthServerException::class);
         Passport::tokensCan([
             'scope-1' => 'description',
         ]);

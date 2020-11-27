@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class CreateFreshApiTokenTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

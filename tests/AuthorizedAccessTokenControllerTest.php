@@ -19,12 +19,12 @@ class AuthorizedAccessTokenControllerTest extends TestCase
      */
     protected $controller;
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->tokenRepository = Mockery::mock(TokenRepository::class);
         $this->controller = new Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController(

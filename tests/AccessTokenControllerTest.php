@@ -7,7 +7,7 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 
 class AccessTokenControllerTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

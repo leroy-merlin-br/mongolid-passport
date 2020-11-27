@@ -10,7 +10,7 @@ use Laravel\Passport\Passport;
 
 class TokenGuardTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

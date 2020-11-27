@@ -1,11 +1,13 @@
 <?php
 
+use Illuminate\Auth\AuthenticationException;
+use Laravel\Passport\Exceptions\MissingScopeException;
 use PHPUnit\Framework\TestCase;
 use Laravel\Passport\Http\Middleware\CheckForAnyScope as CheckScopes;
 
 class CheckForAnyScopesTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }
@@ -26,11 +28,9 @@ class CheckForAnyScopesTest extends TestCase
         $this->assertEquals('response', $response);
     }
 
-    /**
-     * @expectedException Laravel\Passport\Exceptions\MissingScopeException
-     */
     public function test_exception_is_thrown_if_token_doesnt_have_scope()
     {
+        $this->expectException(MissingScopeException::class);
         $middleware = new CheckScopes;
         $request = Mockery::mock();
         $request->shouldReceive('user')->andReturn($user = Mockery::mock());
@@ -43,11 +43,9 @@ class CheckForAnyScopesTest extends TestCase
         }, 'foo', 'bar');
     }
 
-    /**
-     * @expectedException Illuminate\Auth\AuthenticationException
-     */
     public function test_exception_is_thrown_if_no_authenticated_user()
     {
+        $this->expectException(AuthenticationException::class);
         $middleware = new CheckScopes;
         $request = Mockery::mock();
         $request->shouldReceive('user')->once()->andReturn(null);
@@ -57,11 +55,9 @@ class CheckForAnyScopesTest extends TestCase
         }, 'foo', 'bar');
     }
 
-    /**
-     * @expectedException Illuminate\Auth\AuthenticationException
-     */
     public function test_exception_is_thrown_if_no_token()
     {
+        $this->expectException(AuthenticationException::class);
         $middleware = new CheckScopes;
         $request = Mockery::mock();
         $request->shouldReceive('user')->andReturn($user = Mockery::mock());

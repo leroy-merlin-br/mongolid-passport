@@ -1,12 +1,14 @@
 <?php
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Laravel\Passport\Exceptions\MissingScopeException;
 use PHPUnit\Framework\TestCase;
 use Laravel\Passport\Http\Middleware\CheckClientCredentialsForAnyScope;
 
 class CheckClientCredentialsForAnyScopeTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }
@@ -53,11 +55,9 @@ class CheckClientCredentialsForAnyScopeTest extends TestCase
         $this->assertEquals('response', $response);
     }
 
-    /**
-     * @expectedException Illuminate\Auth\AuthenticationException
-     */
     public function test_exception_is_thrown_when_oauth_throws_exception()
     {
+        $this->expectException(AuthenticationException::class);
         $resourceServer = Mockery::mock('League\OAuth2\Server\ResourceServer');
         $resourceServer->shouldReceive('validateAuthenticatedRequest')->andThrow(
             new League\OAuth2\Server\Exception\OAuthServerException('message', 500, 'error type')
@@ -73,11 +73,9 @@ class CheckClientCredentialsForAnyScopeTest extends TestCase
         });
     }
 
-    /**
-     * @expectedException \Laravel\Passport\Exceptions\MissingScopeException
-     */
     public function test_exception_is_thrown_if_token_does_not_have_required_scope()
     {
+        $this->expectException(MissingScopeException::class);
         $resourceServer = Mockery::mock('League\OAuth2\Server\ResourceServer');
         $resourceServer->shouldReceive('validateAuthenticatedRequest')->andReturn($psr = Mockery::mock());
         $psr->shouldReceive('getAttribute')->with('oauth_user_id')->andReturn(1);

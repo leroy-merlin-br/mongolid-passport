@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 class ClientControllerTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

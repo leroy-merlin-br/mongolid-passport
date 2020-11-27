@@ -5,7 +5,7 @@ use Laravel\Passport\Bridge\ClientRepository;
 
 class BridgeClientRepositoryTest extends TestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         $clientModelRepository = Mockery::mock(Laravel\Passport\ClientRepository::class);
         $clientModelRepository->shouldReceive('findActive')->with(1)->andReturn(new BridgeClientRepositoryTestClientStub);
@@ -14,7 +14,7 @@ class BridgeClientRepositoryTest extends TestCase
         $this->repository = new Laravel\Passport\Bridge\ClientRepository($clientModelRepository);
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }
