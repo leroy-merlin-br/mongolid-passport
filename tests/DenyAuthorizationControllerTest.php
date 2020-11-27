@@ -5,7 +5,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 
 class DenyAuthorizationControllerTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }
@@ -96,7 +96,7 @@ class DenyAuthorizationControllerTest extends TestCase
 
         $this->assertEquals('http://localhost#error=access_denied&state=state', $controller->deny($request));
     }
-    
+
     public function test_authorization_can_be_denied_with_existing_query_string()
     {
         $response = Mockery::mock(ResponseFactory::class);
@@ -126,12 +126,10 @@ class DenyAuthorizationControllerTest extends TestCase
         $this->assertEquals('http://localhost?action=some_action&error=access_denied&state=state', $controller->deny($request));
     }
 
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Authorization request was not present in the session.
-     */
     public function test_auth_request_should_exist()
     {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Authorization request was not present in the session.');
         $response = Mockery::mock(ResponseFactory::class);
 
         $controller = new Laravel\Passport\Http\Controllers\DenyAuthorizationController($response);

@@ -8,7 +8,7 @@ use Laravel\Passport\TokenRepository;
 
 class PersonalAccessTokenControllerTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

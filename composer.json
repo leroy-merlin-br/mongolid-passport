@@ -38,8 +38,8 @@
         "zendframework/zend-diactoros": "~1.0"
     },
     "require-dev": {
-        "mockery/mockery": "~1.0",
-        "phpunit/phpunit": "~7.4"
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^8.5.10"
     },
     "autoload": {
         "psr-4": {

@@ -5,7 +5,7 @@ use League\OAuth2\Server\AuthorizationServer;
 
 class ApproveAuthorizationControllerTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

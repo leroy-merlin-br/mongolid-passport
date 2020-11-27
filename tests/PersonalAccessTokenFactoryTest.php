@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 class PersonalAccessTokenFactoryTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }

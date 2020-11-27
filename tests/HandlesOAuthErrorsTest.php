@@ -7,7 +7,7 @@ use Illuminate\Contracts\Debug\ExceptionHandler;
 
 class HandlesOAuthErrorsTest extends TestCase
 {
-    public function tearDown()
+    protected function tearDown(): void
     {
         Mockery::close();
     }
