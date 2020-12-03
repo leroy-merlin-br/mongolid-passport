@@ -1,19 +1,25 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace Laravel\Passport\Tests;
+
 use Illuminate\Container\Container;
+use Laravel\Passport\HasApiTokens;
+use Laravel\Passport\PersonalAccessTokenFactory;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class HasApiTokensTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Mockery::close();
+        m::close();
+        Container::getInstance()->flush();
     }
 
     public function test_token_can_indicates_if_token_has_given_scope()
     {
         $user = new HasApiTokensTestStub;
-        $token = Mockery::mock();
+        $token = m::mock();
         $token->shouldReceive('can')->with('scope')->andReturn(true);
         $token->shouldReceive('can')->with('another-scope')->andReturn(false);
 
@@ -25,7 +31,7 @@ class HasApiTokensTest extends TestCase
     {
         $container = new Container;
         Container::setInstance($container);
-        $container->instance(Laravel\Passport\PersonalAccessTokenFactory::class, $factory = Mockery::mock());
+        $container->instance(PersonalAccessTokenFactory::class, $factory = m::mock());
         $factory->shouldReceive('make')->once()->with(1, 'name', ['scopes']);
         $user = new HasApiTokensTestStub;
 
@@ -35,7 +41,8 @@ class HasApiTokensTest extends TestCase
 
 class HasApiTokensTestStub
 {
-    use Laravel\Passport\HasApiTokens;
+    use HasApiTokens;
+
     public function getKey()
     {
         return 1;

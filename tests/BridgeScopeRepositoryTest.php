@@ -1,11 +1,13 @@
 <?php
 
-use Laravel\Passport\Passport;
+namespace Laravel\Passport\Tests;
+
 use League\OAuth2\Server\Exception\OAuthServerException;
-use PHPUnit\Framework\TestCase;
-use Laravel\Passport\Bridge\Scope;
 use Laravel\Passport\Bridge\Client;
+use Laravel\Passport\Bridge\Scope;
 use Laravel\Passport\Bridge\ScopeRepository;
+use Laravel\Passport\Passport;
+use PHPUnit\Framework\TestCase;
 
 class BridgeScopeRepositoryTest extends TestCase
 {
@@ -33,7 +35,7 @@ class BridgeScopeRepositoryTest extends TestCase
         $repository = new ScopeRepository;
 
         $scopes = $repository->finalizeScopes(
-            [$scope1 = new Scope('*')], 'client_credentials', new Client('id', 'name', 'http://localhost', '*'), 1
+            [$scope1 = new Scope('*')], 'refresh_token', new Client('id', 'name', 'http://localhost', '*'), 1
         );
 
         $this->assertEquals([], $scopes);

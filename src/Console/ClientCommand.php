@@ -18,7 +18,10 @@ class ClientCommand extends Command
             {--personal : Create a personal access token client}
             {--password : Create a password grant client}
             {--client : Create a client credentials grant client}
-            {--name= : The name of the client}';
+            {--name= : The name of the client}
+            {--redirect_uri= : The URI to redirect to after authorization }
+            {--user_id= : The user ID the client should be assigned to }
+            {--public : Create a public client (Auth code grant type only) }';
 
     /**
      * The console command description.
@@ -99,7 +102,8 @@ class ClientCommand extends Command
     protected function createClientCredentialsClient(ClientRepository $clients)
     {
         $name = $this->option('name') ?: $this->ask(
-            'What should we name the client?'
+            'What should we name the client?',
+            config('app.name').' ClientCredentials Grant Client'
         );
 
         $this->line('Available scopes:');
@@ -113,7 +117,7 @@ class ClientCommand extends Command
         } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
 
         $client = $clients->create(
-            null, $name, '', false, false, $allowedScopes
+            null, $name, '', false, false, true, $allowedScopes
         );
 
         $this->info('New client created successfully.');
@@ -129,7 +133,7 @@ class ClientCommand extends Command
      */
     protected function createAuthCodeClient(ClientRepository $clients)
     {
-        $userId = $this->ask(
+        $userId = $this->option('user_id') ?: $this->ask(
             'Which user ID should the client be assigned to?'
         );
 
@@ -137,7 +141,7 @@ class ClientCommand extends Command
             'What should we name the client?'
         );
 
-        $redirect = $this->ask(
+        $redirect = $this->option('redirect_uri') ?: $this->ask(
             'Where should we redirect the request after authorization?',
             url('/auth/callback')
         );
@@ -145,7 +149,7 @@ class ClientCommand extends Command
         $allowedScopes = config('auth.authorization_code.allowed_scopes');
 
         $client = $clients->create(
-            $userId, $name, $redirect, false, false, $allowedScopes
+            $userId, $name, $redirect, false, false, ! $this->option('public'), $allowedScopes
         );
 
         $this->info('New client created successfully.');

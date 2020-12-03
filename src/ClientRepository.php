@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport;
 
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class ClientRepository
@@ -111,11 +112,12 @@ class ClientRepository
      * @param  string $redirect
      * @param  bool   $personalAccess
      * @param  bool   $password
+     * @param  bool   $confidential
      * @param  string $allowedScopes
      *
      * @return \Laravel\Passport\Client
      */
-    public function create($userId, $name, $redirect, $personalAccess = false, $password = false, $allowedScopes = null)
+    public function create($userId, $name, $redirect, $personalAccess = false, $password = false, $confidential = true, $allowedScopes = null)
     {
         $client = new Client();
 
@@ -123,7 +125,7 @@ class ClientRepository
             [
                 'user_id' => $userId,
                 'name' => $name,
-                'secret' => str_random(40),
+                'secret' => ($confidential || $personalAccess) ? Str::random(40) : null,
                 'redirect' => $redirect,
                 'personal_access_client' => $personalAccess,
                 'password_client' => $password,
@@ -205,7 +207,7 @@ class ClientRepository
     {
         $client->fill(
             [
-                'secret' => str_random(40),
+                'secret' => Str::random(40),
             ],
             true
         );

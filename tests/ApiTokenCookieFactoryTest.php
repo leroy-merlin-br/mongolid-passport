@@ -1,19 +1,24 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace Laravel\Passport\Tests;
+
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Encryption\Encrypter;
 use Laravel\Passport\ApiTokenCookieFactory;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class ApiTokenCookieFactoryTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Mockery::close();
+        m::close();
     }
 
     public function test_cookie_can_be_successfully_created()
     {
-        $config = Mockery::mock('Illuminate\Contracts\Config\Repository');
+        $config = m::mock(Repository::class);
         $config->shouldReceive('get')->with('session')->andReturn([
             'lifetime' => 120,
             'path' => '/',
@@ -26,6 +31,6 @@ class ApiTokenCookieFactoryTest extends TestCase
 
         $cookie = $factory->make(1, 'token');
 
-        $this->assertInstanceOf('Symfony\Component\HttpFoundation\Cookie', $cookie);
+        $this->assertInstanceOf(Cookie::class, $cookie);
     }
 }

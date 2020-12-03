@@ -83,6 +83,46 @@ class Client extends Model
     }
 
     /**
+     * Determine if the client should skip the authorization prompt.
+     *
+     * @return bool
+     */
+    public function skipsAuthorization()
+    {
+        return false;
+    }
+
+    /**
+     * Determine if the client is a confidential client.
+     *
+     * @return bool
+     */
+    public function confidential()
+    {
+        return ! empty($this->secret);
+    }
+
+    /**
+     * Get the auto-incrementing key type.
+     *
+     * @return string
+     */
+    public function getKeyType()
+    {
+        return '\MongoDB\BSON\ObjectId';
+    }
+
+    /**
+     * Get the value indicating whether the IDs are incrementing.
+     *
+     * @return bool
+     */
+    public function getIncrementing()
+    {
+        return false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray()

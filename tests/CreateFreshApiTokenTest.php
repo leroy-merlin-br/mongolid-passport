@@ -1,34 +1,39 @@
 <?php
 
+namespace Laravel\Passport\Tests;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Laravel\Passport\ApiTokenCookieFactory;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 use Laravel\Passport\Passport;
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class CreateFreshApiTokenTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Mockery::close();
+        m::close();
     }
 
     public function testShouldReceiveAFreshToken()
     {
-        $cookieFactory = Mockery::mock(\Laravel\Passport\ApiTokenCookieFactory::class);
+        $cookieFactory = m::mock(ApiTokenCookieFactory::class);
 
         $middleware = new CreateFreshApiToken($cookieFactory);
-        $request = Mockery::mock(Request::class)->makePartial();
+        $request = m::mock(Request::class)->makePartial();
 
         $response = new Response;
 
         $guard = 'guard';
-        $user = Mockery::mock()
+        $user = m::mock()
             ->shouldReceive('getKey')
             ->andReturn($userKey = 1)
             ->getMock();
 
-        $request->shouldReceive('session')->andReturn($session = Mockery::mock());
+        $request->shouldReceive('session')->andReturn($session = m::mock());
         $request->shouldReceive('isMethod')->with('GET')->once()->andReturn(true);
         $request->shouldReceive('user')->with($guard)->twice()->andReturn($user);
         $session->shouldReceive('token')->withNoArgs()->once()->andReturn($token = 't0k3n');
@@ -36,7 +41,7 @@ class CreateFreshApiTokenTest extends TestCase
         $cookieFactory->shouldReceive('make')
             ->with($userKey, $token)
             ->once()
-            ->andReturn(new \Symfony\Component\HttpFoundation\Cookie(Passport::cookie()));
+            ->andReturn(new Cookie(Passport::cookie()));
 
         $result = $middleware->handle($request, function () use ($response) {
             return $response;
@@ -48,7 +53,7 @@ class CreateFreshApiTokenTest extends TestCase
 
     public function testShouldNotReceiveAFreshTokenForOtherHttpVerbs()
     {
-        $cookieFactory = Mockery::mock(\Laravel\Passport\ApiTokenCookieFactory::class);
+        $cookieFactory = m::mock(ApiTokenCookieFactory::class);
 
         $middleware = new CreateFreshApiToken($cookieFactory);
         $request = Request::create('/', 'POST');
@@ -64,13 +69,14 @@ class CreateFreshApiTokenTest extends TestCase
 
     public function testShouldNotReceiveAFreshTokenForAnInvalidUser()
     {
-        $cookieFactory = Mockery::mock(\Laravel\Passport\ApiTokenCookieFactory::class);
+        $cookieFactory = m::mock(ApiTokenCookieFactory::class);
 
         $middleware = new CreateFreshApiToken($cookieFactory);
         $request = Request::create('/', 'GET');
         $response = new Response;
 
-        $request->setUserResolver(function () {});
+        $request->setUserResolver(function () {
+        });
 
         $result = $middleware->handle($request, function () use ($response) {
             return $response;
@@ -82,17 +88,17 @@ class CreateFreshApiTokenTest extends TestCase
 
     public function testShouldNotReceiveAFreshTokenForResponseThatAlreadyHasToken()
     {
-        $cookieFactory = Mockery::mock(\Laravel\Passport\ApiTokenCookieFactory::class);
+        $cookieFactory = m::mock(ApiTokenCookieFactory::class);
 
         $middleware = new CreateFreshApiToken($cookieFactory);
         $request = Request::create('/', 'GET');
 
         $response = (new Response)->withCookie(
-            new \Symfony\Component\HttpFoundation\Cookie(Passport::cookie())
+            new Cookie(Passport::cookie())
         );
 
         $request->setUserResolver(function () {
-            return Mockery::mock()
+            return m::mock()
                 ->shouldReceive('getKey')
                 ->andReturn(1)
                 ->getMock();

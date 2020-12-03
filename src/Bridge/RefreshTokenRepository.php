@@ -2,12 +2,13 @@
 
 namespace Laravel\Passport\Bridge;
 
-use MongoDB\BSON\UTCDateTime;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Passport\Events\RefreshTokenCreated;
 use Laravel\Passport\RefreshToken as RefreshTokenModel;
+use Laravel\Passport\RefreshTokenRepository as PassportRefreshTokenRepository;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use MongoDB\BSON\UTCDateTime;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
@@ -17,6 +18,13 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      * @var \Laravel\Passport\Bridge\AccessTokenRepository
      */
     protected $tokens;
+
+    /**
+     * The refresh token repository instance.
+     *
+     * @var \Illuminate\Database\Connection
+     */
+    protected $refreshTokenRepository;
 
     /**
      * The event dispatcher instance.
@@ -29,16 +37,19 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      * Create a new repository instance.
      *
      * @param  \Laravel\Passport\Bridge\AccessTokenRepository $tokens
+     * @param  \Laravel\Passport\RefreshTokenRepository       $refreshTokenRepository
      * @param  \Illuminate\Contracts\Events\Dispatcher        $events
      *
      * @return void
      */
     public function __construct(
         AccessTokenRepository $tokens,
+        PassportRefreshTokenRepository $refreshTokenRepository,
         Dispatcher $events
     ) {
         $this->events = $events;
         $this->tokens = $tokens;
+        $this->refreshTokenRepository = $refreshTokenRepository;
     }
 
     /**
@@ -66,7 +77,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
         $refreshToken->save();
 
-        $this->events->fire(new RefreshTokenCreated($id, $accessTokenId));
+        $this->events->dispatch(new RefreshTokenCreated($id, $accessTokenId));
     }
 
     /**
@@ -79,6 +90,8 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
             $refreshToken->save();
         }
+
+        // $this->refreshTokenRepository->revokeRefreshToken($tokenId);
     }
 
     /**
@@ -95,5 +108,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
         return $this->tokens->isAccessTokenRevoked(
             $refreshToken->access_token_id
         );
+
+        // return $this->refreshTokenRepository->isRefreshTokenRevoked($tokenId);
     }
 }

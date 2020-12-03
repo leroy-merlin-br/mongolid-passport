@@ -3,12 +3,19 @@
 namespace Laravel\Passport\Bridge;
 
 use Laravel\Passport\Bridge\ScopedClientInterface;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
-use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
 class Client implements ScopedClientInterface
 {
-    use ClientTrait, EntityTrait;
+    use ClientTrait;
+
+    /**
+     * The client identifier.
+     *
+     * @var string
+     */
+    protected $identifier;
 
     /**
      * @var string[]
@@ -21,16 +28,39 @@ class Client implements ScopedClientInterface
      * @param  string $identifier
      * @param  string $name
      * @param  string $redirectUri
+     * @param  bool   $isConfidential
      * @param  mixed  $allowedScopes
      * @return void
      */
-    public function __construct($identifier, $name, $redirectUri, $allowedScopes = null)
+    public function __construct($identifier, $name, $redirectUri, $isConfidential = false, $allowedScopes = null)
     {
         $this->setIdentifier((string) $identifier); // @todo check if it conflicts (string)
         $this->setAllowedScopes($allowedScopes);
 
         $this->name = $name;
+        $this->isConfidential = $isConfidential;
         $this->redirectUri = explode(',', $redirectUri);
+    }
+
+    /**
+     * Get the client's identifier.
+     *
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return (string) $this->identifier;
+    }
+
+    /**
+     * Set the client's identifier.
+     *
+     * @param  string  $identifier
+     * @return void
+     */
+    public function setIdentifier($identifier)
+    {
+        $this->identifier = $identifier;
     }
 
     /**

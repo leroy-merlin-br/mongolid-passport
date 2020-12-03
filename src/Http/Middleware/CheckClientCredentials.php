@@ -2,73 +2,43 @@
 
 namespace Laravel\Passport\Http\Middleware;
 
-use Closure;
-use League\OAuth2\Server\ResourceServer;
 use Illuminate\Auth\AuthenticationException;
 use Laravel\Passport\Exceptions\MissingScopeException;
-use League\OAuth2\Server\Exception\OAuthServerException;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 
-class CheckClientCredentials
+class CheckClientCredentials extends CheckCredentials
 {
     /**
-     * The Resource Server instance.
+     * Validate token credentials.
      *
-     * @var \League\OAuth2\Server\ResourceServer
-     */
-    protected $server;
-
-    /**
-     * Create a new middleware instance.
-     *
-     * @param  \League\OAuth2\Server\ResourceServer  $server
+     * @param  \Laravel\Passport\Token  $token
      * @return void
-     */
-    public function __construct(ResourceServer $server)
-    {
-        $this->server = $server;
-    }
-
-    /**
-     * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  mixed  ...$scopes
-     * @return mixed
      * @throws \Illuminate\Auth\AuthenticationException
      */
-    public function handle($request, Closure $next, ...$scopes)
+    protected function validateCredentials($token)
     {
-        $psr = (new DiactorosFactory)->createRequest($request);
-
-        try {
-            $psr = $this->server->validateAuthenticatedRequest($psr);
-        } catch (OAuthServerException $e) {
+        if (! $token || ! $token->client || $token->client->firstParty()) {
             throw new AuthenticationException;
         }
-
-        $this->validateScopes($psr, $scopes);
-
-        return $next($request);
     }
 
     /**
-     * Validate the scopes on the incoming request.
+     * Validate token credentials.
      *
-     * @param  \Psr\Http\Message\ServerRequestInterface $psr
+     * @param  \Laravel\Passport\Token  $token
      * @param  array  $scopes
      * @return void
+     *
      * @throws \Laravel\Passport\Exceptions\MissingScopeException
      */
-    protected function validateScopes($psr, $scopes)
+    protected function validateScopes($token, $scopes)
     {
-        if (in_array('*', $tokenScopes = $psr->getAttribute('oauth_scopes'))) {
+        if (in_array('*', $token->scopes)) {
             return;
         }
 
         foreach ($scopes as $scope) {
-            if (! in_array($scope, $tokenScopes)) {
+            if ($token->cant($scope)) {
                 throw new MissingScopeException($scope);
             }
         }

@@ -1,8 +1,7 @@
+/.idea
 /vendor
 composer.phar
 composer.lock
-.DS_Store
-Thumbs.db
-phpunit.xml
-docker-compose.override.yml
+/phpunit.xml
 .phpunit.result.cache
+docker-compose.override.yml

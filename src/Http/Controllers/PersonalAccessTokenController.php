@@ -82,7 +82,7 @@ class PersonalAccessTokenController
     /**
      * Delete the given token.
      *
-     * @param  Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  string  $tokenId
      * @return \Illuminate\Http\Response
      */
@@ -98,5 +98,7 @@ class PersonalAccessTokenController
         }
 
         $token->revoke();
+
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

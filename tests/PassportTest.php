@@ -1,12 +1,15 @@
 <?php
 
+namespace Laravel\Passport\Tests;
+
 use Laravel\Passport\AuthCode;
 use Laravel\Passport\Client;
+use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
 use Laravel\Passport\PersonalAccessClient;
+use Laravel\Passport\RefreshToken;
 use Laravel\Passport\Token;
 use PHPUnit\Framework\TestCase;
-use Laravel\Passport\ClientRepository;
 
 class PassportTest extends TestCase
 {
@@ -47,8 +50,9 @@ class PassportTest extends TestCase
 
     public function test_missing_personal_access_client_is_reported()
     {
-        $this->expectException(RuntimeException::class);
-        Passport::usePersonalAccessClientModel('PersonalAccessClientStub');
+        $this->expectException('RuntimeException');
+
+        Passport::usePersonalAccessClientModel(PersonalAccessClientStub::class);
 
         $clientRepository = new ClientRepository;
         $clientRepository->personalAccessClient();
@@ -61,6 +65,24 @@ class PassportTest extends TestCase
         $this->assertInstanceOf(Token::class, $token);
         $this->assertInstanceOf(Passport::tokenModel(), $token);
     }
+
+    public function test_refresh_token_instance_can_be_created()
+    {
+        $refreshToken = Passport::refreshToken();
+
+        $this->assertInstanceOf(RefreshToken::class, $refreshToken);
+        $this->assertInstanceOf(Passport::refreshTokenModel(), $refreshToken);
+    }
+
+    public function test_refresh_token_model_can_be_changed()
+    {
+        Passport::useRefreshTokenModel(RefreshTokenStub::class);
+
+        $refreshToken = Passport::refreshToken();
+
+        $this->assertInstanceOf(RefreshTokenStub::class, $refreshToken);
+        $this->assertInstanceOf(Passport::refreshTokenModel(), $refreshToken);
+    }
 }
 
 class PersonalAccessClientStub
@@ -69,4 +91,8 @@ class PersonalAccessClientStub
     {
         return null;
     }
+}
+
+class RefreshTokenStub
+{
 }

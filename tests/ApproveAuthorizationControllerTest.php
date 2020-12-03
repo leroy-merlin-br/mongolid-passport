@@ -1,34 +1,53 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace Laravel\Passport\Tests;
+
+use Illuminate\Http\Request;
+use Laminas\Diactoros\Response;
+use Laravel\Passport\Http\Controllers\ApproveAuthorizationController;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 
 class ApproveAuthorizationControllerTest extends TestCase
 {
     protected function tearDown(): void
     {
-        Mockery::close();
+        m::close();
     }
 
     public function test_complete_authorization_request()
     {
-        $server = Mockery::mock(AuthorizationServer::class);
+        $server = m::mock(AuthorizationServer::class);
 
-        $controller = new Laravel\Passport\Http\Controllers\ApproveAuthorizationController($server);
+        $controller = new ApproveAuthorizationController($server);
 
-        $request = Mockery::mock('Illuminate\Http\Request');
-        $request->shouldReceive('session')->andReturn($session = Mockery::mock());
-        $session->shouldReceive('get')->once()->with('authRequest')->andReturn($authRequest = Mockery::mock('League\OAuth2\Server\RequestTypes\AuthorizationRequest'));
+        $request = m::mock(Request::class);
+        $request->shouldReceive('session')->andReturn($session = m::mock());
+        $request->shouldReceive('has')->with('auth_token')->andReturn(true);
+        $request->shouldReceive('get')->with('auth_token')->andReturn('foo');
+
+        $session->shouldReceive('get')->once()->with('authToken')->andReturn('foo');
+        $session->shouldReceive('get')
+            ->once()
+            ->with('authRequest')
+            ->andReturn($authRequest = m::mock(AuthorizationRequest::class));
+
         $request->shouldReceive('user')->andReturn(new ApproveAuthorizationControllerFakeUser);
+
         $authRequest->shouldReceive('getClient->getIdentifier')->andReturn(1);
         $authRequest->shouldReceive('getUser->getIdentifier')->andReturn(2);
         $authRequest->shouldReceive('setUser')->once();
         $authRequest->shouldReceive('setAuthorizationApproved')->once()->with(true);
 
-        $psrResponse = new Zend\Diactoros\Response();
+        $psrResponse = new Response();
         $psrResponse->getBody()->write('response');
 
-        $server->shouldReceive('completeAuthorizationRequest')->with($authRequest, Mockery::type('Psr\Http\Message\ResponseInterface'))->andReturn($psrResponse);
+        $server->shouldReceive('completeAuthorizationRequest')
+            ->with($authRequest, m::type(ResponseInterface::class))
+            ->andReturn($psrResponse);
 
         $this->assertEquals('response', $controller->approve($request)->getContent());
     }
@@ -37,6 +56,7 @@ class ApproveAuthorizationControllerTest extends TestCase
 class ApproveAuthorizationControllerFakeUser
 {
     public $_id = 1;
+
     public function getKey()
     {
         return $this->_id;
