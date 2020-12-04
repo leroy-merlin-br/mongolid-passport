@@ -52,6 +52,8 @@ class AuthorizationController
      * @param  \Illuminate\Http\Request  $request
      * @param  \Laravel\Passport\ClientRepository  $clients
      * @param  \Laravel\Passport\TokenRepository  $tokens
+     * @param  \Laravel\Passport\Bridge\ScopeRepository $scopeRepository
+     *
      * @return \Illuminate\Http\Response
      */
     public function authorize(ServerRequestInterface $psrRequest,
@@ -76,7 +78,7 @@ class AuthorizationController
             $authRequest->getClient()
         );
 
-        if (($token && $token->scopes === collect($scopes)->pluck('id')->all()) ||
+        if (($token && $token->scopes === collect($scopes)->pluck('_id')->all()) ||
             $client->skipsAuthorization()) {
             return $this->approveRequest($authRequest, $user);
         }

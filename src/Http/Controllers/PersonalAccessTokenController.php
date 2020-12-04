@@ -43,7 +43,7 @@ class PersonalAccessTokenController
      *
      * @param  \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function forUser(Request $request)
     {
