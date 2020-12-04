@@ -10,6 +10,7 @@ use Laravel\Passport\Bridge\Client;
 use Laravel\Passport\Bridge\Scope;
 use Laravel\Passport\TokenRepository;
 use Mockery as m;
+use MongoDB\BSON\UTCDateTime;
 use PHPUnit\Framework\TestCase;
 
 class BridgeAccessTokenRepositoryTest extends TestCase

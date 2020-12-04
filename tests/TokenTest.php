@@ -18,7 +18,8 @@ class TokenTest extends TestCase
 
     public function test_token_can_determine_if_it_has_scopes()
     {
-        $token = new Token(['scopes' => ['user']]);
+        $token = new Token();
+        $token->fill(['scopes' => ['user']]);
 
         $this->assertTrue($token->can('user'));
         $this->assertFalse($token->can('something'));
@@ -27,7 +28,8 @@ class TokenTest extends TestCase
 
         $this->assertTrue($token->cant('user:read'));
 
-        $token = new Token(['scopes' => ['*']]);
+        $token = new Token();
+        $token->fill(['scopes' => ['*']]);
         $this->assertTrue($token->can('user'));
         $this->assertTrue($token->can('something'));
     }
@@ -36,7 +38,8 @@ class TokenTest extends TestCase
     {
         Passport::$withInheritedScopes = true;
 
-        $token = new Token([
+        $token = new Token();
+        $token->fill([
             'scopes' => [
                 'user',
                 'group',
@@ -54,7 +57,8 @@ class TokenTest extends TestCase
 
         $this->assertFalse($token->can('something'));
 
-        $token = new Token(['scopes' => ['*']]);
+        $token = new Token();
+        $token->fill(['scopes' => ['*']]);
         $this->assertTrue($token->can('user'));
         $this->assertTrue($token->can('something'));
         $this->assertTrue($token->can('admin:webhooks:write'));

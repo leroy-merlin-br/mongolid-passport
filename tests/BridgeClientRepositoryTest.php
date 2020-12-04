@@ -180,39 +180,39 @@ class BridgeClientRepositoryTest extends TestCase
 
     public function test_should_get_client_with_allowed_scopes()
     {
-        $clients = Mockery::mock('Laravel\Passport\ClientRepository');
+        $clients = m::mock(ClientRepository::class);
         $client = new BridgeClientRepositoryTestClientStub;
         $client->allowed_scopes = 'foo,bar';
         $clients->shouldReceive('findActive')->with(1)->andReturn($client);
-        $repository = new ClientRepository($clients);
+        $repository = new BridgeClientRepository($clients);
 
-        $client = $repository->getClientEntity(1, 'client_credentials', 'secret', true);
+        $client = $repository->getClientEntity(1);
 
         $this->assertSame(['foo', 'bar'], $client->getAllowedScopes());
     }
 
     public function test_should_get_client_with_allowed_scopes_as_array()
     {
-        $clients = Mockery::mock('Laravel\Passport\ClientRepository');
+        $clients = m::mock(ClientRepository::class);
         $client = new BridgeClientRepositoryTestClientStub;
         $client->allowed_scopes = ['foo', 'bar'];
         $clients->shouldReceive('findActive')->with(1)->andReturn($client);
-        $repository = new ClientRepository($clients);
+        $repository = new BridgeClientRepository($clients);
 
-        $client = $repository->getClientEntity(1, 'client_credentials', 'secret', true);
+        $client = $repository->getClientEntity(1);
 
         $this->assertSame(['foo', 'bar'], $client->getAllowedScopes());
     }
 
     public function test_should_restrict_scopes_for_client_with_wild_card()
     {
-        $clients = Mockery::mock('Laravel\Passport\ClientRepository');
+        $clients = m::mock(ClientRepository::class);
         $client = new BridgeClientRepositoryTestClientStub;
         $client->allowed_scopes = '*';
         $clients->shouldReceive('findActive')->with(1)->andReturn($client);
-        $repository = new ClientRepository($clients);
+        $repository = new BridgeClientRepository($clients);
 
-        $client = $repository->getClientEntity(1, 'client_credentials', 'secret', true);
+        $client = $repository->getClientEntity(1);
 
         $this->assertSame(['*'], $client->getAllowedScopes());
     }

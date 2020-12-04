@@ -4,11 +4,14 @@ namespace Laravel\Passport\Tests;
 
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Request;
+use Laravel\Passport\Client;
 use Laravel\Passport\Http\Controllers\PersonalAccessTokenController;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Mockery as m;
+use MongoDB\BSON\ObjectId;
+use Mongolid\Cursor\Cursor;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,15 +26,26 @@ class PersonalAccessTokenControllerTest extends TestCase
     {
         $request = Request::create('/', 'GET');
 
-        $token1 = new Token;
-        $token2 = new Token;
+        $client1 = m::mock(Client::class)->makePartial();
+        $client1->fill([
+            '_id' => new ObjectId(),
+            'personal_access_client' => true,
+        ]);
+        $client2 = m::mock(Client::class)->makePartial();
+        $client2->fill([
+            '_id' => new ObjectId(),
+            'personal_access_client' => false,
+        ]);
 
-        $userTokens = m::mock();
-        $token1->client = (object) ['personal_access_client' => true];
-        $token2->client = (object) ['personal_access_client' => false];
-        $userTokens->shouldReceive('load')->with('client')->andReturn(collect([
-            $token1, $token2,
-        ]));
+        $token1 = m::mock(Token::class)->makePartial();
+        $token1->revoked = false;
+        $token2 = m::mock(Token::class)->makePartial();
+        $token2->revoked = false;
+
+        $userTokens = [$token1, $token2];
+
+        $token1->shouldReceive('client')->twice()->andReturn($client1);
+        $token2->shouldReceive('client')->twice()->andReturn($client2);
 
         $tokenRepository = m::mock(TokenRepository::class);
         $tokenRepository->shouldReceive('forUser')->andReturn($userTokens);

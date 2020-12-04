@@ -47,10 +47,9 @@ class AuthorizedAccessTokenControllerTest extends TestCase
     {
         $request = Request::create('/', 'GET');
 
-        $token1 = new Token;
-        $token2 = new Token;
+        $token1 = m::mock(Token::class)->makePartial();
+        $token2 = m::mock( Token::class)->makePartial();
 
-        $userTokens = m::mock();
         $client1 = new Client;
         $client1->personal_access_client = true;
         $client2 = new Client;

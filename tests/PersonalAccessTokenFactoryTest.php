@@ -54,7 +54,7 @@ class PersonalAccessTokenFactoryTestClientStub
     public $secret = 'something';
 }
 
-class PersonalAccessTokenFactoryTestModelStub extends Laravel\Passport\Token
+class PersonalAccessTokenFactoryTestModelStub extends Token
 {
     public $_id = 1;
 
