@@ -12,7 +12,11 @@ class RefreshTokenRepository
      */
     public function create($attributes)
     {
-        return Passport::refreshToken()->create($attributes);
+        $refreshToken = Passport::refreshToken();
+        $refreshToken->fill($attributes);
+        $refreshToken->save();
+
+        return $refreshToken;
     }
 
     /**
@@ -23,7 +27,9 @@ class RefreshTokenRepository
      */
     public function find($id)
     {
-        return Passport::refreshToken()->where('id', $id)->first();
+        $refreshTokenModel = Passport::refreshTokenModel();
+
+        return $refreshTokenModel::first($id);
     }
 
     /**
@@ -41,11 +47,15 @@ class RefreshTokenRepository
      * Revokes the refresh token.
      *
      * @param  string  $id
-     * @return mixed
+     * @return bool
      */
     public function revokeRefreshToken($id)
     {
-        return Passport::refreshToken()->where('id', $id)->update(['revoked' => true]);
+        if ($refreshToken = $this->find($id)) {
+            return $refreshToken->revoke();
+        }
+
+        return true;
     }
 
     /**
@@ -56,7 +66,11 @@ class RefreshTokenRepository
      */
     public function revokeRefreshTokensByAccessTokenId($tokenId)
     {
-        Passport::refreshToken()->where('access_token_id', $tokenId)->update(['revoked' => true]);
+        $refreshTokens = Passport::refreshToken()->where(['access_token_id' => $tokenId]);
+
+        foreach ($refreshTokens as $refreshToken) {
+            $refreshToken->revoke();
+        }
     }
 
     /**
@@ -68,7 +82,7 @@ class RefreshTokenRepository
     public function isRefreshTokenRevoked($id)
     {
         if ($token = $this->find($id)) {
-            return $token->revoked;
+            return (bool) $token->revoked;
         }
 
         return true;

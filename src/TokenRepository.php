@@ -103,9 +103,7 @@ class TokenRepository
     public function revokeAccessToken($id)
     {
         if ($token = $this->find($id)) {
-            $token->revoked = true;
-
-            return $token->update();
+            return $token->revoke();
         }
 
         return true;

@@ -4,7 +4,6 @@ namespace Laravel\Passport\Bridge;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Passport\Events\RefreshTokenCreated;
-use Laravel\Passport\RefreshToken as RefreshTokenModel;
 use Laravel\Passport\RefreshTokenRepository as PassportRefreshTokenRepository;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
@@ -12,13 +11,6 @@ use MongoDB\BSON\UTCDateTime;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    /**
-     * The access token repository instance.
-     *
-     * @var \Laravel\Passport\Bridge\AccessTokenRepository
-     */
-    protected $tokens;
-
     /**
      * The refresh token repository instance.
      *
@@ -36,19 +28,16 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     /**
      * Create a new repository instance.
      *
-     * @param  \Laravel\Passport\Bridge\AccessTokenRepository $tokens
      * @param  \Laravel\Passport\RefreshTokenRepository       $refreshTokenRepository
      * @param  \Illuminate\Contracts\Events\Dispatcher        $events
      *
      * @return void
      */
     public function __construct(
-        AccessTokenRepository $tokens,
         PassportRefreshTokenRepository $refreshTokenRepository,
         Dispatcher $events
     ) {
         $this->events = $events;
-        $this->tokens = $tokens;
         $this->refreshTokenRepository = $refreshTokenRepository;
     }
 
@@ -65,17 +54,12 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
-        $refreshToken = new RefreshTokenModel();
-        $refreshToken->fill(
-            [
-                '_id' => $id = $refreshTokenEntity->getIdentifier(),
-                'access_token_id' => $accessTokenId = $refreshTokenEntity->getAccessToken()->getIdentifier(),
-                'revoked' => false,
-                'expires_at' => new UTCDateTime($refreshTokenEntity->getExpiryDateTime()),
-            ]
-        );
-
-        $refreshToken->save();
+        $this->refreshTokenRepository->create([
+            '_id' => $id = $refreshTokenEntity->getIdentifier(),
+            'access_token_id' => $accessTokenId = $refreshTokenEntity->getAccessToken()->getIdentifier(),
+            'revoked' => false,
+            'expires_at' => new UTCDateTime($refreshTokenEntity->getExpiryDateTime()),
+        ]);
 
         $this->events->dispatch(new RefreshTokenCreated($id, $accessTokenId));
     }
@@ -85,13 +69,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function revokeRefreshToken($tokenId)
     {
-        if ($refreshToken = RefreshTokenModel::first($tokenId)) {
-            $refreshToken->revoked = true;
-
-            $refreshToken->save();
-        }
-
-        // $this->refreshTokenRepository->revokeRefreshToken($tokenId);
+         $this->refreshTokenRepository->revokeRefreshToken($tokenId);
     }
 
     /**
@@ -99,16 +77,6 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        $refreshToken = RefreshTokenModel::first($tokenId);
-
-        if (!$refreshToken || $refreshToken->revoked) {
-            return true;
-        }
-
-        return $this->tokens->isAccessTokenRevoked(
-            $refreshToken->access_token_id
-        );
-
-        // return $this->refreshTokenRepository->isRefreshTokenRevoked($tokenId);
+         return $this->refreshTokenRepository->isRefreshTokenRevoked($tokenId);
     }
 }

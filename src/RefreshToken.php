@@ -20,11 +20,11 @@ class RefreshToken extends Model
     /**
      * Get the access token that the refresh token belongs to.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Mongolid\ActiveRecord|null
      */
     public function accessToken()
     {
-        return $this->belongsTo(Passport::tokenModel());
+        return $this->referencesOne(Passport::tokenModel(), 'access_token_id');
     }
 
     /**
@@ -34,7 +34,9 @@ class RefreshToken extends Model
      */
     public function revoke()
     {
-        return $this->forceFill(['revoked' => true])->save();
+        $this->fill(['revoked' => true], true);
+
+        return $this->save();
     }
 
     /**
