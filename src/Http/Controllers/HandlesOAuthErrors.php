@@ -26,5 +26,7 @@ trait HandlesOAuthErrors
             throw new OAuthServerException(
                 $e,
                 $this->convertResponse($e->generateHttpResponse(new Psr7Response)->withoutHeader('WWW-Authenticate'))
+            );
+        }
     }
 }
