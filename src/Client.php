@@ -103,26 +103,6 @@ class Client extends Model
     }
 
     /**
-     * Get the auto-incrementing key type.
-     *
-     * @return string
-     */
-    public function getKeyType()
-    {
-        return '\MongoDB\BSON\ObjectId';
-    }
-
-    /**
-     * Get the value indicating whether the IDs are incrementing.
-     *
-     * @return bool
-     */
-    public function getIncrementing()
-    {
-        return false;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function toArray()

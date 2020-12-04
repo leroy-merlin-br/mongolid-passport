@@ -12,13 +12,6 @@ class PersonalAccessClient extends Model
     protected $collection = 'oauth_personal_access_clients';
 
     /**
-     * The guarded attributes on the model.
-     *
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
      * Get all of the authentication codes for the client.
      *
      * @return Client|null
