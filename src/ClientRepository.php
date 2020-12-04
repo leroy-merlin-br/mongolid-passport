@@ -98,7 +98,7 @@ class ClientRepository
             throw new RuntimeException('Personal access client not found. Please create one.');
         }
 
-        return PersonalAccessClient::all()
+        return $client->all()
             ->sort(['created_at' => -1])
             ->first()
             ->client();
@@ -119,7 +119,7 @@ class ClientRepository
      */
     public function create($userId, $name, $redirect, $personalAccess = false, $password = false, $confidential = true, $allowedScopes = null)
     {
-        $client = new Client();
+        $client = Passport::client();
 
         $client->fill(
             [
@@ -241,8 +241,7 @@ class ClientRepository
     public function delete(Client $client)
     {
         foreach($client->tokens() as $token) {
-            $token->revoked = true;
-            $token->update();
+            $token->revoke();
         }
 
         $client->revoked = true;
