@@ -5,37 +5,17 @@ namespace Laravel\Passport\Tests\Feature;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Database\Eloquent\Factory;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Lcobucci\JWT\Parser;
+use MongolidLaravel\MongolidModel as Model;
 
 class AccessTokenControllerTest extends PassportTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->dateTime('created_at');
-            $table->dateTime('updated_at');
-        });
-    }
-
-    protected function tearDown(): void
-    {
-        Schema::dropIfExists('users');
-
-        parent::tearDown();
-    }
-
     protected function getUserClass()
     {
         return User::class;
@@ -51,14 +31,23 @@ class AccessTokenControllerTest extends PassportTestCase
         $user->password = $this->app->make(Hasher::class)->make($password);
         $user->save();
 
-        /** @var Client $client */
-        $client = $this->app->make(Factory::class)->of(Client::class)->state('password_client')->create(['user_id' => $user->id]);
+        $client = new Client();
+        $client->fill([
+            'user_id' => $user->_id,
+            'name' => 'Some Company',
+            'secret' => Str::random(40),
+            'redirect' => 'http://some-company.com',
+            'personal_access_client' => false,
+            'password_client' => true,
+            'revoked' => false,
+        ]);
+        $client->save();
 
         $response = $this->post(
             '/oauth/token',
             [
                 'grant_type' => 'password',
-                'client_id' => $client->id,
+                'client_id' => (string) $client->_id,
                 'client_secret' => $client->secret,
                 'username' => $user->email,
                 'password' => $password,
@@ -82,16 +71,16 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
         $jwtAccessToken = (new Parser())->parse($decodedResponse['access_token']);
-        $this->assertTrue($this->app->make(ClientRepository::class)->findActive($jwtAccessToken->getClaim('aud'))->is($client));
-        $this->assertTrue($this->app->make('auth')->createUserProvider()->retrieveById($jwtAccessToken->getClaim('sub'))->is($user));
+        $this->assertEquals($client, $this->app->make(ClientRepository::class)->findActive($jwtAccessToken->getClaim('aud')));
+        $this->assertEquals($user->attributes, $this->app->make('auth')->createUserProvider()->retrieveById($jwtAccessToken->getClaim('sub'))->attributes);
 
         $token = $this->app->make(TokenRepository::class)->find($jwtAccessToken->getClaim('jti'));
         $this->assertInstanceOf(Token::class, $token);
         $this->assertFalse($token->revoked);
-        $this->assertTrue($token->user->is($user));
-        $this->assertTrue($token->client->is($client));
+        $this->assertEquals($user, $token->user());
+        $this->assertEquals($client, $token->client());
         $this->assertNull($token->name);
-        $this->assertLessThanOrEqual(5, CarbonImmutable::now()->addSeconds($expiresInSeconds)->diffInSeconds($token->expires_at));
+        $this->assertLessThanOrEqual(5, CarbonImmutable::now()->addSeconds($expiresInSeconds)->diffInSeconds($token->expires_at->toDateTime()));
     }
 
     public function testGettingAccessTokenWithPasswordGrantWithInvalidPassword()
@@ -102,14 +91,23 @@ class AccessTokenControllerTest extends PassportTestCase
         $user->password = $this->app->make(Hasher::class)->make($password);
         $user->save();
 
-        /** @var Client $client */
-        $client = $this->app->make(Factory::class)->of(Client::class)->state('password_client')->create(['user_id' => $user->id]);
+        $client = new Client();
+        $client->fill([
+            'user_id' => $user->_id,
+            'name' => 'Some Company',
+            'secret' => Str::random(40),
+            'redirect' => 'http://some-company.com',
+            'personal_access_client' => false,
+            'password_client' => true,
+            'revoked' => false,
+        ]);
+        $client->save();
 
         $response = $this->post(
             '/oauth/token',
             [
                 'grant_type' => 'password',
-                'client_id' => $client->id,
+                'client_id' => (string) $client->_id,
                 'client_secret' => $client->secret,
                 'username' => $user->email,
                 'password' => $password.'foo',
@@ -134,7 +132,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertArrayHasKey('hint', $decodedResponse);
         $this->assertArrayHasKey('message', $decodedResponse);
 
-        $this->assertSame(0, Token::count());
+        $this->assertSame(0, Token::all()->count());
     }
 
     public function testGettingAccessTokenWithPasswordGrantWithInvalidClientSecret()
@@ -145,14 +143,23 @@ class AccessTokenControllerTest extends PassportTestCase
         $user->password = $this->app->make(Hasher::class)->make($password);
         $user->save();
 
-        /** @var Client $client */
-        $client = $this->app->make(Factory::class)->of(Client::class)->state('password_client')->create(['user_id' => $user->id]);
+        $client = new Client();
+        $client->fill([
+            'user_id' => $user->_id,
+            'name' => 'Some Company',
+            'secret' => Str::random(40),
+            'redirect' => 'http://some-company.com',
+            'personal_access_client' => false,
+            'password_client' => true,
+            'revoked' => false,
+        ]);
+        $client->save();
 
         $response = $this->post(
             '/oauth/token',
             [
                 'grant_type' => 'password',
-                'client_id' => $client->id,
+                'client_id' => (string) $client->_id,
                 'client_secret' => $client->secret.'foo',
                 'username' => $user->email,
                 'password' => $password,
@@ -179,11 +186,23 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertArrayHasKey('message', $decodedResponse);
         $this->assertSame('Client authentication failed', $decodedResponse['message']);
 
-        $this->assertSame(0, Token::count());
+        $this->assertSame(0, Token::all()->count());
     }
 }
 
-class User extends \Illuminate\Foundation\Auth\User
+class User extends Model
 {
     use HasApiTokens;
+
+    protected $collection = 'users';
+
+    public function getAuthIdentifier()
+    {
+        return $this->_id;
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
 }
