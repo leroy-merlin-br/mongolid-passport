@@ -87,7 +87,7 @@ abstract class PassportTestCase extends TestCase
     }
 
     /**
-     * Get the Eloquent user model class name.
+     * Get the Mongolid user model class name.
      *
      * @return string|null
      */

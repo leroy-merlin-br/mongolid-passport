@@ -54,7 +54,8 @@ class ClientController
      * Get all of the clients for the authenticated user.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Database\Eloquent\Collection
+     *
+     * @return \Illuminate\Support\Collection
      */
     public function forUser(Request $request)
     {
