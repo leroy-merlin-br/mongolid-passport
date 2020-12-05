@@ -11,7 +11,7 @@ use Laravel\Passport\ClientRepository;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Configuration;
 use MongolidLaravel\MongolidModel as Model;
 
 class AccessTokenControllerTest extends PassportTestCase
@@ -70,11 +70,11 @@ class AccessTokenControllerTest extends PassportTestCase
         $expiresInSeconds = 31536000;
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
-        $jwtAccessToken = (new Parser())->parse($decodedResponse['access_token']);
-        $this->assertEquals($client, $this->app->make(ClientRepository::class)->findActive($jwtAccessToken->getClaim('aud')));
-        $this->assertEquals($user->attributes, $this->app->make('auth')->createUserProvider()->retrieveById($jwtAccessToken->getClaim('sub'))->attributes);
+        $jwtAccessToken = Configuration::forUnsecuredSigner()->parser()->parse($decodedResponse['access_token']);
+        $this->assertEquals($client, $this->app->make(ClientRepository::class)->findActive($jwtAccessToken->claims()->get('aud')));
+        $this->assertEquals($user, $this->app->make('auth')->createUserProvider()->retrieveById($jwtAccessToken->claims()->get('sub')));
 
-        $token = $this->app->make(TokenRepository::class)->find($jwtAccessToken->getClaim('jti'));
+        $token = $this->app->make(TokenRepository::class)->find($jwtAccessToken->claims()->get('jti'));
         $this->assertInstanceOf(Token::class, $token);
         $this->assertFalse($token->revoked);
         $this->assertEquals($user, $token->user());

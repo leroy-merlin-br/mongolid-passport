@@ -16,8 +16,7 @@ class TokenRepository
      */
     public function create($attributes)
     {
-        $token = new Token();
-
+        $token = Passport::token();
         $token->fill($attributes);
         $token->save();
 
@@ -33,7 +32,9 @@ class TokenRepository
      */
     public function find($id)
     {
-        return Token::first($id);
+        $tokenModel = Passport::tokenModel();
+
+        return $tokenModel::first($id);
     }
 
     /**
@@ -46,7 +47,9 @@ class TokenRepository
      */
     public function findForUser($id, $userId)
     {
-        return Token::first(['_id' => (string) $id, 'user_id' => (string) $userId]);
+        $tokenModel = Passport::tokenModel();
+
+        return $tokenModel::first(['_id' => (string) $id, 'user_id' => (string) $userId]);
     }
 
     /**
@@ -58,7 +61,9 @@ class TokenRepository
      */
     public function forUser($userId)
     {
-        return Token::where(['user_id' => (string) $userId]);
+        $tokenModel = Passport::tokenModel();
+
+        return $tokenModel::where(['user_id' => (string) $userId]);
     }
 
     /**
@@ -73,7 +78,7 @@ class TokenRepository
     {
         return $client->tokens(
             [
-                'user_id' => (string) $user->getKey(),
+                'user_id' => (string) $user->getAuthIdentifier(),
                 'revoked' => false,
                 'expires_at' => ['$gt' => new UTCDateTime()],
             ]
@@ -136,7 +141,7 @@ class TokenRepository
     public function findValidToken($user, $client)
     {
         $where = [
-            'user_id' => (string) $user->getKey(),
+            'user_id' => (string) $user->getAuthIdentifier(),
             'revoked' => false,
             'expires_at' => ['$gt' => new UTCDateTime()],
         ];

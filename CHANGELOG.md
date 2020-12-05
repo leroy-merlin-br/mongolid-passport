@@ -1,6 +1,94 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/passport/compare/v8.5.0...8.x)
+## [Unreleased](https://github.com/laravel/passport/compare/v9.4.0...9.x)
+
+
+## [v9.4.0 (2020-12-04)](https://github.com/laravel/passport/compare/v9.3.2...v9.4.0)
+
+### Added
+- Support PHP 8.0 ([#1387](https://github.com/laravel/passport/pull/1387))
+
+### Removed
+- Remove Guzzle dependency ([#1327](https://github.com/laravel/passport/pull/1327))
+
+
+## [v9.3.2 (2020-07-27)](https://github.com/laravel/passport/compare/v9.3.1...v9.3.2)
+
+### Fixes
+- Fix cookie handling for security release ([#1322](https://github.com/laravel/passport/pull/1322), [75f1ad2](https://github.com/laravel/passport/commit/75f1ad218ddf4500f2beb9e5c2fb186530e8ddb6))
+
+
+## [v9.3.1 (2020-07-21)](https://github.com/laravel/passport/compare/v9.3.0...v9.3.1)
+
+### Fixed
+- Use custom models in purge command if set ([#1316](https://github.com/laravel/passport/pull/1316))
+- Apply table responsive on table class ([#1318](https://github.com/laravel/passport/pull/1318))
+
+
+## [v9.3.0 (2020-06-30)](https://github.com/laravel/passport/compare/v9.2.2...v9.3.0)
+
+### Added
+- Guzzle 7 support ([#1311](https://github.com/laravel/passport/pull/1311))
+
+
+## [v9.2.2 (2020-06-25)](https://github.com/laravel/passport/compare/v9.2.1...v9.2.2)
+
+### Fixed
+- Fix maxlength for token names ([#1300](https://github.com/laravel/passport/pull/1300))
+- Improve `passport:install` command ([#1294](https://github.com/laravel/passport/pull/1294))
+
+
+## [v9.2.1 (2020-05-14)](https://github.com/laravel/passport/compare/v9.2.0...v9.2.1)
+
+### Fixed
+- Fix actingAsClient token relation ([#1268](https://github.com/laravel/passport/pull/1268))
+- Fix HashCommand ([bedf02c](https://github.com/laravel/passport/commit/bedf02c8bb8fb9ca373e34f0ceefb2e8c5bf006b))
+
+
+## [v9.2.0 (2020-05-12](https://github.com/laravel/passport/compare/v9.1.0...v9.2.0)
+
+### Added
+- Allow to change Models database connection ([#1255](https://github.com/laravel/passport/pull/1255), [7ab3bdb](https://github.com/laravel/passport/commit/7ab3bdbdb9bf162f2da9d8c445523dc63c862248))
+
+### Fixed
+- Nonstandard ID in the token's relationship with the user ([#1267](https://github.com/laravel/passport/pull/1267))
+
+
+## [v9.1.0 (2020-05-08](https://github.com/laravel/passport/compare/v9.0.1...v9.1.0)
+
+### Added
+- Implement secret modal ([#1258](https://github.com/laravel/passport/pull/1258))
+- Warn about one-time-hashed-secret ([#1259](https://github.com/laravel/passport/pull/1259))
+- Add force option to hash command ([#1251](https://github.com/laravel/passport/pull/1251))
+
+### Fixed
+- Implement personal access client config ([#1260](https://github.com/laravel/passport/pull/1260))
+
+
+## [v9.0.1 (2020-05-06)](https://github.com/laravel/passport/compare/v9.0.0...v9.0.1)
+
+### Fixed
+- Fix displaying secret in Vue component ([#1244](https://github.com/laravel/passport/pull/1244))
+- Moved provider check to bearer token only ([#1246](https://github.com/laravel/passport/pull/1246))
+- Fix create client call ([aff9d09](https://github.com/laravel/passport/commit/aff9d0933737354d04df98cfc431fa20309be03a))
+
+
+## [v9.0.0 (2020-05-05)](https://github.com/laravel/passport/compare/v8.5.0...v9.0.0)
+
+### Added
+- Allow client credentials secret to be hashed ([#1145](https://github.com/laravel/passport/pull/1145), [ccbcfeb](https://github.com/laravel/passport/commit/ccbcfeb5301e8f757395ba0e43980615acf4385e), [1c40ae0](https://github.com/laravel/passport/commit/1c40ae07503aeb23173d48f3a6e5757cafcfd71b))
+- Implement `passport:hash` command ([#1238](https://github.com/laravel/passport/pull/1238))
+- Initial support for multiple providers ([#1220](https://github.com/laravel/passport/pull/1220))
+
+### Changed
+- Client credentials middleware should allow any valid client ([#1132](https://github.com/laravel/passport/pull/1132))
+- Switch from `getKey()` to `getAuthIdentifier()` to match Laravel core ([#1134](https://github.com/laravel/passport/pull/1134))
+- Use Hasher interface instead of HashManager ([#1157](https://github.com/laravel/passport/pull/1157))
+- Bump league server dependency ([#1237](https://github.com/laravel/passport/pull/1237))
+
+### Removed
+- Remove deprecated functionality ([#1235](https://github.com/laravel/passport/pull/1235))
+- Drop support for old JWT versions ([#1236](https://github.com/laravel/passport/pull/1236))
 
 
 ## [v8.5.0 (2020-05-05)](https://github.com/laravel/passport/compare/v8.4.4...v8.5.0)

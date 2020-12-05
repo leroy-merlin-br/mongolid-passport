@@ -20,25 +20,18 @@ class Passport
     public static $implicitGrantEnabled = false;
 
     /**
-     * Indicates if Passport should revoke existing tokens when issuing a new one.
-     *
-     * @var bool
-     */
-    public static $revokeOtherTokens = false;
-
-    /**
-     * Indicates if Passport should prune revoked tokens.
-     *
-     * @var bool
-     */
-    public static $pruneRevokedTokens = false;
-
-    /**
      * The personal access token client ID.
      *
-     * @var int
+     * @var int|string
      */
     public static $personalAccessClientId;
+
+    /**
+     * The personal access token client secret.
+     *
+     * @var string
+     */
+    public static $personalAccessClientSecret;
 
     /**
      * The default scope.
@@ -148,6 +141,11 @@ class Passport
     public static $unserializesCookies = false;
 
     /**
+     * @var bool
+     */
+    public static $hashesClientSecrets = false;
+
+    /**
      * Indicates the scope should inherit its parent scope.
      *
      * @var bool
@@ -192,38 +190,27 @@ class Passport
     }
 
     /**
-     * Instruct Passport to revoke other tokens when a new one is issued.
-     *
-     * @deprecated since 1.0. Listen to Passport events on token creation instead.
-     *
-     * @return static
-     */
-    public static function revokeOtherTokens()
-    {
-        return new static;
-    }
-
-    /**
-     * Instruct Passport to keep revoked tokens pruned.
-     *
-     * @deprecated since 1.0. Listen to Passport events on token creation instead.
-     *
-     * @return static
-     */
-    public static function pruneRevokedTokens()
-    {
-        return new static;
-    }
-
-    /**
      * Set the client ID that should be used to issue personal access tokens.
      *
-     * @param  int  $clientId
+     * @param  int|string  $clientId
      * @return static
      */
     public static function personalAccessClientId($clientId)
     {
         static::$personalAccessClientId = $clientId;
+
+        return new static;
+    }
+
+    /**
+     * Set the client secret that should be used to issue personal access tokens.
+     *
+     * @param  string  $clientSecret
+     * @return static
+     */
+    public static function personalAccessClientSecret($clientSecret)
+    {
+        static::$personalAccessClientSecret = $clientSecret;
 
         return new static;
     }
@@ -417,15 +404,17 @@ class Passport
     /**
      * Set the current client for the application with the given scopes.
      *
-     * @param  \Laravel\Passport\Client  $client
-     * @param  array  $scopes
+     * @param \Laravel\Passport\Client $client
+     * @param array $scopes
      * @return \Laravel\Passport\Client
      */
     public static function actingAsClient($client, $scopes = [])
     {
         $token = app(self::tokenModel());
 
-        $token->client = $client;
+        $token->client_id = $client->_id;
+        $token->setRelation('client', $client);
+
         $token->scopes = $scopes;
 
         $mock = Mockery::mock(ResourceServer::class);
@@ -625,6 +614,18 @@ class Passport
     public static function refreshToken()
     {
         return new static::$refreshTokenModel;
+    }
+
+    /**
+     * Configure Passport to hash client credential secrets.
+     *
+     * @return static
+     */
+    public static function hashClientSecrets()
+    {
+        static::$hashesClientSecrets = true;
+
+        return new static;
     }
 
     /**

@@ -5,9 +5,9 @@ namespace Laravel\Passport\Guards;
 use Exception;
 use Firebase\JWT\JWT;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Encryption\Encrypter;
+use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Http\Request;
 use Laminas\Diactoros\ResponseFactory;
@@ -16,6 +16,7 @@ use Laminas\Diactoros\StreamFactory;
 use Laminas\Diactoros\UploadedFileFactory;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\Passport;
+use Laravel\Passport\PassportUserProvider;
 use Laravel\Passport\TokenRepository;
 use Laravel\Passport\TransientToken;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -34,7 +35,7 @@ class TokenGuard
     /**
      * The user provider implementation.
      *
-     * @var \Illuminate\Contracts\Auth\UserProvider
+     * @var \Laravel\Passport\PassportUserProvider
      */
     protected $provider;
 
@@ -63,23 +64,41 @@ class TokenGuard
      * Create a new token guard instance.
      *
      * @param  \League\OAuth2\Server\ResourceServer  $server
-     * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
+     * @param  \Laravel\Passport\PassportUserProvider  $provider
      * @param  \Laravel\Passport\TokenRepository  $tokens
      * @param  \Laravel\Passport\ClientRepository  $clients
      * @param  \Illuminate\Contracts\Encryption\Encrypter  $encrypter
      * @return void
      */
-    public function __construct(ResourceServer $server,
-                                UserProvider $provider,
-                                TokenRepository $tokens,
-                                ClientRepository $clients,
-                                Encrypter $encrypter)
-    {
+    public function __construct(
+        ResourceServer $server,
+        PassportUserProvider $provider,
+        TokenRepository $tokens,
+        ClientRepository $clients,
+        Encrypter $encrypter
+    ) {
         $this->server = $server;
         $this->tokens = $tokens;
         $this->clients = $clients;
         $this->provider = $provider;
         $this->encrypter = $encrypter;
+    }
+
+    /**
+     * Determine if the requested provider matches the client's provider.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function hasValidProvider(Request $request)
+    {
+        $client = $this->client($request);
+
+        if ($client && ! $client->provider) {
+            return true;
+        }
+
+        return $client && $client->provider === $this->provider->getProviderName();
     }
 
     /**
@@ -129,6 +148,10 @@ class TokenGuard
     protected function authenticateViaBearerToken($request)
     {
         if (! $psr = $this->getPsrRequestViaBearerToken($request)) {
+            return;
+        }
+
+        if (! $this->hasValidProvider($request)) {
             return;
         }
 
@@ -248,7 +271,7 @@ class TokenGuard
     protected function decodeJwtTokenCookie($request)
     {
         return (array) JWT::decode(
-            $this->encrypter->decrypt($request->cookie(Passport::cookie()), Passport::$unserializesCookies),
+            CookieValuePrefix::remove($this->encrypter->decrypt($request->cookie(Passport::cookie()), Passport::$unserializesCookies)),
             $this->encrypter->getKey(),
             ['HS256']
         );
@@ -279,7 +302,7 @@ class TokenGuard
         $token = $request->header('X-CSRF-TOKEN');
 
         if (! $token && $header = $request->header('X-XSRF-TOKEN')) {
-            $token = $this->encrypter->decrypt($header, static::serialized());
+            $token = CookieValuePrefix::remove($this->encrypter->decrypt($header, static::serialized()));
         }
 
         return $token;

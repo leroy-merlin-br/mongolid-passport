@@ -12,6 +12,10 @@ abstract class PassportTestCase extends TestCase
 {
     use DropDatabase;
 
+    const KEYS = __DIR__.'/keys';
+    const PUBLIC_KEY = self::KEYS.'/oauth-public.key';
+    const PRIVATE_KEY = self::KEYS.'/oauth-private.key';
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -19,6 +23,9 @@ abstract class PassportTestCase extends TestCase
         $this->dropDatabase();
 
         Passport::routes();
+
+        @unlink(self::PUBLIC_KEY);
+        @unlink(self::PRIVATE_KEY);
 
         $this->artisan('passport:keys');
     }
@@ -54,6 +61,20 @@ abstract class PassportTestCase extends TestCase
                 ],
             ],
             'database' => 'testing',
+        ]);
+
+        $app['config']->set('passport.storage.database.connection', 'mongolid');
+
+        $app['config']->set('database.mongodb.connections.mongolid', [
+            'cluster' => [
+                'nodes' => [
+                    'primary' => [
+                        'host' => 'db',
+                        'port' => 27017,
+                    ],
+                ],
+            ],
+            'database' => 'mongolid',
         ]);
     }
 

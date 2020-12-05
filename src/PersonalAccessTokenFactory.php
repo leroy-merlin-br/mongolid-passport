@@ -95,10 +95,12 @@ class PersonalAccessTokenFactory
      */
     protected function createRequest($client, $userId, array $scopes)
     {
+        $secret = Passport::$hashesClientSecrets ? Passport::$personalAccessClientSecret : $client->secret;
+
         return (new ServerRequest)->withParsedBody([
             'grant_type' => 'personal_access',
             'client_id' => (string) $client->_id,
-            'client_secret' => $client->secret,
+            'client_secret' => $secret,
             'user_id' => (string) $userId,
             'scope' => implode(' ', $scopes),
         ]);
@@ -126,7 +128,7 @@ class PersonalAccessTokenFactory
     protected function findAccessToken(array $response)
     {
         return $this->tokens->find(
-            $this->jwt->parse($response['access_token'])->getClaim('jti')
+            $this->jwt->parse($response['access_token'])->claims()->get('jti')
         );
     }
 }

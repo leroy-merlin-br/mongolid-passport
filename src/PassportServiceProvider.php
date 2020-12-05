@@ -14,6 +14,8 @@ use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Bridge\PersonalAccessGrant;
 use Laravel\Passport\Bridge\RefreshTokenRepository;
 use Laravel\Passport\Guards\TokenGuard;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Parser;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
@@ -62,6 +64,7 @@ class PassportServiceProvider extends ServiceProvider
             $this->commands([
                 Console\InstallCommand::class,
                 Console\ClientCommand::class,
+                Console\HashCommand::class,
                 Console\KeysCommand::class,
                 Console\PurgeCommand::class,
             ]);
@@ -89,6 +92,7 @@ class PassportServiceProvider extends ServiceProvider
     {
         $this->registerAuthorizationServer();
         $this->registerResourceServer();
+        $this->registerJWTParser();
         $this->registerGuard();
     }
 
@@ -233,7 +237,7 @@ class PassportServiceProvider extends ServiceProvider
     /**
      * Create a CryptKey instance without permissions check.
      *
-     * @param  string  $key
+     * @param  string  $type
      * @return \League\OAuth2\Server\CryptKey
      */
     protected function makeCryptKey($type)
@@ -245,6 +249,18 @@ class PassportServiceProvider extends ServiceProvider
         }
 
         return new CryptKey($key, null, false);
+    }
+
+    /**
+     * Register the JWT Parser.
+     *
+     * @return void
+     */
+    protected function registerJWTParser()
+    {
+        $this->app->singleton(Parser::class, function () {
+            return Configuration::forUnsecuredSigner()->parser();
+        });
     }
 
     /**
@@ -274,7 +290,7 @@ class PassportServiceProvider extends ServiceProvider
         return new RequestGuard(function ($request) use ($config) {
             return (new TokenGuard(
                 $this->app->make(ResourceServer::class),
-                Auth::createUserProvider($config['provider']),
+                new PassportUserProvider(Auth::createUserProvider($config['provider']), $config['provider']),
                 $this->app->make(TokenRepository::class),
                 $this->app->make(ClientRepository::class),
                 $this->app->make('encrypter')

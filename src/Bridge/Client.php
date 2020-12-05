@@ -18,6 +18,13 @@ class Client implements ScopedClientInterface
     protected $identifier;
 
     /**
+     * The client's provider.
+     *
+     * @var string
+     */
+    public $provider;
+
+    /**
      * @var string[]
      */
     protected $allowedScopes;
@@ -29,17 +36,25 @@ class Client implements ScopedClientInterface
      * @param  string $name
      * @param  string $redirectUri
      * @param  bool   $isConfidential
+     * @param  string|null  $provider
      * @param  mixed  $allowedScopes
      * @return void
      */
-    public function __construct($identifier, $name, $redirectUri, $isConfidential = false, $allowedScopes = null)
-    {
-        $this->setIdentifier((string) $identifier); // @todo check if it conflicts (string)
+    public function __construct(
+        $identifier,
+        $name,
+        $redirectUri,
+        $isConfidential = false,
+        $provider = null,
+        $allowedScopes = null
+    ) {
+        $this->setIdentifier((string) $identifier);
         $this->setAllowedScopes($allowedScopes);
 
         $this->name = $name;
         $this->isConfidential = $isConfidential;
         $this->redirectUri = explode(',', $redirectUri);
+        $this->provider = $provider;
     }
 
     /**

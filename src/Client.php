@@ -12,6 +12,11 @@ class Client extends Model
      */
     protected $collection = 'oauth_clients';
 
+    /**
+     * The guarded attributes on the model.
+     *
+     * @var array
+     */
     protected $guarded = [];
 
     /**
@@ -36,14 +41,23 @@ class Client extends Model
     ];
 
     /**
+     * The temporary plain-text client secret.
+     *
+     * @var string|null
+     */
+    protected $plainSecret;
+
+    /**
      * Get the user that the client belongs to.
      *
      * @return \Mongolid\ActiveRecord
      */
     public function user()
     {
+        $provider = $this->provider ?: config('auth.guards.api.provider');
+
         $this->referencesOne(
-            config('auth.providers.'.config('auth.guards.api.provider').'.model'),
+            config("auth.providers.{$provider}.model"),
             'user_id'
         );
     }
@@ -67,9 +81,42 @@ class Client extends Model
      */
     public function tokens(array $query = [])
     {
-        return Token::where(
+        $tokenModel = Passport::tokenModel();
+
+        return $tokenModel::where(
             array_merge($query, ['client_id' => (string) $this->_id])
         );
+    }
+
+    /**
+     * The temporary non-hashed client secret.
+     *
+     * This is only available once during the request that created the client.
+     *
+     * @return string|null
+     */
+    public function getPlainSecretAttribute()
+    {
+        return $this->plainSecret;
+    }
+
+    /**
+     * Set the value of the secret attribute.
+     *
+     * @param  string|null  $value
+     * @return void
+     */
+    public function setSecretAttribute($value)
+    {
+        $this->plainSecret = $value;
+
+        if (is_null($value) || ! Passport::$hashesClientSecrets) {
+            $this->attributes['secret'] = $value;
+
+            return;
+        }
+
+        $this->attributes['secret'] = password_hash($value, PASSWORD_BCRYPT);
     }
 
     /**
@@ -118,5 +165,15 @@ class Client extends Model
             'created_at' => LocalDateTime::format($this->created_at, 'Y-m-d H:i:s'),
             'updated_at' => LocalDateTime::format($this->updated_at, 'Y-m-d H:i:s'),
         ];
+    }
+
+    /**
+     * Get the current connection name for the model.
+     *
+     * @return string|null
+     */
+    public function getConnectionName()
+    {
+        return config('passport.storage.database.connection') ?? $this->connection;
     }
 }

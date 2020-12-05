@@ -31,7 +31,9 @@ class Token extends Model
     {
         $provider = config('auth.guards.api.provider');
 
-        return $this->referencesOne(config('auth.providers.'.$provider.'.model'), 'user_id');
+        $model = config('auth.providers.'.$provider.'.model');
+
+        return $this->referencesOne($model, 'user_id');
     }
 
     /**
@@ -111,5 +113,15 @@ class Token extends Model
     public function transient()
     {
         return false;
+    }
+
+    /**
+     * Get the current connection name for the model.
+     *
+     * @return string|null
+     */
+    public function getConnectionName()
+    {
+        return config('passport.storage.database.connection') ?? $this->connection;
     }
 }
