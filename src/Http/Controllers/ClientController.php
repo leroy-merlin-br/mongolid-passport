@@ -60,13 +60,7 @@ class ClientController
     {
         $userId = $request->user()->getAuthIdentifier();
 
-        $clients = $this->clients->activeForUser($userId);
-
-        if (Passport::$hashesClientSecrets) {
-            return $clients;
-        }
-
-        return $clients->makeVisible('secret');
+        return $this->clients->activeForUser($userId);
     }
 
     /**
@@ -88,12 +82,11 @@ class ClientController
             null, false, false, (bool) $request->input('confidential', true)
         );
 
-        // TODO - Hide "secret" field
         if (Passport::$hashesClientSecrets) {
             return ['plainSecret' => $client->plainSecret] + $client->toArray();
         }
 
-        return $client->makeVisible('secret');
+        return $client;
     }
 
     /**
