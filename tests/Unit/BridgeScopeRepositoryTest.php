@@ -20,7 +20,7 @@ class BridgeScopeRepositoryTest extends TestCase
         $repository = new ScopeRepository;
 
         $scopes = $repository->finalizeScopes(
-            [$scope1 = new Scope('scope-1'), new Scope('scope-2')], 'client_credentials', new Client('id', 'name', 'http://localhost', false, '*'), 1
+            [$scope1 = new Scope('scope-1'), new Scope('scope-2')], 'client_credentials', new Client('id', 'name', 'http://localhost', false, null, '*'), 1
         );
 
         $this->assertEquals([$scope1], $scopes);
@@ -35,7 +35,7 @@ class BridgeScopeRepositoryTest extends TestCase
         $repository = new ScopeRepository;
 
         $scopes = $repository->finalizeScopes(
-            [$scope1 = new Scope('*')], 'refresh_token', new Client('id', 'name', 'http://localhost', false, '*'), 1
+            [$scope1 = new Scope('*')], 'refresh_token', new Client('id', 'name', 'http://localhost', false, null, '*'), 1
         );
 
         $this->assertEquals([], $scopes);
@@ -53,7 +53,7 @@ class BridgeScopeRepositoryTest extends TestCase
         $rawScopes = [new Scope('scope-1'), new Scope('scope-2')];
 
         $scopes = $repository->finalizeScopes(
-            $rawScopes, 'client_credentials', new Client('id', 'name', 'http://localhost', false, 'scope-1,scope-2'), 1
+            $rawScopes, 'client_credentials', new Client('id', 'name', 'http://localhost', false, null, 'scope-1,scope-2'), 1
         );
 
         $this->assertEquals($rawScopes, $scopes);
@@ -71,7 +71,7 @@ class BridgeScopeRepositoryTest extends TestCase
         $rawScopes = [new Scope('scope-1'), new Scope('scope-2')];
 
         $scopes = $repository->finalizeScopes(
-            $rawScopes, 'client_credentials', new Client('id', 'name', 'http://localhost', false, '*'), 1
+            $rawScopes, 'client_credentials', new Client('id', 'name', 'http://localhost', false, null, '*'), 1
         );
 
         $this->assertEquals($rawScopes, $scopes);
@@ -87,7 +87,7 @@ class BridgeScopeRepositoryTest extends TestCase
         $repository = new ScopeRepository;
 
         $scopes = $repository->finalizeScopes(
-            [new Scope('scope-1')], 'client_credentials', new Client('id', 'name', 'http://localhost', false, 'scope-2,scope-3'), 1
+            [new Scope('scope-1')], 'client_credentials', new Client('id', 'name', 'http://localhost', false, null, 'scope-2,scope-3'), 1
         );
     }
 

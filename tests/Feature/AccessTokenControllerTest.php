@@ -71,7 +71,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
         $jwtAccessToken = Configuration::forUnsecuredSigner()->parser()->parse($decodedResponse['access_token']);
-        $this->assertEquals($client, $this->app->make(ClientRepository::class)->findActive($jwtAccessToken->claims()->get('aud')));
+        $this->assertEquals($client, $this->app->make(ClientRepository::class)->findActive(current($jwtAccessToken->claims()->get('aud'))));
         $this->assertEquals($user, $this->app->make('auth')->createUserProvider()->retrieveById($jwtAccessToken->claims()->get('sub')));
 
         $token = $this->app->make(TokenRepository::class)->find($jwtAccessToken->claims()->get('jti'));
