@@ -3,52 +3,66 @@
 namespace Laravel\Passport\Tests\Feature;
 
 use Illuminate\Contracts\Config\Repository;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Laravel\Passport\PassportServiceProvider;
+use MongolidLaravel\MongolidServiceProvider;
 use Orchestra\Testbench\TestCase;
 
 abstract class PassportTestCase extends TestCase
 {
-    use RefreshDatabase;
+    use DropDatabase;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->withFactories(__DIR__.'/../../database/factories');
-
-        $this->artisan('migrate:fresh');
+        $this->dropDatabase();
 
         Passport::routes();
 
         $this->artisan('passport:keys');
     }
 
+    protected function tearDown(): void
+    {
+        $this->dropDatabase();
+
+        parent::tearDown();
+    }
+
     protected function getEnvironmentSetUp($app)
     {
         $config = $app->make(Repository::class);
 
-        $config->set('auth.defaults.provider', 'users');
+        $config->set('auth.defaults.provider', 'mongolid');
 
         if (($userClass = $this->getUserClass()) !== null) {
-            $config->set('auth.providers.users.model', $userClass);
+            $config->set('auth.providers.mongolid.driver', 'mongolid');
+            $config->set('auth.providers.mongolid.model', $userClass);
         }
 
-        $config->set('auth.guards.api', ['driver' => 'passport', 'provider' => 'users']);
+        $config->set('auth.guards.web', ['driver' => 'session', 'provider' => 'mongolid']);
+        $config->set('auth.guards.api', ['driver' => 'passport', 'provider' => 'mongolid']);
 
-        $app['config']->set('database.default', 'testbench');
-
-        $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
-            'database' => ':memory:',
-            'prefix'   => '',
+        $app['config']->set('database.mongodb.default', [
+            'cluster' => [
+                'nodes' => [
+                    'primary' => [
+                        'host' => 'db',
+                        'port' => 27017,
+                    ],
+                ],
+            ],
+            'database' => 'testing',
         ]);
     }
 
     protected function getPackageProviders($app)
     {
-        return [PassportServiceProvider::class];
+        return [
+            PassportServiceProvider::class,
+            MongolidServiceProvider::class,
+        ];
     }
 
     /**
