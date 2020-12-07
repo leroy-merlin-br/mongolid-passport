@@ -62,20 +62,6 @@ abstract class PassportTestCase extends TestCase
             ],
             'database' => 'testing',
         ]);
-
-        $app['config']->set('passport.storage.database.connection', 'mongolid');
-
-        $app['config']->set('database.mongodb.connections.mongolid', [
-            'cluster' => [
-                'nodes' => [
-                    'primary' => [
-                        'host' => 'db',
-                        'port' => 27017,
-                    ],
-                ],
-            ],
-            'database' => 'mongolid',
-        ]);
     }
 
     protected function getPackageProviders($app)

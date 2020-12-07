@@ -166,14 +166,4 @@ class Client extends Model
             'updated_at' => LocalDateTime::format($this->updated_at, 'Y-m-d H:i:s'),
         ];
     }
-
-    /**
-     * Get the current connection name for the model.
-     *
-     * @return string|null
-     */
-    public function getConnectionName()
-    {
-        return config('passport.storage.database.connection') ?? $this->connection;
-    }
 }

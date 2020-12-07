@@ -20,14 +20,4 @@ class PersonalAccessClient extends Model
     {
         return $this->referencesOne(Client::class, 'client_id');
     }
-
-    /**
-     * Get the current connection name for the model.
-     *
-     * @return string|null
-     */
-    public function getConnectionName()
-    {
-        return config('passport.storage.database.connection') ?? $this->connection;
-    }
 }
