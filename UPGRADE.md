@@ -14,10 +14,6 @@ PR: https://github.com/laravel/passport/pull/1220
 
 Passport now has support for multiple guard user providers. Because of this change, you must add a `provider` column to the `oauth_clients` database table:
 
-    Schema::table('oauth_clients', function (Blueprint $table) {
-        $table->string('provider')->after('secret')->nullable();
-    });
-
 If you have not previously published the Passport migrations, you should manually add the `provider` column to your database.
 
 ### Client Credentials Secret Hashing
@@ -80,10 +76,6 @@ The minimum Laravel version is now v6.0 and the minimum PHP version is now 7.2. 
 PR: https://github.com/laravel/passport/pull/1065
 
 Passport now supports public clients and PCKE. To leverage this feature, you should update the the `secret` column of the `oauth_clients` table to be `nullable`:
-
-    Schema::table('oauth_clients', function (Blueprint $table) {
-        $table->string('secret', 100)->nullable()->change();
-    });
 
 ### Renderable Exceptions For OAuth Errors
 
