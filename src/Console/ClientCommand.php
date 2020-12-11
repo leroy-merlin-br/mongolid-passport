@@ -2,10 +2,10 @@
 
 namespace Laravel\Passport\Console;
 
-use Laravel\Passport\Passport;
 use Illuminate\Console\Command;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
+use Laravel\Passport\Passport;
 
 class ClientCommand extends Command
 {
@@ -18,7 +18,11 @@ class ClientCommand extends Command
             {--personal : Create a personal access token client}
             {--password : Create a password grant client}
             {--client : Create a client credentials grant client}
-            {--name= : The name of the client}';
+            {--name= : The name of the client}
+            {--provider= : The name of the user provider}
+            {--redirect_uri= : The URI to redirect to after authorization }
+            {--user_id= : The user ID the client should be assigned to }
+            {--public : Create a public client (Auth code grant type only) }';
 
     /**
      * The console command description.
@@ -81,8 +85,16 @@ class ClientCommand extends Command
             config('app.name').' Password Grant Client'
         );
 
+        $providers = array_keys(config('auth.providers'));
+
+        $provider = $this->option('provider') ?: $this->choice(
+            'Which user provider should this client use to retrieve users?',
+            $providers,
+            in_array('mongolid', $providers) ? 'mongolid' : null
+        );
+
         $client = $clients->createPasswordGrantClient(
-            null, $name, 'http://localhost'
+            null, $name, 'http://localhost', $provider
         );
 
         $this->info('Password grant client created successfully.');
@@ -99,7 +111,8 @@ class ClientCommand extends Command
     protected function createClientCredentialsClient(ClientRepository $clients)
     {
         $name = $this->option('name') ?: $this->ask(
-            'What should we name the client?'
+            'What should we name the client?',
+            config('app.name').' ClientCredentials Grant Client'
         );
 
         $this->line('Available scopes:');
@@ -113,7 +126,7 @@ class ClientCommand extends Command
         } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
 
         $client = $clients->create(
-            null, $name, '', false, false, $allowedScopes
+            null, $name, '', false, false, true, $allowedScopes
         );
 
         $this->info('New client created successfully.');
@@ -129,7 +142,7 @@ class ClientCommand extends Command
      */
     protected function createAuthCodeClient(ClientRepository $clients)
     {
-        $userId = $this->ask(
+        $userId = $this->option('user_id') ?: $this->ask(
             'Which user ID should the client be assigned to?'
         );
 
@@ -137,7 +150,7 @@ class ClientCommand extends Command
             'What should we name the client?'
         );
 
-        $redirect = $this->ask(
+        $redirect = $this->option('redirect_uri') ?: $this->ask(
             'Where should we redirect the request after authorization?',
             url('/auth/callback')
         );
@@ -145,7 +158,7 @@ class ClientCommand extends Command
         $allowedScopes = config('auth.authorization_code.allowed_scopes');
 
         $client = $clients->create(
-            $userId, $name, $redirect, false, false, $allowedScopes
+            $userId, $name, $redirect, null, false, false, ! $this->option('public'), $allowedScopes
         );
 
         $this->info('New client created successfully.');
@@ -161,8 +174,13 @@ class ClientCommand extends Command
      */
     protected function outputClientDetails(Client $client)
     {
+        if (Passport::$hashesClientSecrets) {
+            $this->line('<comment>Here is your new client secret. This is the only time it will be shown so don\'t lose it!</comment>');
+            $this->line('');
+        }
+
         $this->line('<comment>Client ID:</comment> '.$client->_id);
-        $this->line('<comment>Client secret:</comment> '.$client->secret);
+        $this->line('<comment>Client secret:</comment> '.($client->plainSecret ?? $client->secret));
     }
 
     /**

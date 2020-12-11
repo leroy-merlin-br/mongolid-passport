@@ -12,13 +12,6 @@ class AuthCode extends Model
     protected $collection = 'oauth_auth_codes';
 
     /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
-
-    /**
      * Get the client that owns the authentication code.
      *
      * @return Client|null

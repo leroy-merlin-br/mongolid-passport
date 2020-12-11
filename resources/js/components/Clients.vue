@@ -25,7 +25,7 @@
                     You have not created any OAuth clients.
                 </p>
 
-                <table class="table table-borderless mb-0" v-if="clients.length > 0">
+                <table class="table table-responsive table-borderless mb-0" v-if="clients.length > 0">
                     <thead>
                         <tr>
                             <th>Client ID</th>
@@ -50,7 +50,7 @@
 
                             <!-- Secret -->
                             <td style="vertical-align: middle;">
-                                <code>{{ client.secret }}</code>
+                                <code>{{ client.secret ? client.secret : '-' }}</code>
                             </td>
 
                             <!-- Edit Button -->
@@ -122,6 +122,23 @@
 
                                     <span class="form-text text-muted">
                                         Your application's authorization callback URL.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Confidential -->
+                            <div class="form-group row">
+                                <label class="col-md-3 col-form-label">Confidential</label>
+
+                                <div class="col-md-9">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" v-model="createForm.confidential">
+                                        </label>
+                                    </div>
+
+                                    <span class="form-text text-muted">
+                                        Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.
                                     </span>
                                 </div>
                             </div>
@@ -207,6 +224,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- Client Secret Modal -->
+        <div class="modal fade" id="modal-client-secret" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            Client Secret
+                        </h4>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>
+                            Here is your new client secret. This is the only time it will be shown so don't lose it!
+                            You may now use this secret to make API requests.
+                        </p>
+
+                        <input type="text" class="form-control" v-model="clientSecret">
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -219,10 +265,13 @@
             return {
                 clients: [],
 
+                clientSecret: null,
+
                 createForm: {
                     errors: [],
                     name: '',
-                    redirect: ''
+                    redirect: '',
+                    confidential: true
                 },
 
                 editForm: {
@@ -285,8 +334,10 @@
              */
             store() {
                 this.persistClient(
-                    'post', '/oauth/clients',
-                    this.createForm, '#modal-create-client'
+                    'post',
+                    '/oauth/clients',
+                    this.createForm,
+                    '#modal-create-client'
                 );
             },
 
@@ -306,8 +357,10 @@
              */
             update() {
                 this.persistClient(
-                    'put', '/oauth/clients/' + this.editForm.id,
-                    this.editForm, '#modal-edit-client'
+                    'put',
+                    '/oauth/clients/' + this.editForm.id,
+                    this.editForm,
+                    '#modal-edit-client'
                 );
             },
 
@@ -326,6 +379,10 @@
                         form.errors = [];
 
                         $(modal).modal('hide');
+
+                        if (response.data.plainSecret) {
+                            this.showClientSecret(response.data.plainSecret);
+                        }
                     })
                     .catch(error => {
                         if (typeof error.response.data === 'object') {
@@ -334,6 +391,15 @@
                             form.errors = ['Something went wrong. Please try again.'];
                         }
                     });
+            },
+
+            /**
+             * Show the given client secret to the user.
+             */
+            showClientSecret(clientSecret) {
+                this.clientSecret = clientSecret;
+
+                $('#modal-client-secret').modal('show');
             },
 
             /**

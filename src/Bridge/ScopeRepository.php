@@ -28,7 +28,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     {
         $this->validateClientScopes($scopes, $clientEntity);
 
-        if (! in_array($grantType, ['password', 'personal_access'])) {
+        if (! in_array($grantType, ['password', 'personal_access', 'client_credentials'])) {
             $scopes = collect($scopes)->reject(function ($scope) {
                 return trim($scope->getIdentifier()) === '*';
             })->values()->all();

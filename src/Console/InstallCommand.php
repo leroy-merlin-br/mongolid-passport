@@ -3,6 +3,7 @@
 namespace Laravel\Passport\Console;
 
 use Illuminate\Console\Command;
+use Laravel\Passport\Passport;
 
 class InstallCommand extends Command
 {
@@ -29,8 +30,11 @@ class InstallCommand extends Command
      */
     public function handle()
     {
+        $provider = in_array('mongolid', array_keys(config('auth.providers'))) ? 'mongolid' : null;
+
         $this->call('passport:keys', ['--force' => $this->option('force'), '--length' => $this->option('length')]);
+
         $this->call('passport:client', ['--personal' => true, '--name' => config('app.name').' Personal Access Client']);
-        $this->call('passport:client', ['--password' => true, '--name' => config('app.name').' Password Grant Client']);
+        $this->call('passport:client', ['--password' => true, '--name' => config('app.name').' Password Grant Client', '--provider' => $provider]);
     }
 }

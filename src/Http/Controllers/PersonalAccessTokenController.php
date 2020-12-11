@@ -43,15 +43,15 @@ class PersonalAccessTokenController
      *
      * @param  \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function forUser(Request $request)
     {
-        $tokens = $this->tokenRepository->forUser($request->user()->getKey());
+        $tokens = $this->tokenRepository->forUser($request->user()->getAuthIdentifier());
 
         return collect($tokens)->filter(
             function ($token) {
-                return !$token->revoked && $token->client()->personal_access_client;
+                return $token->client()->personal_access_client && ! $token->revoked;
             }
         )->values();
     }
@@ -65,13 +65,10 @@ class PersonalAccessTokenController
      */
     public function store(Request $request)
     {
-        $this->validation->make(
-            $request->all(),
-            [
-                'name' => 'required|max:255',
-                'scopes' => 'array|in:'.implode(',', Passport::scopeIds()),
-            ]
-        )->validate();
+        $this->validation->make($request->all(), [
+            'name' => 'required|max:191',
+            'scopes' => 'array|in:'.implode(',', Passport::scopeIds()),
+        ])->validate();
 
         return $request->user()->createToken(
             $request->name,
@@ -82,15 +79,14 @@ class PersonalAccessTokenController
     /**
      * Delete the given token.
      *
-     * @param  Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  string  $tokenId
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request, $tokenId)
     {
         $token = $this->tokenRepository->findForUser(
-            $tokenId,
-            $request->user()->getKey()
+            $tokenId, $request->user()->getAuthIdentifier()
         );
 
         if (is_null($token)) {
@@ -98,5 +94,7 @@ class PersonalAccessTokenController
         }
 
         $token->revoke();
+
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 }

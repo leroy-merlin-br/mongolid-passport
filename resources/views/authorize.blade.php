@@ -64,21 +64,23 @@
 
                         <div class="buttons">
                             <!-- Authorize Button -->
-                            <form method="post" action="{{ url('/oauth/authorize') }}">
-                                {{ csrf_field() }}
+                            <form method="post" action="{{ route('passport.authorizations.approve') }}">
+                                @csrf
 
                                 <input type="hidden" name="state" value="{{ $request->state }}">
                                 <input type="hidden" name="client_id" value="{{ (string) $client->_id }}">
+                                <input type="hidden" name="auth_token" value="{{ $authToken }}">
                                 <button type="submit" class="btn btn-success btn-approve">Authorize</button>
                             </form>
 
                             <!-- Cancel Button -->
-                            <form method="post" action="{{ url('/oauth/authorize') }}">
-                                {{ csrf_field() }}
-                                {{ method_field('DELETE') }}
+                            <form method="post" action="{{ route('passport.authorizations.deny') }}">
+                                @csrf
+                                @method('DELETE')
 
                                 <input type="hidden" name="state" value="{{ $request->state }}">
                                 <input type="hidden" name="client_id" value="{{ (string) $client->_id }}">
+                                <input type="hidden" name="auth_token" value="{{ $authToken }}">
                                 <button class="btn btn-danger">Cancel</button>
                             </form>
                         </div>

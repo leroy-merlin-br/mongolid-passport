@@ -31,7 +31,9 @@ class Token extends Model
     {
         $provider = config('auth.guards.api.provider');
 
-        return $this->referencesOne(config('auth.providers.'.$provider.'.model'), 'user_id');
+        $model = config('auth.providers.'.$provider.'.model');
+
+        return $this->referencesOne($model, 'user_id');
     }
 
     /**
@@ -42,8 +44,42 @@ class Token extends Model
      */
     public function can($scope)
     {
-        return in_array('*', $this->scopes) ||
-               array_key_exists($scope, array_flip($this->scopes));
+        if (in_array('*', $this->scopes)) {
+            return true;
+        }
+
+        $scopes = Passport::$withInheritedScopes
+            ? $this->resolveInheritedScopes($scope)
+            : [$scope];
+
+        foreach ($scopes as $scope) {
+            if (array_key_exists($scope, array_flip($this->scopes))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Resolve all possible scopes.
+     *
+     * @param  string  $scope
+     * @return array
+     */
+    protected function resolveInheritedScopes($scope)
+    {
+        $parts = explode(':', $scope);
+
+        $partsCount = count($parts);
+
+        $scopes = [];
+
+        for ($i = 1; $i <= $partsCount; $i++) {
+            $scopes[] = implode(':', array_slice($parts, 0, $i));
+        }
+
+        return $scopes;
     }
 
     /**

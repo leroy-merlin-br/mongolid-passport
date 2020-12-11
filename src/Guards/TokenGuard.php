@@ -4,18 +4,24 @@ namespace Laravel\Passport\Guards;
 
 use Exception;
 use Firebase\JWT\JWT;
-use Illuminate\Http\Request;
-use Laravel\Passport\Passport;
 use Illuminate\Container\Container;
-use Laravel\Passport\TransientToken;
-use Laravel\Passport\TokenRepository;
-use Laravel\Passport\ClientRepository;
-use League\OAuth2\Server\ResourceServer;
-use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Contracts\Encryption\Encrypter;
+use Illuminate\Cookie\CookieValuePrefix;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Http\Request;
+use Laminas\Diactoros\ResponseFactory;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\Diactoros\StreamFactory;
+use Laminas\Diactoros\UploadedFileFactory;
+use Laravel\Passport\ClientRepository;
+use Laravel\Passport\Passport;
+use Laravel\Passport\PassportUserProvider;
+use Laravel\Passport\TokenRepository;
+use Laravel\Passport\TransientToken;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use League\OAuth2\Server\ResourceServer;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 
 class TokenGuard
 {
@@ -29,7 +35,7 @@ class TokenGuard
     /**
      * The user provider implementation.
      *
-     * @var \Illuminate\Contracts\Auth\UserProvider
+     * @var \Laravel\Passport\PassportUserProvider
      */
     protected $provider;
 
@@ -58,23 +64,41 @@ class TokenGuard
      * Create a new token guard instance.
      *
      * @param  \League\OAuth2\Server\ResourceServer  $server
-     * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
+     * @param  \Laravel\Passport\PassportUserProvider  $provider
      * @param  \Laravel\Passport\TokenRepository  $tokens
      * @param  \Laravel\Passport\ClientRepository  $clients
      * @param  \Illuminate\Contracts\Encryption\Encrypter  $encrypter
      * @return void
      */
-    public function __construct(ResourceServer $server,
-                                UserProvider $provider,
-                                TokenRepository $tokens,
-                                ClientRepository $clients,
-                                Encrypter $encrypter)
-    {
+    public function __construct(
+        ResourceServer $server,
+        PassportUserProvider $provider,
+        TokenRepository $tokens,
+        ClientRepository $clients,
+        Encrypter $encrypter
+    ) {
         $this->server = $server;
         $this->tokens = $tokens;
         $this->clients = $clients;
         $this->provider = $provider;
         $this->encrypter = $encrypter;
+    }
+
+    /**
+     * Determine if the requested provider matches the client's provider.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function hasValidProvider(Request $request)
+    {
+        $client = $this->client($request);
+
+        if ($client && ! $client->provider) {
+            return true;
+        }
+
+        return $client && $client->provider === $this->provider->getProviderName();
     }
 
     /**
@@ -127,6 +151,10 @@ class TokenGuard
             return;
         }
 
+        if (! $this->hasValidProvider($request)) {
+            return;
+        }
+
         // If the access token is valid we will retrieve the user according to the user ID
         // associated with the token. We will use the provider implementation which may
         // be used to retrieve users from Eloquent. Next, we'll be ready to continue.
@@ -167,8 +195,13 @@ class TokenGuard
     {
         // First, we will convert the Symfony request to a PSR-7 implementation which will
         // be compatible with the base OAuth2 library. The Symfony bridge can perform a
-        // conversion for us to a Zend Diactoros implementation of the PSR-7 request.
-        $psr = (new DiactorosFactory)->createRequest($request);
+        // conversion for us to a new Diactoros implementation of this PSR-7 request.
+        $psr = (new PsrHttpFactory(
+            new ServerRequestFactory,
+            new StreamFactory,
+            new UploadedFileFactory,
+            new ResponseFactory
+        ))->createRequest($request);
 
         try {
             return $this->server->validateAuthenticatedRequest($psr);
@@ -219,7 +252,7 @@ class TokenGuard
         }
 
         // We will compare the CSRF token in the decoded API token against the CSRF header
-        // sent with the request. If the two don't match then this request is sent from
+        // sent with the request. If they don't match then this request isn't sent from
         // a valid source and we won't authenticate the request for further handling.
         if (! Passport::$ignoreCsrfToken && (! $this->validCsrf($token, $request) ||
             time() >= $token['expiry'])) {
@@ -238,7 +271,7 @@ class TokenGuard
     protected function decodeJwtTokenCookie($request)
     {
         return (array) JWT::decode(
-            $this->encrypter->decrypt($request->cookie(Passport::cookie()), Passport::$unserializesCookies),
+            CookieValuePrefix::remove($this->encrypter->decrypt($request->cookie(Passport::cookie()), Passport::$unserializesCookies)),
             $this->encrypter->getKey(),
             ['HS256']
         );
@@ -254,7 +287,34 @@ class TokenGuard
     protected function validCsrf($token, $request)
     {
         return isset($token['csrf']) && hash_equals(
-            $token['csrf'], (string) $request->header('X-CSRF-TOKEN')
+            $token['csrf'], (string) $this->getTokenFromRequest($request)
         );
+    }
+
+    /**
+     * Get the CSRF token from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string
+     */
+    protected function getTokenFromRequest($request)
+    {
+        $token = $request->header('X-CSRF-TOKEN');
+
+        if (! $token && $header = $request->header('X-XSRF-TOKEN')) {
+            $token = CookieValuePrefix::remove($this->encrypter->decrypt($header, static::serialized()));
+        }
+
+        return $token;
+    }
+
+    /**
+     * Determine if the cookie contents should be serialized.
+     *
+     * @return bool
+     */
+    public static function serialized()
+    {
+        return EncryptCookies::serialized('XSRF-TOKEN');
     }
 }

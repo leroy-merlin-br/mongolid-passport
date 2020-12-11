@@ -2,11 +2,13 @@
 
 namespace Laravel\Passport;
 
-use Mockery;
-use DateInterval;
 use Carbon\Carbon;
+use DateInterval;
 use DateTimeInterface;
 use Illuminate\Support\Facades\Route;
+use League\OAuth2\Server\ResourceServer;
+use Mockery;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Passport
 {
@@ -18,25 +20,18 @@ class Passport
     public static $implicitGrantEnabled = false;
 
     /**
-     * Indicates if Passport should revoke existing tokens when issuing a new one.
-     *
-     * @var bool
-     */
-    public static $revokeOtherTokens = false;
-
-    /**
-     * Indicates if Passport should prune revoked tokens.
-     *
-     * @var bool
-     */
-    public static $pruneRevokedTokens = false;
-
-    /**
      * The personal access token client ID.
      *
-     * @var int
+     * @var int|string
      */
     public static $personalAccessClientId;
+
+    /**
+     * The personal access token client secret.
+     *
+     * @var string
+     */
+    public static $personalAccessClientSecret;
 
     /**
      * The default scope.
@@ -67,6 +62,13 @@ class Passport
      * @var \DateTimeInterface|null
      */
     public static $refreshTokensExpireAt;
+
+    /**
+     * The date when personal access tokens expire.
+     *
+     * @var \DateTimeInterface|null
+     */
+    public static $personalAccessTokensExpireAt;
 
     /**
      * The name for API token cookies.
@@ -118,6 +120,13 @@ class Passport
     public static $tokenModel = 'Laravel\Passport\Token';
 
     /**
+     * The refresh token model class name.
+     *
+     * @var string
+     */
+    public static $refreshTokenModel = 'Laravel\Passport\RefreshToken';
+
+    /**
      * Indicates if Passport migrations will be run.
      *
      * @var bool
@@ -130,6 +139,18 @@ class Passport
      * @var bool
      */
     public static $unserializesCookies = false;
+
+    /**
+     * @var bool
+     */
+    public static $hashesClientSecrets = false;
+
+    /**
+     * Indicates the scope should inherit its parent scope.
+     *
+     * @var bool
+     */
+    public static $withInheritedScopes = false;
 
     /**
      * Enable the implicit grant type.
@@ -169,38 +190,27 @@ class Passport
     }
 
     /**
-     * Instruct Passport to revoke other tokens when a new one is issued.
-     *
-     * @deprecated since 1.0. Listen to Passport events on token creation instead.
-     *
-     * @return static
-     */
-    public static function revokeOtherTokens()
-    {
-        return new static;
-    }
-
-    /**
-     * Instruct Passport to keep revoked tokens pruned.
-     *
-     * @deprecated since 1.0. Listen to Passport events on token creation instead.
-     *
-     * @return static
-     */
-    public static function pruneRevokedTokens()
-    {
-        return new static;
-    }
-
-    /**
      * Set the client ID that should be used to issue personal access tokens.
      *
-     * @param  int  $clientId
+     * @param  int|string  $clientId
      * @return static
      */
     public static function personalAccessClientId($clientId)
     {
         static::$personalAccessClientId = $clientId;
+
+        return new static;
+    }
+
+    /**
+     * Set the client secret that should be used to issue personal access tokens.
+     *
+     * @param  string  $clientSecret
+     * @return static
+     */
+    public static function personalAccessClientSecret($clientSecret)
+    {
+        static::$personalAccessClientSecret = $clientSecret;
 
         return new static;
     }
@@ -261,8 +271,6 @@ class Passport
             if (isset(static::$scopes[$id])) {
                 return new Scope($id, static::$scopes[$id]);
             }
-
-            return;
         })->filter()->values()->all();
     }
 
@@ -316,6 +324,25 @@ class Passport
     }
 
     /**
+     * Get or set when personal access tokens expire.
+     *
+     * @param  \DateTimeInterface|null  $date
+     * @return \DateInterval|static
+     */
+    public static function personalAccessTokensExpireIn(DateTimeInterface $date = null)
+    {
+        if (is_null($date)) {
+            return static::$personalAccessTokensExpireAt
+                ? Carbon::now()->diff(static::$personalAccessTokensExpireAt)
+                : new DateInterval('P1Y');
+        }
+
+        static::$personalAccessTokensExpireAt = $date;
+
+        return new static;
+    }
+
+    /**
      * Get or set the name for API token cookies.
      *
      * @param  string|null  $cookie
@@ -355,7 +382,7 @@ class Passport
      */
     public static function actingAs($user, $scopes = [], $guard = 'api')
     {
-        $token = Mockery::mock(Passport::tokenModel())->shouldIgnoreMissing(false);
+        $token = Mockery::mock(self::tokenModel())->shouldIgnoreMissing(false);
 
         foreach ($scopes as $scope) {
             $token->shouldReceive('can')->with($scope)->andReturn(true);
@@ -363,11 +390,47 @@ class Passport
 
         $user->withAccessToken($token);
 
+        if (isset($user->wasRecentlyCreated) && $user->wasRecentlyCreated) {
+            $user->wasRecentlyCreated = false;
+        }
+
         app('auth')->guard($guard)->setUser($user);
 
         app('auth')->shouldUse($guard);
 
         return $user;
+    }
+
+    /**
+     * Set the current client for the application with the given scopes.
+     *
+     * @param \Laravel\Passport\Client $client
+     * @param array $scopes
+     * @return \Laravel\Passport\Client
+     */
+    public static function actingAsClient($client, $scopes = [])
+    {
+        $token = app(self::tokenModel());
+
+        $token->client = $client;
+        $token->scopes = $scopes;
+
+        $mock = Mockery::mock(ResourceServer::class);
+        $mock->shouldReceive('validateAuthenticatedRequest')
+            ->andReturnUsing(function (ServerRequestInterface $request) use ($token) {
+                return $request->withAttribute('oauth_client_id', $token->client->id)
+                    ->withAttribute('oauth_access_token_id', $token->id)
+                    ->withAttribute('oauth_scopes', $token->scopes);
+            });
+
+        app()->instance(ResourceServer::class, $mock);
+
+        $mock = Mockery::mock(TokenRepository::class);
+        $mock->shouldReceive('find')->andReturn($token);
+
+        app()->instance(TokenRepository::class, $mock);
+
+        return $client;
     }
 
     /**
@@ -518,6 +581,49 @@ class Passport
     public static function token()
     {
         return new static::$tokenModel;
+    }
+
+    /**
+     * Set the refresh token model class name.
+     *
+     * @param  string  $refreshTokenModel
+     * @return void
+     */
+    public static function useRefreshTokenModel($refreshTokenModel)
+    {
+        static::$refreshTokenModel = $refreshTokenModel;
+    }
+
+    /**
+     * Get the refresh token model class name.
+     *
+     * @return string
+     */
+    public static function refreshTokenModel()
+    {
+        return static::$refreshTokenModel;
+    }
+
+    /**
+     * Get a new refresh token model instance.
+     *
+     * @return \Laravel\Passport\RefreshToken
+     */
+    public static function refreshToken()
+    {
+        return new static::$refreshTokenModel;
+    }
+
+    /**
+     * Configure Passport to hash client credential secrets.
+     *
+     * @return static
+     */
+    public static function hashClientSecrets()
+    {
+        static::$hashesClientSecrets = true;
+
+        return new static;
     }
 
     /**

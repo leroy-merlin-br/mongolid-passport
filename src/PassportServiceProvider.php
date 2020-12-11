@@ -3,25 +3,27 @@
 namespace Laravel\Passport;
 
 use DateInterval;
-use Illuminate\Auth\RequestGuard;
 use Illuminate\Auth\Events\Logout;
+use Illuminate\Auth\RequestGuard;
+use Illuminate\Config\Repository as Config;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Bridge\PersonalAccessGrant;
+use Laravel\Passport\Bridge\RefreshTokenRepository;
 use Laravel\Passport\Guards\TokenGuard;
-use League\OAuth2\Server\CryptKey;
-use League\OAuth2\Server\ResourceServer;
-use Illuminate\Config\Repository as Config;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Parser;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
+use League\OAuth2\Server\Grant\ClientCredentialsGrant;
 use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Grant\PasswordGrant;
-use Laravel\Passport\Bridge\PersonalAccessGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
-use Laravel\Passport\Bridge\RefreshTokenRepository;
-use League\OAuth2\Server\Grant\ClientCredentialsGrant;
+use League\OAuth2\Server\ResourceServer;
 
 class PassportServiceProvider extends ServiceProvider
 {
@@ -51,10 +53,20 @@ class PassportServiceProvider extends ServiceProvider
                 __DIR__.'/../resources/js/components' => base_path('resources/js/components/passport'),
             ], 'passport-components');
 
+            $this->publishes([
+                __DIR__.'/../database/factories' => database_path('factories'),
+            ], 'passport-factories');
+
+            $this->publishes([
+                __DIR__.'/../config/passport.php' => config_path('passport.php'),
+            ], 'passport-config');
+
             $this->commands([
                 Console\InstallCommand::class,
                 Console\ClientCommand::class,
+                Console\HashCommand::class,
                 Console\KeysCommand::class,
+                Console\PurgeCommand::class,
             ]);
         }
     }
@@ -79,12 +91,9 @@ class PassportServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerAuthorizationServer();
-
         $this->registerResourceServer();
-
+        $this->registerJWTParser();
         $this->registerGuard();
-
-        $this->offerPublishing();
     }
 
     /**
@@ -111,7 +120,7 @@ class PassportServiceProvider extends ServiceProvider
                 );
 
                 $server->enableGrantType(
-                    new PersonalAccessGrant, new DateInterval('P1Y')
+                    new PersonalAccessGrant, Passport::personalAccessTokensExpireIn()
                 );
 
                 $server->enableGrantType(
@@ -226,9 +235,9 @@ class PassportServiceProvider extends ServiceProvider
     }
 
     /**
-     * Create a CryptKey instance without permissions check
+     * Create a CryptKey instance without permissions check.
      *
-     * @param string $key
+     * @param  string  $type
      * @return \League\OAuth2\Server\CryptKey
      */
     protected function makeCryptKey($type)
@@ -243,15 +252,29 @@ class PassportServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the JWT Parser.
+     *
+     * @return void
+     */
+    protected function registerJWTParser()
+    {
+        $this->app->singleton(Parser::class, function () {
+            return Configuration::forUnsecuredSigner()->parser();
+        });
+    }
+
+    /**
      * Register the token guard.
      *
      * @return void
      */
     protected function registerGuard()
     {
-        Auth::extend('passport', function ($app, $name, array $config) {
-            return tap($this->makeGuard($config), function ($guard) {
-                $this->app->refresh('request', $guard, 'setRequest');
+        Auth::resolved(function ($auth) {
+            $auth->extend('passport', function ($app, $name, array $config) {
+                return tap($this->makeGuard($config), function ($guard) {
+                    $this->app->refresh('request', $guard, 'setRequest');
+                });
             });
         });
     }
@@ -267,7 +290,7 @@ class PassportServiceProvider extends ServiceProvider
         return new RequestGuard(function ($request) use ($config) {
             return (new TokenGuard(
                 $this->app->make(ResourceServer::class),
-                Auth::createUserProvider($config['provider']),
+                new PassportUserProvider(Auth::createUserProvider($config['provider']), $config['provider']),
                 $this->app->make(TokenRepository::class),
                 $this->app->make(ClientRepository::class),
                 $this->app->make('encrypter')
@@ -287,19 +310,5 @@ class PassportServiceProvider extends ServiceProvider
                 Cookie::queue(Cookie::forget(Passport::cookie()));
             }
         });
-    }
-
-    /**
-     * Setup the resource publishing groups for Passport.
-     *
-     * @return void
-     */
-    protected function offerPublishing()
-    {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__.'/../config/passport.php' => config_path('passport.php'),
-            ], 'passport-config');
-        }
     }
 }

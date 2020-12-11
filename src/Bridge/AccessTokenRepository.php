@@ -3,11 +3,11 @@
 namespace Laravel\Passport\Bridge;
 
 use MongoDB\BSON\UTCDateTime;
-use Laravel\Passport\TokenRepository;
 use Illuminate\Contracts\Events\Dispatcher;
 use Laravel\Passport\Events\AccessTokenCreated;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
+use Laravel\Passport\TokenRepository;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
@@ -33,6 +33,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      *
      * @param  \Laravel\Passport\TokenRepository  $tokenRepository
      * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+     * @return void
      */
     public function __construct(TokenRepository $tokenRepository, Dispatcher $events)
     {
@@ -45,7 +46,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
-        return new AccessToken($userIdentifier, $scopes);
+        return new AccessToken($userIdentifier, $scopes, $clientEntity);
     }
 
     /**

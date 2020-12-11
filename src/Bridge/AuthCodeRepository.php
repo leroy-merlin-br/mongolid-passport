@@ -4,8 +4,6 @@ namespace Laravel\Passport\Bridge;
 
 use MongoDB\BSON\UTCDateTime;
 use Laravel\Passport\AuthCode as AuthCodeModel;
-use Laravel\Passport\Passport;
-use Illuminate\Database\Connection;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 

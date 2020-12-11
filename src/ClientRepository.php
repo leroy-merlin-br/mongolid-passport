@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport;
 
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class ClientRepository
@@ -15,7 +16,9 @@ class ClientRepository
      */
     public function find($id)
     {
-        return Client::first($id);
+        $clientModel = Passport::clientModel();
+
+        return $clientModel::first($id);
     }
 
     /**
@@ -29,7 +32,7 @@ class ClientRepository
     {
         $client = $this->find($id);
 
-        return $client && !$client->revoked ? $client : null;
+        return $client && ! $client->revoked ? $client : null;
     }
 
     /**
@@ -42,7 +45,9 @@ class ClientRepository
      */
     public function findForUser($clientId, $userId)
     {
-        return Client::first(['_id' => (string) $clientId, 'user_id' => (string) $userId]);
+        $clientModel = Passport::clientModel();
+
+        return $clientModel::first(['_id' => (string) $clientId, 'user_id' => (string) $userId]);
     }
 
     /**
@@ -54,7 +59,9 @@ class ClientRepository
      */
     public function forUser($userId)
     {
-        return Client::where(['user_id' => (string) $userId])
+        $clientModel = Passport::clientModel();
+
+        return $clientModel::where(['user_id' => (string) $userId])
             ->sort(['name' => 1]);
     }
 
@@ -97,7 +104,7 @@ class ClientRepository
             throw new RuntimeException('Personal access client not found. Please create one.');
         }
 
-        return PersonalAccessClient::all()
+        return $client->all()
             ->sort(['created_at' => -1])
             ->first()
             ->client();
@@ -109,21 +116,24 @@ class ClientRepository
      * @param  int    $userId
      * @param  string $name
      * @param  string $redirect
+     * @param  string|null  $provider
      * @param  bool   $personalAccess
      * @param  bool   $password
+     * @param  bool   $confidential
      * @param  string $allowedScopes
      *
      * @return \Laravel\Passport\Client
      */
-    public function create($userId, $name, $redirect, $personalAccess = false, $password = false, $allowedScopes = null)
+    public function create($userId, $name, $redirect, $provider = null, $personalAccess = false, $password = false, $confidential = true, $allowedScopes = null)
     {
-        $client = new Client();
+        $client = Passport::client();
 
         $client->fill(
             [
                 'user_id' => $userId,
                 'name' => $name,
-                'secret' => str_random(40),
+                'secret' => ($confidential || $personalAccess) ? Str::random(40) : null,
+                'provider' => $provider,
                 'redirect' => $redirect,
                 'personal_access_client' => $personalAccess,
                 'password_client' => $password,
@@ -149,7 +159,7 @@ class ClientRepository
      */
     public function createPersonalAccessClient($userId, $name, $redirect)
     {
-        return tap($this->create($userId, $name, $redirect, true), function ($client) {
+        return tap($this->create($userId, $name, $redirect, null, true), function ($client) {
             $accessClient = Passport::personalAccessClient();
             $accessClient->client_id = $client->_id;
             $accessClient->save();
@@ -162,12 +172,13 @@ class ClientRepository
      * @param  int    $userId
      * @param  string $name
      * @param  string $redirect
+     * @param  string|null  $provider
      *
      * @return \Laravel\Passport\Client
      */
-    public function createPasswordGrantClient($userId, $name, $redirect)
+    public function createPasswordGrantClient($userId, $name, $redirect, $provider = null)
     {
-        return $this->create($userId, $name, $redirect, false, true);
+        return $this->create($userId, $name, $redirect, $provider, false, true);
     }
 
     /**
@@ -205,7 +216,7 @@ class ClientRepository
     {
         $client->fill(
             [
-                'secret' => str_random(40),
+                'secret' => Str::random(40),
             ],
             true
         );
@@ -239,8 +250,7 @@ class ClientRepository
     public function delete(Client $client)
     {
         foreach($client->tokens() as $token) {
-            $token->revoked = true;
-            $token->update();
+            $token->revoke();
         }
 
         $client->revoked = true;
