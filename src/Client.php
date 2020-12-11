@@ -48,6 +48,11 @@ class Client extends Model
     protected $plainSecret;
 
     /**
+     * {@inheritdoc}
+     */
+    public $mutable = true;
+
+    /**
      * Get the user that the client belongs to.
      *
      * @return \Mongolid\ActiveRecord
@@ -116,7 +121,7 @@ class Client extends Model
             return;
         }
 
-        $this->attributes['secret'] = password_hash($value, PASSWORD_BCRYPT);
+        $this->secret = password_hash($value, PASSWORD_BCRYPT);
     }
 
     /**

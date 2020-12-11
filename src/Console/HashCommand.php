@@ -37,16 +37,15 @@ class HashCommand extends Command
         if ($this->option('force') || $this->confirm('Are you sure you want to hash all client secrets? This cannot be undone.')) {
             $model = Passport::clientModel();
 
-            foreach ((new $model)->whereNotNull('secret')->cursor() as $client) {
+            foreach ((new $model)->where(['secret' => ['$nin' => ['', null]]]) as $client) {
                 if (password_get_info($client->secret)['algo'] === PASSWORD_BCRYPT) {
                     continue;
                 }
 
-                $client->timestamps = false;
-
-                $client->forceFill([
+                $client->fill([
                     'secret' => $client->secret,
-                ])->save();
+                ], true);
+                $client->save();
             }
 
             $this->info('All client secrets were successfully hashed.');
