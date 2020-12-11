@@ -37,7 +37,7 @@ class PurgeCommand extends Command
 
         if (($this->option('revoked') && $this->option('expired')) ||
             (! $this->option('revoked') && ! $this->option('expired'))) {
-            $query = ['$or' => ['revoked' => true, 'expires_at' => ['$lt', $expired]]];
+            $query = ['$or' => [['revoked' => true], ['expires_at' => ['$lt' => $expired]]]];
             $message = 'Purged revoked items and items expired for more than seven days.';
         } elseif ($this->option('revoked')) {
             $query = ['revoked' => true];
