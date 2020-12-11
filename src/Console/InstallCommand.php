@@ -30,7 +30,7 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        $provider = in_array('users', array_keys(config('auth.providers'))) ? 'users' : null;
+        $provider = in_array('mongolid', array_keys(config('auth.providers'))) ? 'mongolid' : null;
 
         $this->call('passport:keys', ['--force' => $this->option('force'), '--length' => $this->option('length')]);
 

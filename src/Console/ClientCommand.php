@@ -90,7 +90,7 @@ class ClientCommand extends Command
         $provider = $this->option('provider') ?: $this->choice(
             'Which user provider should this client use to retrieve users?',
             $providers,
-            in_array('users', $providers) ? 'users' : null
+            in_array('mongolid', $providers) ? 'mongolid' : null
         );
 
         $client = $clients->createPasswordGrantClient(
