@@ -3,7 +3,7 @@
 namespace Laravel\Passport\Bridge;
 
 use MongoDB\BSON\UTCDateTime;
-use Laravel\Passport\AuthCode as AuthCodeModel;
+use Laravel\Passport\Passport;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
@@ -24,7 +24,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
-        $authCode = new AuthCodeModel();
+        $authCode = Passport::authCode();
 
         $authCode->fill(
             [
@@ -34,7 +34,8 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
                 'scopes' => $this->formatScopesForStorage($authCodeEntity->getScopes()),
                 'revoked' => false,
                 'expires_at' => new UTCDateTime($authCodeEntity->getExpiryDateTime()),
-            ]
+            ],
+            true
         );
 
         $authCode->save();
@@ -45,7 +46,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function revokeAuthCode($codeId)
     {
-        if ($authCode = AuthCodeModel::first($codeId)) {
+        if ($authCode = Passport::authCodeModel()::first($codeId)) {
             $authCode->revoked = true;
 
             $authCode->save();
@@ -57,7 +58,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function isAuthCodeRevoked($codeId)
     {
-        $authCode = AuthCodeModel::first($codeId);
+        $authCode = Passport::authCodeModel()::first($codeId);
 
         return $authCode && $authCode->revoked;
     }

@@ -50,14 +50,6 @@ class PassportServiceProvider extends ServiceProvider
             ], 'passport-views');
 
             $this->publishes([
-                __DIR__.'/../resources/js/components' => base_path('resources/js/components/passport'),
-            ], 'passport-components');
-
-            $this->publishes([
-                __DIR__.'/../database/factories' => database_path('factories'),
-            ], 'passport-factories');
-
-            $this->publishes([
                 __DIR__.'/../config/passport.php' => config_path('passport.php'),
             ], 'passport-config');
 
@@ -91,8 +83,9 @@ class PassportServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerAuthorizationServer();
-        $this->registerResourceServer();
+        $this->registerClientRepository();
         $this->registerJWTParser();
+        $this->registerResourceServer();
         $this->registerGuard();
     }
 
@@ -217,6 +210,20 @@ class PassportServiceProvider extends ServiceProvider
             $this->makeCryptKey('private'),
             app('encrypter')->getKey()
         );
+    }
+
+    /**
+     * Register the client repository.
+     *
+     * @return void
+     */
+    protected function registerClientRepository()
+    {
+        $this->app->singleton(ClientRepository::class, function ($container) {
+            $config = $container->make('config')->get('passport.personal_access_client');
+
+            return new ClientRepository($config['id'] ?? null, $config['secret'] ?? null);
+        });
     }
 
     /**

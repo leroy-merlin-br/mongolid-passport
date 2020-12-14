@@ -2,10 +2,11 @@
 
 namespace Laravel\Passport;
 
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\ServerRequest;
 use Lcobucci\JWT\Parser as JwtParser;
 use League\OAuth2\Server\AuthorizationServer;
+use Nyholm\Psr7\Response;
+use Nyholm\Psr7\ServerRequest;
+use Psr\Http\Message\ServerRequestInterface;
 
 class PersonalAccessTokenFactory
 {
@@ -34,6 +35,8 @@ class PersonalAccessTokenFactory
      * The JWT token parser instance.
      *
      * @var \Lcobucci\JWT\Parser
+     *
+     * @deprecated This property will be removed in a future Passport version.
      */
     protected $jwt;
 
@@ -91,13 +94,13 @@ class PersonalAccessTokenFactory
      * @param  \Laravel\Passport\Client  $client
      * @param  mixed  $userId
      * @param  array  $scopes
-     * @return \Laminas\Diactoros\ServerRequest
+     * @return \Psr\Http\Message\ServerRequestInterface
      */
     protected function createRequest($client, $userId, array $scopes)
     {
-        $secret = Passport::$hashesClientSecrets ? Passport::$personalAccessClientSecret : $client->secret;
+        $secret = Passport::$hashesClientSecrets ? $this->clients->getPersonalAccessClientSecret() : $client->secret;
 
-        return (new ServerRequest)->withParsedBody([
+        return (new ServerRequest('POST', 'not-important'))->withParsedBody([
             'grant_type' => 'personal_access',
             'client_id' => (string) $client->_id,
             'client_secret' => $secret,
@@ -109,10 +112,10 @@ class PersonalAccessTokenFactory
     /**
      * Dispatch the given request to the authorization server.
      *
-     * @param  \Laminas\Diactoros\ServerRequest  $request
+     * @param  \Psr\Http\Message\ServerRequestInterface  $request
      * @return array
      */
-    protected function dispatchRequestToAuthorizationServer(ServerRequest $request)
+    protected function dispatchRequestToAuthorizationServer(ServerRequestInterface $request)
     {
         return json_decode($this->server->respondToAccessTokenRequest(
             $request, new Response
