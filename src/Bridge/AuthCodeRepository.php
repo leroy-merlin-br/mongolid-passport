@@ -46,7 +46,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function revokeAuthCode($codeId)
     {
-        if ($authCode = Passport::authCodeModel()::first($codeId)) {
+        if ($authCode = (Passport::authCodeModel())::first($codeId)) {
             $authCode->revoked = true;
 
             $authCode->save();
@@ -58,7 +58,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
      */
     public function isAuthCodeRevoked($codeId)
     {
-        $authCode = Passport::authCodeModel()::first($codeId);
+        $authCode = (Passport::authCodeModel())::first($codeId);
 
         return $authCode && $authCode->revoked;
     }
