@@ -74,7 +74,9 @@ class Client extends Model
      */
     public function authCodes()
     {
-        return AuthCode::where(['client_id' => (string) $this->_id]);
+        $authCodeModel = Passport::authCodeModel();
+
+        return $authCodeModel::where(['client_id' => (string) $this->_id]);
     }
 
     /**
