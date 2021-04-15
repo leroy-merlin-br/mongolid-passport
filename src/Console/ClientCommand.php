@@ -126,7 +126,7 @@ class ClientCommand extends Command
         } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
 
         $client = $clients->create(
-            null, $name, '', false, false, true, $allowedScopes
+            null, $name, '', false, false, true, !$this->option('public'), $allowedScopes
         );
 
         $this->info('New client created successfully.');
@@ -158,7 +158,7 @@ class ClientCommand extends Command
         $allowedScopes = config('auth.authorization_code.allowed_scopes');
 
         $client = $clients->create(
-            $userId, $name, $redirect, null, false, false, ! $this->option('public'), $allowedScopes
+            $userId, $name, $redirect, null, false, false, !$this->option('public'), $allowedScopes
         );
 
         $this->info('New client created successfully.');
