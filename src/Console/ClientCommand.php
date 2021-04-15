@@ -126,7 +126,7 @@ class ClientCommand extends Command
         } while (false === $allowedScopes = $this->parseAllowedScopes($allowedScopes));
 
         $client = $clients->create(
-            null, $name, '', false, false, true, $allowedScopes
+            null, $name, '', false, false, true, ! $this->option('public'), $allowedScopes
         );
 
         $this->info('New client created successfully.');
