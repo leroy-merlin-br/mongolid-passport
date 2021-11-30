@@ -1,4 +1,4 @@
-FROM leroymerlinbr/php:7.2
+FROM leroymerlinbr/php:7.3
 
 USER root
 
