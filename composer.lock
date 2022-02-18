@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1ce229ab06638216a042c65690eb1ade",
+    "content-hash": "a860adfa586407d1df2fc15ae9f0de23",
     "packages": [
         {
             "name": "brick/math",
@@ -1370,42 +1370,43 @@
         },
         {
             "name": "leroy-merlin-br/mongolid",
-            "version": "v2.4.0",
+            "version": "v4.0.0-beta",
             "source": {
                 "type": "git",
-                "url": "https://github.com/leroy-merlin-br/mongolid.git",
-                "reference": "50c637d3cd20a6092c8b04f3fef120c4369e5b2f"
+                "url": "git@github.com:leroy-merlin-br/mongolid.git",
+                "reference": "40a59e12ba64ed8f20ab377b323d79ea9ea8067b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/50c637d3cd20a6092c8b04f3fef120c4369e5b2f",
-                "reference": "50c637d3cd20a6092c8b04f3fef120c4369e5b2f",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/40a59e12ba64ed8f20ab377b323d79ea9ea8067b",
+                "reference": "40a59e12ba64ed8f20ab377b323d79ea9ea8067b",
                 "shasum": ""
             },
             "require": {
-                "illuminate/container": "^5.8 || ^6.0 || ^7.0 || ^8.0",
+                "ext-mongodb": "*",
+                "illuminate/container": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+                "illuminate/support": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "mongodb/mongodb": "1.8.0",
-                "php": ">=7.1"
+                "php": ">=7.3"
             },
             "require-dev": {
-                "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^6.4",
-                "sami/sami": "^4.0",
-                "squizlabs/php_codesniffer": "^2.0"
+                "leroy-merlin-br/coding-standard": "^1.0",
+                "mockery/mockery": "^1.2",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
+            },
+            "suggest": {
+                "leroy-merlin-br/mongolid-laravel": "Easy, powerful and ultrafast MongoDB ODM for Laravel."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "v2.1.x-dev"
+                    "dev-master": "v4.0.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Mongolid\\": "src/Mongolid"
-                },
-                "classmap": [
-                    "tests/TestCase.php"
-                ]
+                    "Mongolid\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1419,39 +1420,42 @@
                 {
                     "name": "Guilherme Guitte",
                     "email": "guilherme.guitte@gmail.com"
+                },
+                {
+                    "name": "Boitatá",
+                    "email": "boitata@leroymerlin.com.br"
                 }
             ],
             "description": "Easy, powerful and ultrafast ODM for PHP and MongoDB.",
             "keywords": [
+                "Active Record",
+                "laravel",
+                "mongo",
                 "mongodb",
                 "nosql",
                 "odm"
             ],
-            "support": {
-                "issues": "https://github.com/leroy-merlin-br/mongolid/issues",
-                "source": "https://github.com/leroy-merlin-br/mongolid/tree/v2.4.0"
-            },
-            "time": "2022-02-15T14:31:50+00:00"
+            "time": "2022-02-18T12:17:10+00:00"
         },
         {
             "name": "leroy-merlin-br/mongolid-laravel",
-            "version": "v2.3.0",
+            "version": "v3.0.0-beta",
             "source": {
                 "type": "git",
-                "url": "https://github.com/leroy-merlin-br/mongolid-laravel.git",
-                "reference": "c3a88d3b1922deb790832266248860ea31cdfd9e"
+                "url": "git@github.com:leroy-merlin-br/mongolid-laravel.git",
+                "reference": "5911b72094ab1e1f0c9c274602cfb31e252cc61b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/c3a88d3b1922deb790832266248860ea31cdfd9e",
-                "reference": "c3a88d3b1922deb790832266248860ea31cdfd9e",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/5911b72094ab1e1f0c9c274602cfb31e252cc61b",
+                "reference": "5911b72094ab1e1f0c9c274602cfb31e252cc61b",
                 "shasum": ""
             },
             "require": {
                 "illuminate/auth": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "illuminate/queue": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "illuminate/support": "^5.4 || ^6.0 || ^7.0 || ^8.0",
-                "leroy-merlin-br/mongolid": "^2.0",
+                "leroy-merlin-br/mongolid": "v4.0.0-beta",
                 "php": ">=7.1"
             },
             "require-dev": {
@@ -1502,11 +1506,7 @@
                 "nosql",
                 "odm"
             ],
-            "support": {
-                "issues": "https://github.com/leroy-merlin-br/mongolid-laravel/issues",
-                "source": "https://github.com/leroy-merlin-br/mongolid-laravel/tree/v2.3.0"
-            },
-            "time": "2022-02-15T17:02:36+00:00"
+            "time": "2022-02-18T12:43:57+00:00"
         },
         {
             "name": "mongodb/mongodb",
