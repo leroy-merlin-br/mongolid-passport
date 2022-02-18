@@ -8,7 +8,7 @@ PHP 7.3 is now the minimum required version.
 
 Laravel 8.0 is now the minimum required version.
 
-### Old Static Personal Client Methods Removed
+### Why this new version
 
 Mongolid package was upgraded to version 4.x and bring with some breaking changes.
 We believe that this changes will impact the use of mongolid-passport package, so this upgrade is made to keep up with.
