@@ -14,6 +14,14 @@ ported for [Mongolid Laravel](https://github.com/leroy-merlin-br/mongolid-larave
 
 Documentation for Passport can be found on the [Laravel website](https://laravel.com/docs/master/passport).
 
+## Compatibility
+
+| mongolid-passport | mongolid-laravel | mongolid   |
+|-------------------|------------------|------------|
+| 11.0.0-beta       | 3.0.0-beta       | 4.0.0-beta |
+
+[Here](docs/upgrade/upgrade-guide.md) you find guides to upgrade versions.
+
 ## License
 
 Mongolid Passport is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT),
