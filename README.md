@@ -16,9 +16,10 @@ Documentation for Passport can be found on the [Laravel website](https://laravel
 
 ## Compatibility
 
-| mongolid-passport | mongolid-laravel | mongolid   |
-|-------------------|------------------|------------|
-| 11.0.0-beta       | 3.0.0-beta       | 4.0.0-beta |
+| mongolid-passport | laravel-passport | mongolid-laravel | mongolid   |
+|-------------------|------------------|------------------|------------|
+| 11.0.0-beta       | 10.1.1           | 3.0.0-beta       | 4.0.0-beta |
+| 10.1.1            | 10.1.1           | 2.3.x            | 2.4.x      |
 
 [Here](docs/upgrade/upgrade-guide.md) you find guides to upgrade versions.
 
