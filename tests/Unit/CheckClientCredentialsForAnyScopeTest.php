@@ -34,6 +34,8 @@ class CheckClientCredentialsForAnyScopeTest extends TestCase
         $token = m::mock(Token::class);
         $token->shouldReceive('getAttribute')->with('client')->andReturn($client);
         $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['*']);
+        $token->shouldReceive('getDocumentAttribute')->with('client')->andReturn($client);
+        $token->shouldReceive('getDocumentAttribute')->with('scopes')->andReturn(['*']);
 
         $tokenRepository = m::mock(TokenRepository::class);
         $tokenRepository->shouldReceive('find')->with('token')->andReturn($token);
@@ -63,8 +65,8 @@ class CheckClientCredentialsForAnyScopeTest extends TestCase
         $client->shouldReceive('firstParty')->andReturnFalse();
 
         $token = m::mock(Token::class);
-        $token->shouldReceive('getAttribute')->with('client')->andReturn($client);
-        $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['foo', 'bar', 'baz']);
+        $token->shouldReceive('getDocumentAttribute')->with('client')->andReturn($client);
+        $token->shouldReceive('getDocumentAttribute')->with('scopes')->andReturn(['foo', 'bar', 'baz']);
         $token->shouldReceive('can')->with('notfoo')->andReturnFalse();
         $token->shouldReceive('can')->with('bar')->andReturnTrue();
 
@@ -118,8 +120,8 @@ class CheckClientCredentialsForAnyScopeTest extends TestCase
         $client->shouldReceive('firstParty')->andReturnFalse();
 
         $token = m::mock(Token::class);
-        $token->shouldReceive('getAttribute')->with('client')->andReturn($client);
-        $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['foo', 'bar']);
+        $token->shouldReceive('getDocumentAttribute')->with('client')->andReturn($client);
+        $token->shouldReceive('getDocumentAttribute')->with('scopes')->andReturn(['foo', 'bar']);
         $token->shouldReceive('can')->with('baz')->andReturnFalse();
         $token->shouldReceive('can')->with('notbar')->andReturnFalse();
 

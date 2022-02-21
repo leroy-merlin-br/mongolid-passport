@@ -42,9 +42,9 @@ class TokenGuardTest extends TestCase
         $request->headers->set('Authorization', 'Bearer token');
 
         $resourceServer->shouldReceive('validateAuthenticatedRequest')->andReturn($psr = m::mock());
-        $psr->shouldReceive('getAttribute')->with('oauth_user_id')->andReturn(1);
-        $psr->shouldReceive('getAttribute')->with('oauth_client_id')->andReturn(1);
-        $psr->shouldReceive('getAttribute')->with('oauth_access_token_id')->andReturn('token');
+        $psr->shouldReceive('getDocumentAttribute')->with('oauth_user_id')->andReturn(1);
+        $psr->shouldReceive('getDocumentAttribute')->with('oauth_client_id')->andReturn(1);
+        $psr->shouldReceive('getDocumentAttribute')->with('oauth_access_token_id')->andReturn('token');
         $userProvider->shouldReceive('retrieveById')->with(1)->andReturn(new TokenGuardTestUser);
         $userProvider->shouldReceive('getProviderName')->andReturn(null);
         $tokens->shouldReceive('find')->once()->with('token')->andReturn($token = m::mock());
@@ -103,8 +103,8 @@ class TokenGuardTest extends TestCase
         $request->headers->set('Authorization', 'Bearer token');
 
         $resourceServer->shouldReceive('validateAuthenticatedRequest')->andReturn($psr = m::mock());
-        $psr->shouldReceive('getAttribute')->with('oauth_user_id')->andReturn(1);
-        $psr->shouldReceive('getAttribute')->with('oauth_client_id')->andReturn(1);
+        $psr->shouldReceive('getDocumentAttribute')->with('oauth_user_id')->andReturn(1);
+        $psr->shouldReceive('getDocumentAttribute')->with('oauth_client_id')->andReturn(1);
         $userProvider->shouldReceive('retrieveById')->with(1)->andReturn(null);
         $userProvider->shouldReceive('getProviderName')->andReturn(null);
 
@@ -328,7 +328,7 @@ class TokenGuardTest extends TestCase
         $request->headers->set('Authorization', 'Bearer token');
 
         $resourceServer->shouldReceive('validateAuthenticatedRequest')->andReturn($psr = m::mock());
-        $psr->shouldReceive('getAttribute')->with('oauth_client_id')->andReturn(1);
+        $psr->shouldReceive('getDocumentAttribute')->with('oauth_client_id')->andReturn(1);
         $clients->shouldReceive('findActive')->with(1)->andReturn(new TokenGuardTestClient);
 
         $client = $guard->client($request);
@@ -378,7 +378,7 @@ class TokenGuardTest extends TestCase
         $request->headers->set('Authorization', 'Bearer token');
 
         $resourceServer->shouldReceive('validateAuthenticatedRequest')->andReturn($psr = m::mock());
-        $psr->shouldReceive('getAttribute')->with('oauth_client_id')->andReturn(1);
+        $psr->shouldReceive('getDocumentAttribute')->with('oauth_client_id')->andReturn(1);
         $clients->shouldReceive('findActive')->with(1)->andReturn(null);
 
         $this->assertNull($guard->client($request));

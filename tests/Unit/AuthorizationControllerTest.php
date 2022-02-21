@@ -141,7 +141,7 @@ class AuthorizationControllerTest extends TestCase
             ->once()
             ->with($user, $clientEntity)
             ->andReturn($token = m::mock(Token::class));
-        $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['scope-1']);
+        $token->shouldReceive('getDocumentAttribute')->with('scopes')->andReturn(['scope-1']);
 
         $scopeRepository = m::mock(ScopeRepository::class);
         $scopeRepository->shouldReceive('validateClientScopes')->with($scopes, $clientEntity)->andReturn(true);

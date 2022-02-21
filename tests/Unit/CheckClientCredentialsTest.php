@@ -32,8 +32,8 @@ class CheckClientCredentialsTest extends TestCase
         $client->shouldReceive('firstParty')->andReturnFalse();
 
         $token = m::mock(Token::class);
-        $token->shouldReceive('getAttribute')->with('client')->andReturn($client);
-        $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['*']);
+        $token->shouldReceive('getDocumentAttribute')->with('client')->andReturn($client);
+        $token->shouldReceive('getDocumentAttribute')->with('scopes')->andReturn(['*']);
 
         $tokenRepository = m::mock(TokenRepository::class);
         $tokenRepository->shouldReceive('find')->with('token')->andReturn($token);
@@ -63,8 +63,8 @@ class CheckClientCredentialsTest extends TestCase
         $client->shouldReceive('firstParty')->andReturnFalse();
 
         $token = m::mock(Token::class);
-        $token->shouldReceive('getAttribute')->with('client')->andReturn($client);
-        $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['see-profile']);
+        $token->shouldReceive('getDocumentAttribute')->with('client')->andReturn($client);
+        $token->shouldReceive('getDocumentAttribute')->with('scopes')->andReturn(['see-profile']);
         $token->shouldReceive('cant')->with('see-profile')->andReturnFalse();
 
         $tokenRepository = m::mock(TokenRepository::class);
@@ -117,8 +117,8 @@ class CheckClientCredentialsTest extends TestCase
         $client->shouldReceive('firstParty')->andReturnFalse();
 
         $token = m::mock(Token::class);
-        $token->shouldReceive('getAttribute')->with('client')->andReturn($client);
-        $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['foo', 'notbar']);
+        $token->shouldReceive('getDocumentAttribute')->with('client')->andReturn($client);
+        $token->shouldReceive('getDocumentAttribute')->with('scopes')->andReturn(['foo', 'notbar']);
         $token->shouldReceive('cant')->with('foo')->andReturnFalse();
         $token->shouldReceive('cant')->with('bar')->andReturnTrue();
 

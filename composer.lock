@@ -1374,12 +1374,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:leroy-merlin-br/mongolid.git",
-                "reference": "2997f06408199a9d7aaaded3d156e5ea47862ad9"
+                "reference": "9b3904458ad6f02880acb674cc7ea7332df1cced"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/2997f06408199a9d7aaaded3d156e5ea47862ad9",
-                "reference": "2997f06408199a9d7aaaded3d156e5ea47862ad9",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/9b3904458ad6f02880acb674cc7ea7332df1cced",
+                "reference": "9b3904458ad6f02880acb674cc7ea7332df1cced",
                 "shasum": ""
             },
             "require": {
@@ -1436,7 +1436,7 @@
                 "nosql",
                 "odm"
             ],
-            "time": "2022-02-18T20:08:31+00:00"
+            "time": "2022-02-21T17:25:00+00:00"
         },
         {
             "name": "leroy-merlin-br/mongolid-laravel",
