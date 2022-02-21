@@ -2,6 +2,7 @@
 composer.phar
 composer.lock
 .DS_Store
+.idea
 Thumbs.db
 phpunit.xml
 docker-compose.override.yml
