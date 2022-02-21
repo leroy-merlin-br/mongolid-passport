@@ -111,19 +111,21 @@ class Client extends Model
      * Set the value of the secret attribute.
      *
      * @param  string|null  $value
-     * @return void
      */
-    public function setSecretAttribute($value)
+    public function setSecretAttribute($value): string
     {
         $this->plainSecret = $value;
 
         if (is_null($value) || ! Passport::$hashesClientSecrets) {
-            $this->secret = $value;
-
-            return;
+            return $value;
         }
 
-        $this->secret = password_hash($value, PASSWORD_BCRYPT);
+        if (password_get_info($value)['algoName'] === PASSWORD_BCRYPT) {
+            return $value;
+        }
+
+
+        return password_hash($value, PASSWORD_BCRYPT);
     }
 
     /**
