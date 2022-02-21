@@ -55,7 +55,7 @@ class Client extends Model
     /**
      * Get the user that the client belongs to.
      *
-     * @return \Mongolid\ActiveRecord
+     * @return \Mongolid\LegacyRecord
      */
     public function user()
     {
@@ -159,7 +159,7 @@ class Client extends Model
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => (string) $this->_id,
