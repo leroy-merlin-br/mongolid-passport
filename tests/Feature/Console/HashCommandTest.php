@@ -24,7 +24,6 @@ class HashCommandTest extends PassportTestCase
         ]);
         $client->save();
         $hasher = $this->app->make(Hasher::class);
-
         Passport::hashClientSecrets();
 
         $this->artisan('passport:hash', ['--force' => true]);
