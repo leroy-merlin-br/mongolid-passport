@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4cb92c326a62a1a0dd0306b58293c02",
+    "content-hash": "b1c20643b2245215a932e94177002f6e",
     "packages": [
         {
             "name": "brick/math",
@@ -1370,16 +1370,16 @@
         },
         {
             "name": "leroy-merlin-br/mongolid",
-            "version": "dev-chore/legacy-record",
+            "version": "dev-chore/rollback-entity-assembler",
             "source": {
                 "type": "git",
                 "url": "git@github.com:leroy-merlin-br/mongolid.git",
-                "reference": "f7d7402d6fefd2e304c47143f6f9b76f01d923ff"
+                "reference": "d651f333184aecd66cae11ccc71184be3f5f05a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/f7d7402d6fefd2e304c47143f6f9b76f01d923ff",
-                "reference": "f7d7402d6fefd2e304c47143f6f9b76f01d923ff",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/d651f333184aecd66cae11ccc71184be3f5f05a5",
+                "reference": "d651f333184aecd66cae11ccc71184be3f5f05a5",
                 "shasum": ""
             },
             "require": {
@@ -1436,7 +1436,7 @@
                 "nosql",
                 "odm"
             ],
-            "time": "2022-02-21T19:17:19+00:00"
+            "time": "2022-03-18T14:26:43+00:00"
         },
         {
             "name": "leroy-merlin-br/mongolid-laravel",
@@ -1444,19 +1444,19 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:leroy-merlin-br/mongolid-laravel.git",
-                "reference": "89d2339e90972406b8cb12486b1de5b26f772e65"
+                "reference": "18e0024673c4637366d8ba4810ee1769a8279170"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/89d2339e90972406b8cb12486b1de5b26f772e65",
-                "reference": "89d2339e90972406b8cb12486b1de5b26f772e65",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/18e0024673c4637366d8ba4810ee1769a8279170",
+                "reference": "18e0024673c4637366d8ba4810ee1769a8279170",
                 "shasum": ""
             },
             "require": {
                 "illuminate/auth": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "illuminate/queue": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "illuminate/support": "^5.4 || ^6.0 || ^7.0 || ^8.0",
-                "leroy-merlin-br/mongolid": "dev-chore/legacy-record",
+                "leroy-merlin-br/mongolid": "dev-chore/rollback-entity-assembler",
                 "php": ">=7.1"
             },
             "require-dev": {
@@ -1507,7 +1507,7 @@
                 "nosql",
                 "odm"
             ],
-            "time": "2022-02-21T17:08:22+00:00"
+            "time": "2022-03-18T14:40:04+00:00"
         },
         {
             "name": "mongodb/mongodb",
