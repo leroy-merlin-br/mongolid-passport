@@ -16,7 +16,7 @@ trait HasApiTokens
     /**
      * Get all of the user's registered OAuth clients.
      *
-     * @return \Mongolid\Cursor\Cursor
+     * @return \Mongolid\Cursor\CursorInterface
      */
     public function clients()
     {
@@ -26,7 +26,7 @@ trait HasApiTokens
     /**
      * Get all of the access tokens for the user.
      *
-     * @return \Mongolid\Cursor\Cursor
+     * @return \Mongolid\Cursor\CursorInterface
      */
     public function tokens()
     {

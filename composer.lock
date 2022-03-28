@@ -1374,12 +1374,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:leroy-merlin-br/mongolid.git",
-                "reference": "d651f333184aecd66cae11ccc71184be3f5f05a5"
+                "reference": "3649d52d88ab226493950561ebd462be81214716"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/d651f333184aecd66cae11ccc71184be3f5f05a5",
-                "reference": "d651f333184aecd66cae11ccc71184be3f5f05a5",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/3649d52d88ab226493950561ebd462be81214716",
+                "reference": "3649d52d88ab226493950561ebd462be81214716",
                 "shasum": ""
             },
             "require": {
@@ -1436,7 +1436,7 @@
                 "nosql",
                 "odm"
             ],
-            "time": "2022-03-18T14:26:43+00:00"
+            "time": "2022-03-23T20:23:34+00:00"
         },
         {
             "name": "leroy-merlin-br/mongolid-laravel",
@@ -1444,12 +1444,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:leroy-merlin-br/mongolid-laravel.git",
-                "reference": "18e0024673c4637366d8ba4810ee1769a8279170"
+                "reference": "7d963e864b482af7eb4f2fff86a74135a1e49852"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/18e0024673c4637366d8ba4810ee1769a8279170",
-                "reference": "18e0024673c4637366d8ba4810ee1769a8279170",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/7d963e864b482af7eb4f2fff86a74135a1e49852",
+                "reference": "7d963e864b482af7eb4f2fff86a74135a1e49852",
                 "shasum": ""
             },
             "require": {
@@ -1507,7 +1507,7 @@
                 "nosql",
                 "odm"
             ],
-            "time": "2022-03-18T14:40:04+00:00"
+            "time": "2022-03-25T19:31:57+00:00"
         },
         {
             "name": "mongodb/mongodb",

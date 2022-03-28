@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Laravel\Passport\Passport;
 use MongoDB\BSON\UTCDateTime;
-use Mongolid\Cursor\Cursor;
+use Mongolid\Cursor\CursorInterface;
 
 class PurgeCommand extends Command
 {
@@ -62,7 +62,7 @@ class PurgeCommand extends Command
         $this->info($message);
     }
 
-    protected function purgeTokens(Cursor $tokens)
+    protected function purgeTokens(CursorInterface $tokens)
     {
         foreach ($tokens as $token) {
             $token->delete();

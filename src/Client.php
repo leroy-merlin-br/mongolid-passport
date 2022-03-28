@@ -3,7 +3,7 @@
 namespace Laravel\Passport;
 
 use Mongolid\Util\LocalDateTime;
-use MongolidLaravel\MongolidModel as Model;
+use MongolidLaravel\LegacyMongolidModel as Model;
 
 class Client extends Model
 {
@@ -54,8 +54,6 @@ class Client extends Model
 
     /**
      * Get the user that the client belongs to.
-     *
-     * @return \Mongolid\LegacyRecord
      */
     public function user()
     {
@@ -70,7 +68,7 @@ class Client extends Model
     /**
      * Get all of the authentication codes for the client.
      *
-     * @return \Mongolid\Cursor\Cursor
+     * @return \Mongolid\Cursor\CursorInterface
      */
     public function authCodes()
     {
@@ -84,7 +82,7 @@ class Client extends Model
      *
      * @param array $query
      *
-     * @return \Mongolid\Cursor\Cursor
+     * @return \Mongolid\Cursor\CursorInterface
      */
     public function tokens(array $query = [])
     {

@@ -127,7 +127,7 @@ class TokenGuard
             }
 
             return $this->clients->findActive(
-                $psr->getDocumentAttribute('oauth_client_id')
+                $psr->getAttribute('oauth_client_id')
             );
         } elseif ($request->cookie(Passport::cookie())) {
             if ($token = $this->getTokenViaCookie($request)) {
@@ -156,7 +156,7 @@ class TokenGuard
         // associated with the token. We will use the provider implementation which may
         // be used to retrieve users from Eloquent. Next, we'll be ready to continue.
         $user = $this->provider->retrieveById(
-            $psr->getDocumentAttribute('oauth_user_id') ?: null
+            $psr->getAttribute('oauth_user_id') ?: null
         );
 
         if (! $user) {
@@ -167,10 +167,10 @@ class TokenGuard
         // to determine if the token has a given scope, etc. This will be useful during
         // authorization such as within the developer's Laravel model policy classes.
         $token = $this->tokens->find(
-            $psr->getDocumentAttribute('oauth_access_token_id')
+            $psr->getAttribute('oauth_access_token_id')
         );
 
-        $clientId = $psr->getDocumentAttribute('oauth_client_id');
+        $clientId = $psr->getAttribute('oauth_client_id');
 
         // Finally, we will verify if the client that issued this token is still valid and
         // its tokens may still be used. If not, we will bail out since we don't want a

@@ -82,7 +82,7 @@ class ClientRepository
      *
      * @param  mixed $userId
      *
-     * @return \Mongolid\Cursor\Cursor
+     * @return \Mongolid\Cursor\CursorInterface
      */
     public function forUser($userId)
     {
