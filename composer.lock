@@ -1370,7 +1370,7 @@
         },
         {
             "name": "leroy-merlin-br/mongolid",
-            "version": "v4.0.0-beta",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:leroy-merlin-br/mongolid.git",
@@ -1455,7 +1455,7 @@
                 "illuminate/auth": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "illuminate/queue": "^5.4 || ^6.0 || ^7.0 || ^8.0",
                 "illuminate/support": "^5.4 || ^6.0 || ^7.0 || ^8.0",
-                "leroy-merlin-br/mongolid": "v4.0.0-beta",
+                "leroy-merlin-br/mongolid": "v3.1.0",
                 "php": ">=7.1"
             },
             "require-dev": {
