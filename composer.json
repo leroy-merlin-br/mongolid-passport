@@ -34,7 +34,7 @@
         "lcobucci/jwt": "^3.4|^4.0",
         "league/oauth2-server": "~8.2.0",
         "leroy-merlin-br/mongolid": "v3.1.0",
-        "leroy-merlin-br/mongolid-laravel": "v3.1.0",
+        "leroy-merlin-br/mongolid-laravel": "v3.0.0",
         "mongodb/mongodb": "1.8.0",
         "nyholm/psr7": "^1.3",
         "phpseclib/phpseclib": "^2.0",
