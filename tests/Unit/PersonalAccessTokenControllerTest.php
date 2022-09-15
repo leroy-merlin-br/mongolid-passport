@@ -11,7 +11,6 @@ use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Mockery as m;
 use MongoDB\BSON\ObjectId;
-use Mongolid\Cursor\Cursor;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 

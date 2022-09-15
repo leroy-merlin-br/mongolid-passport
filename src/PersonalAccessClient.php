@@ -2,7 +2,7 @@
 
 namespace Laravel\Passport;
 
-use MongolidLaravel\MongolidModel as Model;
+use MongolidLaravel\LegacyMongolidModel as Model;
 
 class PersonalAccessClient extends Model
 {
@@ -13,8 +13,6 @@ class PersonalAccessClient extends Model
 
     /**
      * Get all of the authentication codes for the client.
-     *
-     * @return Client|null
      */
     public function client()
     {

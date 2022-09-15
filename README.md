@@ -1,4 +1,7 @@
-<p align="center">
+<STYLE type="text/css">
+    P {text-align: center}
+</STYLE>
+<p>
 <a href="https://github.com/leroy-merlin-br/mongolid-passport/actions?query=workflow%3ATests"><img src="https://github.com/leroy-merlin-br/mongolid-passport/workflows/Tests/badge.svg" alt="Build Status"></a>
 <a href="https://packagist.org/packages/leroy-merlin-br/mongolid-passport"><img src="https://poser.pugx.org/leroy-merlin-br/mongolid-passport/d/total.svg" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/leroy-merlin-br/mongolid-passport"><img src="https://poser.pugx.org/leroy-merlin-br/mongolid-passport/v/stable.svg" alt="Latest Stable Version"></a>
@@ -16,13 +19,13 @@ Documentation for Passport can be found on the [Laravel website](https://laravel
 
 ## Compatibility
 
-| mongolid-passport | laravel-passport | mongolid-laravel | mongolid   |
-|-------------------|------------------|------------------|------------|
-| 11.0.0-beta       | 10.1.1           | 3.0.0-beta       | 4.0.0-beta |
-| 10.x              | 10.x             | 2.3.x            | 2.4.x      |
-| 9.x               | 9.x              | 2.2.x            | 2.3.x      |
-| 8.x               | 8.x              | 2.2.x            | 2.2.x      |
-| 7.x               | 7.x              | 2.2.x            | 2.2.x      |
+| mongolid-passport | laravel-passport | mongolid-laravel | mongolid |
+|-------------------|------------------|------------------|----------|
+| 11.0.0            | 10.1.1           | 3.0.0            | 3.1.0    |
+| 10.x              | 10.x             | 2.3.x            | 2.4.x    |
+| 9.x               | 9.x              | 2.2.x            | 2.3.x    |
+| 8.x               | 8.x              | 2.2.x            | 2.2.x    |
+| 7.x               | 7.x              | 2.2.x            | 2.2.x    |
 
 [Here](docs/upgrade/upgrade-guide.md) you find guides to upgrade versions.
 

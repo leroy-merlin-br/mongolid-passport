@@ -34,6 +34,8 @@ class CheckClientCredentialsForAnyScopeTest extends TestCase
         $token = m::mock(Token::class);
         $token->shouldReceive('getAttribute')->with('client')->andReturn($client);
         $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['*']);
+        $token->shouldReceive('getAttribute')->with('client')->andReturn($client);
+        $token->shouldReceive('getAttribute')->with('scopes')->andReturn(['*']);
 
         $tokenRepository = m::mock(TokenRepository::class);
         $tokenRepository->shouldReceive('find')->with('token')->andReturn($token);

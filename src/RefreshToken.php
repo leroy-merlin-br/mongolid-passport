@@ -1,7 +1,7 @@
 <?php
 namespace Laravel\Passport;
 
-use MongolidLaravel\MongolidModel as Model;
+use MongolidLaravel\LegacyMongolidModel as Model;
 
 class RefreshToken extends Model
 {
@@ -19,8 +19,6 @@ class RefreshToken extends Model
 
     /**
      * Get the access token that the refresh token belongs to.
-     *
-     * @return \Mongolid\ActiveRecord|null
      */
     public function accessToken()
     {

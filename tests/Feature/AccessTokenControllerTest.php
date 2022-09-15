@@ -11,7 +11,7 @@ use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Lcobucci\JWT\Configuration;
-use MongolidLaravel\MongolidModel as Model;
+use MongolidLaravel\LegacyMongolidModel as Model;
 
 class AccessTokenControllerTest extends PassportTestCase
 {

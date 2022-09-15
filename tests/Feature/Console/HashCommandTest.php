@@ -2,7 +2,6 @@
 
 namespace Laravel\Passport\Tests\Feature\Console;
 
-use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Laravel\Passport\Passport;
@@ -23,13 +22,11 @@ class HashCommandTest extends PassportTestCase
             'revoked' => false,
         ]);
         $client->save();
-        $hasher = $this->app->make(Hasher::class);
-
         Passport::hashClientSecrets();
 
         $this->artisan('passport:hash', ['--force' => true]);
 
-        $this->assertTrue($hasher->check($secret, $client->first()->secret));
+        $this->assertTrue(password_verify($secret, $client->first()->secret));
 
         Passport::$hashesClientSecrets = false;
     }
