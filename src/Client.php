@@ -3,7 +3,7 @@
 namespace Laravel\Passport;
 
 use Mongolid\Util\LocalDateTime;
-use MongolidLaravel\MongolidModel as Model;
+use MongolidLaravel\LegacyMongolidModel as Model;
 
 class Client extends Model
 {
@@ -54,8 +54,6 @@ class Client extends Model
 
     /**
      * Get the user that the client belongs to.
-     *
-     * @return \Mongolid\ActiveRecord
      */
     public function user()
     {
@@ -70,7 +68,7 @@ class Client extends Model
     /**
      * Get all of the authentication codes for the client.
      *
-     * @return \Mongolid\Cursor\Cursor
+     * @return \Mongolid\Cursor\CursorInterface
      */
     public function authCodes()
     {
@@ -84,7 +82,7 @@ class Client extends Model
      *
      * @param array $query
      *
-     * @return \Mongolid\Cursor\Cursor
+     * @return \Mongolid\Cursor\CursorInterface
      */
     public function tokens(array $query = [])
     {
@@ -111,19 +109,21 @@ class Client extends Model
      * Set the value of the secret attribute.
      *
      * @param  string|null  $value
-     * @return void
      */
-    public function setSecretAttribute($value)
+    public function setSecretAttribute($value): string
     {
         $this->plainSecret = $value;
 
         if (is_null($value) || ! Passport::$hashesClientSecrets) {
-            $this->secret = $value;
-
-            return;
+            return $value;
         }
 
-        $this->secret = password_hash($value, PASSWORD_BCRYPT);
+        if (password_get_info($value)['algoName'] === PASSWORD_BCRYPT) {
+            return $value;
+        }
+
+
+        return password_hash($value, PASSWORD_BCRYPT);
     }
 
     /**
@@ -159,7 +159,7 @@ class Client extends Model
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'id' => (string) $this->_id,

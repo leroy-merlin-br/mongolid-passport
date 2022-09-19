@@ -42,9 +42,7 @@ class HashCommand extends Command
                     continue;
                 }
 
-                $client->fill([
-                    'secret' => $client->secret,
-                ], true);
+                $client->setSecretAttribute($client->secret);
                 $client->save();
             }
 

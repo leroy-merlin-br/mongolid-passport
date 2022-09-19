@@ -114,7 +114,7 @@ class AuthorizationController
      * Approve the authorization request.
      *
      * @param  \League\OAuth2\Server\RequestTypes\AuthorizationRequest  $authRequest
-     * @param  \MongolidLaravel\MongolidModel  $user
+     * @param  \MongolidLaravel\LegacyMongolidModel  $user
      * @return \Illuminate\Http\Response
      */
     protected function approveRequest($authRequest, $user)

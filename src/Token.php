@@ -3,7 +3,7 @@
 namespace Laravel\Passport;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use MongolidLaravel\MongolidModel as Model;
+use MongolidLaravel\LegacyMongolidModel as Model;
 
 class Token extends Model
 {

@@ -2,7 +2,7 @@
 
 namespace Laravel\Passport\Tests\Feature;
 
-use Mongolid\Connection\Pool;
+use Mongolid\Connection\Connection;
 
 trait DropDatabase
 {
@@ -13,10 +13,9 @@ trait DropDatabase
      */
     public function dropDatabase()
     {
-        $pool = app(Pool::class);
+        $connection = app(Connection::class);
 
-        $pool->getConnection()
-            ->getRawConnection()
-            ->dropDatabase($pool->getConnection()->defaultDatabase);
+        $connection->getClient()
+            ->dropDatabase($connection->defaultDatabase);
     }
 }

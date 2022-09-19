@@ -3,7 +3,8 @@
 namespace Laravel\Passport;
 
 use MongoDB\BSON\UTCDateTime;
-use MongolidLaravel\MongolidModel as Model;
+use Mongolid\Cursor\CursorInterface;
+use Mongolid\Model\ModelInterface;
 
 class TokenRepository
 {
@@ -57,7 +58,7 @@ class TokenRepository
      *
      * @param  mixed $userId
      *
-     * @return \Mongolid\Cursor\Cursor
+     * @return CursorInterface
      */
     public function forUser($userId)
     {
@@ -69,7 +70,7 @@ class TokenRepository
     /**
      * Get a valid token instance for the given user and client.
      *
-     * @param  Model                    $user
+     * @param  ModelInterface           $user
      * @param  \Laravel\Passport\Client $client
      *
      * @return \Laravel\Passport\Token|null
@@ -133,7 +134,7 @@ class TokenRepository
     /**
      * Find a valid token for the given user and client.
      *
-     * @param  Model                    $user
+     * @param  ModelInterface           $user
      * @param  \Laravel\Passport\Client $client
      *
      * @return \Laravel\Passport\Token|null
