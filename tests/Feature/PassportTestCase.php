@@ -55,7 +55,7 @@ abstract class PassportTestCase extends TestCase
             'cluster' => [
                 'nodes' => [
                     'primary' => [
-                        'host' => 'db',
+                        'host' => env('DB_HOST', 'db'),
                         'port' => 27017,
                     ],
                 ],
