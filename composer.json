@@ -21,7 +21,7 @@
         "php": ">=7.4",
         "ext-json": "*",
         "ext-mongodb": "*",
-        "firebase/php-jwt": "^5.0",
+        "firebase/php-jwt": "^6.0",
         "illuminate/auth": "^8.37|^9.0",
         "illuminate/console": "^8.37|^9.0",
         "illuminate/container": "^8.37|^9.0",
