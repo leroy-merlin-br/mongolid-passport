@@ -208,7 +208,8 @@ class PassportServiceProvider extends ServiceProvider
             $this->app->make(Bridge\AccessTokenRepository::class),
             $this->app->make(Bridge\ScopeRepository::class),
             $this->makeCryptKey('private'),
-            app('encrypter')->getKey()
+            app('encrypter')->getKey(),
+            Passport::$authorizationServerResponseType
         );
     }
 

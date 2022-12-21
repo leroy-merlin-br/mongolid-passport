@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Lcobucci\JWT\Configuration;
@@ -294,6 +295,36 @@ class AccessTokenControllerTest extends PassportTestCase
 
         $this->assertSame(0, Token::all()->count());
     }
+
+    public function testGettingCustomResponseType()
+    {
+        $this->withoutExceptionHandling();
+        Passport::$authorizationServerResponseType = new IdTokenResponse('foo_bar_open_id_token');
+
+        $user = new User();
+        $user->email = 'foo@gmail.com';
+        $user->password = $this->app->make(Hasher::class)->make('foobar123');
+        $user->save();
+
+        /** @var Client $client */
+        $client = ClientFactory::new()->asClientCredentials()->create(['user_id' => $user->id]);
+
+        $response = $this->post(
+            '/oauth/token',
+            [
+                'grant_type' => 'client_credentials',
+                'client_id' => $client->id,
+                'client_secret' => $client->secret,
+            ]
+        );
+
+        $response->assertOk();
+
+        $decodedResponse = $response->decodeResponseJson()->json();
+
+        $this->assertArrayHasKey('id_token', $decodedResponse);
+        $this->assertSame('foo_bar_open_id_token', $decodedResponse['id_token']);
+    }
 }
 
 class User extends Model
@@ -310,5 +341,31 @@ class User extends Model
     public function getAuthPassword()
     {
         return $this->password;
+    }
+}
+
+class IdTokenResponse extends \League\OAuth2\Server\ResponseTypes\BearerTokenResponse
+{
+    /**
+     * @var string Id token.
+     */
+    protected $idToken;
+
+    /**
+     * @param  string  $idToken
+     */
+    public function __construct($idToken)
+    {
+        $this->idToken = $idToken;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getExtraParams(\League\OAuth2\Server\Entities\AccessTokenEntityInterface $accessToken)
+    {
+        return [
+            'id_token' => $this->idToken,
+        ];
     }
 }
