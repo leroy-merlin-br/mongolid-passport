@@ -306,14 +306,23 @@ class AccessTokenControllerTest extends PassportTestCase
         $user->password = $this->app->make(Hasher::class)->make('foobar123');
         $user->save();
 
-        /** @var Client $client */
-        $client = ClientFactory::new()->asClientCredentials()->create(['user_id' => $user->id]);
+        $client = new Client();
+        $client->fill([
+            'user_id' => $user->_id,
+            'name' => 'Some Company',
+            'secret' => Str::random(40),
+            'redirect' => 'http://some-company.com',
+            'personal_access_client' => false,
+            'password_client' => false,
+            'revoked' => false,
+        ]);
+        $client->save();
 
         $response = $this->post(
             '/oauth/token',
             [
                 'grant_type' => 'client_credentials',
-                'client_id' => $client->id,
+                'client_id' => $client->_id,
                 'client_secret' => $client->secret,
             ]
         );
