@@ -15,12 +15,13 @@ ported for [Mongolid Laravel](https://github.com/leroy-merlin-br/mongolid-larave
 
 ## Official Documentation
 
-Documentation for Passport can be found on the [Laravel website](https://laravel.com/docs/master/passport).
+Documentation for Passport can be found on the [Laravel website](https://laravel.com/docs/passport).
 
 ## Compatibility
 
 | mongolid-passport | laravel-passport | mongolid-laravel | mongolid |
 |-------------------|------------------|------------------|----------|
+| 11.1.0            | 10.4.1           | 3.4.0            | 3.4.x    |
 | 11.0.0            | 10.1.1           | 3.0.0            | 3.1.x    |
 | 10.x              | 10.x             | 2.3.x            | 2.4.x    |
 | 9.x               | 9.x              | 2.2.x            | 2.3.x    |

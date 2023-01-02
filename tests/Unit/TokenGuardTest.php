@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Firebase\JWT\JWT;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Contracts\Encryption\Encrypter as EncrypterContract;
 use Illuminate\Cookie\CookieValuePrefix;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Http\Request;
@@ -133,7 +134,7 @@ class TokenGuardTest extends TestCase
                 'aud' => 1,
                 'csrf' => 'token',
                 'expiry' => Carbon::now()->addMinutes(10)->getTimestamp(),
-            ], str_repeat('a', 16)), false)
+            ], str_repeat('a', 16), 'HS256'), false)
         );
 
         $userProvider->shouldReceive('retrieveById')->with(1)->andReturn($expectedUser = new TokenGuardTestUser);
@@ -166,7 +167,7 @@ class TokenGuardTest extends TestCase
                 'aud' => 1,
                 'csrf' => 'token',
                 'expiry' => Carbon::now()->addMinutes(10)->getTimestamp(),
-            ], str_repeat('a', 16)), false)
+            ], str_repeat('a', 16), 'HS256'), false)
         );
 
         $userProvider->shouldReceive('retrieveById')->with(1)->andReturn($expectedUser = new TokenGuardTestUser);
@@ -195,7 +196,7 @@ class TokenGuardTest extends TestCase
                 'aud' => 1,
                 'csrf' => 'token',
                 'expiry' => Carbon::now()->addMinutes(10)->getTimestamp(),
-            ], str_repeat('a', 16)))
+            ], str_repeat('a', 16), 'HS256'))
         );
 
         $userProvider->shouldReceive('retrieveById')->never();
@@ -221,12 +222,52 @@ class TokenGuardTest extends TestCase
                 'aud' => 1,
                 'csrf' => 'token',
                 'expiry' => Carbon::now()->addMinutes(10)->getTimestamp(),
-            ], str_repeat('a', 16)))
+            ], str_repeat('a', 16), 'HS256'))
         );
 
         $userProvider->shouldReceive('retrieveById')->never();
 
         $this->assertNull($guard->user($request));
+    }
+
+    public function test_users_may_be_retrieved_from_cookies_with_xsrf_token_header_when_using_a_custom_encryption_key()
+    {
+        Passport::encryptTokensUsing(function (EncrypterContract $encrypter) {
+            return $encrypter->getKey().'.mykey';
+        });
+
+        $resourceServer = m::mock(ResourceServer::class);
+        $userProvider = m::mock(PassportUserProvider::class);
+        $tokens = m::mock(TokenRepository::class);
+        $clients = m::mock(ClientRepository::class);
+        $encrypter = new Encrypter(str_repeat('a', 16));
+
+        $clients->shouldReceive('findActive')
+            ->with(1)
+            ->andReturn(new TokenGuardTestClient);
+
+        $guard = new TokenGuard($resourceServer, $userProvider, $tokens, $clients, $encrypter);
+
+        $request = Request::create('/');
+        $request->headers->set('X-XSRF-TOKEN', $encrypter->encrypt(CookieValuePrefix::create('X-XSRF-TOKEN', $encrypter->getKey()).'token', false));
+        $request->cookies->set('laravel_token',
+            $encrypter->encrypt(CookieValuePrefix::create('laravel_token', $encrypter->getKey()).JWT::encode([
+                'sub' => 1,
+                'aud' => 1,
+                'csrf' => 'token',
+                'expiry' => Carbon::now()->addMinutes(10)->getTimestamp(),
+            ], Passport::tokenEncryptionKey($encrypter), 'HS256'), false)
+        );
+
+        $userProvider->shouldReceive('retrieveById')->with(1)->andReturn($expectedUser = new TokenGuardTestUser);
+        $userProvider->shouldReceive('getProviderName')->andReturn(null);
+
+        $user = $guard->user($request);
+
+        $this->assertEquals($expectedUser, $user);
+
+        // Revert to the default encryption method
+        Passport::encryptTokensUsing(null);
     }
 
     public function test_xsrf_token_cookie_without_a_token_header_is_not_accepted()
@@ -247,7 +288,7 @@ class TokenGuardTest extends TestCase
                 'aud' => 1,
                 'csrf' => 'token',
                 'expiry' => Carbon::now()->addMinutes(10)->getTimestamp(),
-            ], str_repeat('a', 16)))
+            ], str_repeat('a', 16), 'HS256'))
         );
 
         $userProvider->shouldReceive('retrieveById')->never();
@@ -273,7 +314,7 @@ class TokenGuardTest extends TestCase
                 'aud' => 1,
                 'csrf' => 'token',
                 'expiry' => Carbon::now()->subMinutes(10)->getTimestamp(),
-            ], str_repeat('a', 16)))
+            ], str_repeat('a', 16), 'HS256'))
         );
 
         $userProvider->shouldReceive('retrieveById')->never();
@@ -303,7 +344,7 @@ class TokenGuardTest extends TestCase
                 'sub' => 1,
                 'aud' => 1,
                 'expiry' => Carbon::now()->addMinutes(10)->getTimestamp(),
-            ], str_repeat('a', 16)), false)
+            ], str_repeat('a', 16), 'HS256'), false)
         );
 
         $userProvider->shouldReceive('retrieveById')->with(1)->andReturn($expectedUser = new TokenGuardTestUser);
@@ -402,7 +443,7 @@ class TokenGuardTest extends TestCase
                 'aud' => 1,
                 'csrf' => 'token',
                 'expiry' => Carbon::now()->addMinutes(10)->getTimestamp(),
-            ], str_repeat('a', 16)), false)
+            ], str_repeat('a', 16), 'HS256'), false)
         );
 
         $clients->shouldReceive('findActive')->with(1)->andReturn($expectedClient = new TokenGuardTestClient);

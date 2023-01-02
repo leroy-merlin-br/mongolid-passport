@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Lcobucci\JWT\Configuration;
@@ -231,11 +232,11 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertArrayNotHasKey('expires_in', $decodedResponse);
         $this->assertArrayNotHasKey('access_token', $decodedResponse);
         $this->assertArrayNotHasKey('refresh_token', $decodedResponse);
+        $this->assertArrayNotHasKey('hint', $decodedResponse);
 
         $this->assertArrayHasKey('error', $decodedResponse);
         $this->assertSame('invalid_grant', $decodedResponse['error']);
         $this->assertArrayHasKey('error_description', $decodedResponse);
-        $this->assertArrayHasKey('hint', $decodedResponse);
         $this->assertArrayHasKey('message', $decodedResponse);
 
         $this->assertSame(0, Token::all()->count());
@@ -294,6 +295,45 @@ class AccessTokenControllerTest extends PassportTestCase
 
         $this->assertSame(0, Token::all()->count());
     }
+
+    public function testGettingCustomResponseType()
+    {
+        $this->withoutExceptionHandling();
+        Passport::$authorizationServerResponseType = new IdTokenResponse('foo_bar_open_id_token');
+
+        $user = new User();
+        $user->email = 'foo@gmail.com';
+        $user->password = $this->app->make(Hasher::class)->make('foobar123');
+        $user->save();
+
+        $client = new Client();
+        $client->fill([
+            'user_id' => $user->_id,
+            'name' => 'Some Company',
+            'secret' => Str::random(40),
+            'redirect' => 'http://some-company.com',
+            'personal_access_client' => false,
+            'password_client' => false,
+            'revoked' => false,
+        ]);
+        $client->save();
+
+        $response = $this->post(
+            '/oauth/token',
+            [
+                'grant_type' => 'client_credentials',
+                'client_id' => $client->_id,
+                'client_secret' => $client->secret,
+            ]
+        );
+
+        $response->assertOk();
+
+        $decodedResponse = $response->decodeResponseJson()->json();
+
+        $this->assertArrayHasKey('id_token', $decodedResponse);
+        $this->assertSame('foo_bar_open_id_token', $decodedResponse['id_token']);
+    }
 }
 
 class User extends Model
@@ -310,5 +350,31 @@ class User extends Model
     public function getAuthPassword()
     {
         return $this->password;
+    }
+}
+
+class IdTokenResponse extends \League\OAuth2\Server\ResponseTypes\BearerTokenResponse
+{
+    /**
+     * @var string Id token.
+     */
+    protected $idToken;
+
+    /**
+     * @param  string  $idToken
+     */
+    public function __construct($idToken)
+    {
+        $this->idToken = $idToken;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getExtraParams(\League\OAuth2\Server\Entities\AccessTokenEntityInterface $accessToken)
+    {
+        return [
+            'id_token' => $this->idToken,
+        ];
     }
 }
