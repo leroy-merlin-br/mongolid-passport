@@ -22,8 +22,6 @@ abstract class PassportTestCase extends TestCase
 
         $this->dropDatabase();
 
-        Passport::routes();
-
         Passport::loadKeysFrom(self::KEYS);
 
         @unlink(self::PUBLIC_KEY);
@@ -81,5 +79,6 @@ abstract class PassportTestCase extends TestCase
      */
     protected function getUserClass()
     {
+        return \Laravel\Passport\Tests\Stubs\User::class;
     }
 }

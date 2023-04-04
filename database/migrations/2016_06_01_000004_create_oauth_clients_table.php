@@ -7,40 +7,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * The database schema.
-     *
-     * @var \Illuminate\Database\Schema\Builder
-     */
-    protected $schema;
-
-    /**
-     * Create a new migration instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->schema = Schema::connection($this->getConnection());
-    }
-
-    /**
-     * Get the migration connection name.
-     *
-     * @return string|null
-     */
-    public function getConnection()
-    {
-        return config('passport.storage.database.connection');
-    }
-
-    /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        $this->schema->create('oauth_clients', function (Blueprint $table) {
+        Schema::create('oauth_clients', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('name');
@@ -56,11 +27,9 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        $this->schema->dropIfExists('oauth_clients');
+        Schema::dropIfExists('oauth_clients');
     }
 };

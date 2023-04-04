@@ -3,6 +3,7 @@
 namespace Laravel\Passport;
 
 use Illuminate\Support\Str;
+use MongoDB\BSON\ObjectId;
 use RuntimeException;
 
 class ClientRepository
@@ -37,7 +38,7 @@ class ClientRepository
     /**
      * Get a client by the given ID.
      *
-     * @param  int $id
+     * @param  string|ObjectId $id
      *
      * @return \Laravel\Passport\Client|null
      */
@@ -51,7 +52,7 @@ class ClientRepository
     /**
      * Get an active client by the given ID.
      *
-     * @param string|int $id
+     * @param string|ObjectId $id
      *
      * @return \Laravel\Passport\Client|null
      */
@@ -65,8 +66,8 @@ class ClientRepository
     /**
      * Get a client instance for the given ID and user ID.
      *
-     * @param  int   $clientId
-     * @param  mixed $userId
+     * @param  string|ObjectId  $clientId
+     * @param  mixed            $userId
      *
      * @return \Laravel\Passport\Client|null
      */
@@ -140,14 +141,14 @@ class ClientRepository
     /**
      * Store a new client.
      *
-     * @param  int    $userId
-     * @param  string $name
-     * @param  string $redirect
-     * @param  string|null  $provider
-     * @param  bool   $personalAccess
-     * @param  bool   $password
-     * @param  bool   $confidential
-     * @param  string $allowedScopes
+     * @param  string|ObjectId  $userId
+     * @param  string           $name
+     * @param  string           $redirect
+     * @param  string|null      $provider
+     * @param  bool             $personalAccess
+     * @param  bool             $password
+     * @param  bool             $confidential
+     * @param  string           $allowedScopes
      *
      * @return \Laravel\Passport\Client
      */
@@ -178,9 +179,9 @@ class ClientRepository
     /**
      * Store a new personal access token client.
      *
-     * @param  int    $userId
-     * @param  string $name
-     * @param  string $redirect
+     * @param  string|ObjectId  $userId
+     * @param  string           $name
+     * @param  string           $redirect
      *
      * @return \Laravel\Passport\Client
      */
@@ -196,10 +197,10 @@ class ClientRepository
     /**
      * Store a new password grant client.
      *
-     * @param  int    $userId
-     * @param  string $name
-     * @param  string $redirect
-     * @param  string|null  $provider
+     * @param  string|ObjectId  $userId
+     * @param  string           $name
+     * @param  string           $redirect
+     * @param  string|null      $provider
      *
      * @return \Laravel\Passport\Client
      */
@@ -256,7 +257,7 @@ class ClientRepository
     /**
      * Determine if the given client is revoked.
      *
-     * @param  int $id
+     * @param  string|ObjectId $id
      *
      * @return bool
      */

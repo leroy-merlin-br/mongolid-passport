@@ -143,7 +143,7 @@ class ClientCommand extends Command
     protected function createAuthCodeClient(ClientRepository $clients)
     {
         $userId = $this->option('user_id') ?: $this->ask(
-            'Which user ID should the client be assigned to?'
+            'Which user ID should the client be assigned to? (Optional)'
         );
 
         $name = $this->option('name') ?: $this->ask(
@@ -155,10 +155,8 @@ class ClientCommand extends Command
             url('/auth/callback')
         );
 
-        $allowedScopes = config('auth.authorization_code.allowed_scopes');
-
         $client = $clients->create(
-            $userId, $name, $redirect, null, false, false, !$this->option('public'), $allowedScopes
+            $userId, $name, $redirect, null, false, false, !$this->option('public')
         );
 
         $this->info('New client created successfully.');
@@ -180,7 +178,7 @@ class ClientCommand extends Command
         }
 
         $this->line('<comment>Client ID:</comment> '.$client->_id);
-        $this->line('<comment>Client secret:</comment> '.($client->plainSecret ?? $client->secret));
+        $this->line('<comment>Client secret:</comment> '.$client->plainSecret);
     }
 
     /**

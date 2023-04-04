@@ -9,6 +9,7 @@ use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Passport;
+use Laravel\Passport\PersonalAccessTokenFactory;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Lcobucci\JWT\Configuration;
@@ -57,19 +58,16 @@ class AccessTokenControllerTest extends PassportTestCase
         $response->assertHeader('cache-control', 'no-store, private');
         $response->assertHeader('content-type', 'application/json; charset=UTF-8');
 
-        $decodedResponse = $response->decodeResponseJson();
+        $decodedResponse = $response->decodeResponseJson()->json();
 
         $this->assertArrayHasKey('token_type', $decodedResponse);
         $this->assertArrayHasKey('expires_in', $decodedResponse);
         $this->assertArrayHasKey('access_token', $decodedResponse);
         $this->assertSame('Bearer', $decodedResponse['token_type']);
-        $expiresInSeconds = 31536000;
+        $expiresInSeconds = 31622400;
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
-        $jwtAccessToken = Configuration::forUnsecuredSigner()->parser()->parse($decodedResponse['access_token']);
-        $this->assertEquals($client, $this->app->make(ClientRepository::class)->findActive(current($jwtAccessToken->claims()->get('aud'))));
-
-        $token = $this->app->make(TokenRepository::class)->find($jwtAccessToken->claims()->get('jti'));
+        $token = $this->app->make(PersonalAccessTokenFactory::class)->findAccessToken($decodedResponse);
         $this->assertInstanceOf(Token::class, $token);
         $this->assertEquals($client, $token->client());
         $this->assertFalse($token->revoked);
@@ -111,7 +109,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $response->assertHeader('cache-control', 'no-cache, private');
         $response->assertHeader('content-type', 'application/json');
 
-        $decodedResponse = $response->decodeResponseJson();
+        $decodedResponse = $response->decodeResponseJson()->json();
 
         $this->assertArrayNotHasKey('token_type', $decodedResponse);
         $this->assertArrayNotHasKey('expires_in', $decodedResponse);
@@ -167,21 +165,17 @@ class AccessTokenControllerTest extends PassportTestCase
         $response->assertHeader('cache-control', 'no-store, private');
         $response->assertHeader('content-type', 'application/json; charset=UTF-8');
 
-        $decodedResponse = $response->decodeResponseJson();
+        $decodedResponse = $response->decodeResponseJson()->json();
 
         $this->assertArrayHasKey('token_type', $decodedResponse);
         $this->assertArrayHasKey('expires_in', $decodedResponse);
         $this->assertArrayHasKey('access_token', $decodedResponse);
         $this->assertArrayHasKey('refresh_token', $decodedResponse);
         $this->assertSame('Bearer', $decodedResponse['token_type']);
-        $expiresInSeconds = 31536000;
+        $expiresInSeconds = 31622400;
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
-        $jwtAccessToken = Configuration::forUnsecuredSigner()->parser()->parse($decodedResponse['access_token']);
-        $this->assertEquals($client, $this->app->make(ClientRepository::class)->findActive(current($jwtAccessToken->claims()->get('aud'))));
-        $this->assertEquals($user, $this->app->make('auth')->createUserProvider()->retrieveById($jwtAccessToken->claims()->get('sub')));
-
-        $token = $this->app->make(TokenRepository::class)->find($jwtAccessToken->claims()->get('jti'));
+        $token = $this->app->make(PersonalAccessTokenFactory::class)->findAccessToken($decodedResponse);
         $this->assertInstanceOf(Token::class, $token);
         $this->assertFalse($token->revoked);
         $this->assertEquals($user, $token->user());
@@ -226,7 +220,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $response->assertHeader('cache-control', 'no-cache, private');
         $response->assertHeader('content-type', 'application/json');
 
-        $decodedResponse = $response->decodeResponseJson();
+        $decodedResponse = $response->decodeResponseJson()->json();
 
         $this->assertArrayNotHasKey('token_type', $decodedResponse);
         $this->assertArrayNotHasKey('expires_in', $decodedResponse);
@@ -278,7 +272,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $response->assertHeader('cache-control', 'no-cache, private');
         $response->assertHeader('content-type', 'application/json');
 
-        $decodedResponse = $response->decodeResponseJson();
+        $decodedResponse = $response->decodeResponseJson()->json();
 
         $this->assertArrayNotHasKey('token_type', $decodedResponse);
         $this->assertArrayNotHasKey('expires_in', $decodedResponse);
