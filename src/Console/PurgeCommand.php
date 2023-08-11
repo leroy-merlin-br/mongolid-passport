@@ -17,7 +17,8 @@ class PurgeCommand extends Command
      */
     protected $signature = 'passport:purge
                             {--revoked : Only purge revoked tokens and authentication codes}
-                            {--expired : Only purge expired tokens and authentication codes}';
+                            {--expired : Only purge expired tokens and authentication codes}
+                            {--hours= : The number of hours to retain expired tokens}';
 
     /**
      * The console command description.
@@ -31,20 +32,27 @@ class PurgeCommand extends Command
      */
     public function handle()
     {
-        $expired = new UTCDateTime(Carbon::now()->subDays(7));
+        $expired = $this->option('hours')
+            ? Carbon::now()->subHours($this->option('hours'))
+            : Carbon::now()->subDays(7);
+        $expired = new UTCDateTime($expired);
         $query = [];
         $message = '';
 
         if (($this->option('revoked') && $this->option('expired')) ||
             (! $this->option('revoked') && ! $this->option('expired'))) {
             $query = ['$or' => [['revoked' => true], ['expires_at' => ['$lt' => $expired]]]];
-            $message = 'Purged revoked items and items expired for more than seven days.';
+            $message = $this->option('hours')
+                ? 'Purged revoked items and items expired for more than '.$this->option('hours').' hours.'
+                : 'Purged revoked items and items expired for more than seven days.';
         } elseif ($this->option('revoked')) {
             $query = ['revoked' => true];
             $message = 'Purged revoked items.';
         } elseif ($this->option('expired')) {
             $query = ['expires_at' => ['$lt' => $expired]];
-            $message = 'Purged items expired for more than seven days.';
+            $message = $this->option('hours')
+                ? 'Purged items expired for more than '.$this->option('hours').' hours.'
+                : 'Purged items expired for more than seven days.';
         }
 
         if ($tokens = Passport::tokenModel()::where($query)) {

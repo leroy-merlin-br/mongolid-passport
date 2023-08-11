@@ -1,4 +1,5 @@
 <?php
+
 namespace Laravel\Passport;
 
 use MongolidLaravel\LegacyMongolidModel as Model;
