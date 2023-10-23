@@ -29,18 +29,6 @@ class Client extends Model
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'grant_types' => 'array',
-        'personal_access_client' => 'bool',
-        'password_client' => 'bool',
-        'revoked' => 'bool',
-    ];
-
-    /**
      * The temporary plain-text client secret.
      *
      * @var string|null
