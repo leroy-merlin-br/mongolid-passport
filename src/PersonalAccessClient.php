@@ -9,7 +9,7 @@ class PersonalAccessClient extends Model
     /**
      * {@inheritdoc}
      */
-    protected $collection = 'oauth_personal_access_clients';
+    protected ?string $collection = 'oauth_personal_access_clients';
 
     /**
      * Get all of the authentication codes for the client.

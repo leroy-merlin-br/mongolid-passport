@@ -10,14 +10,12 @@ class Client extends Model
     /**
      * {@inheritdoc}
      */
-    protected $collection = 'oauth_clients';
+    protected ?string $collection = 'oauth_clients';
 
     /**
      * The guarded attributes on the model.
-     *
-     * @var array
      */
-    protected $guarded = [];
+    protected array $guarded = [];
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -38,7 +36,7 @@ class Client extends Model
     /**
      * {@inheritdoc}
      */
-    public $mutable = true;
+    public bool $mutable = true;
 
     /**
      * Get the user that the client belongs to.

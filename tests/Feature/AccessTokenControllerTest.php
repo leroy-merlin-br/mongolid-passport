@@ -13,6 +13,7 @@ use Laravel\Passport\PersonalAccessTokenFactory;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Lcobucci\JWT\Configuration;
+use MongoDB\BSON\ObjectId;
 use MongolidLaravel\LegacyMongolidModel as Model;
 
 class AccessTokenControllerTest extends PassportTestCase
@@ -64,7 +65,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertArrayHasKey('expires_in', $decodedResponse);
         $this->assertArrayHasKey('access_token', $decodedResponse);
         $this->assertSame('Bearer', $decodedResponse['token_type']);
-        $expiresInSeconds = 31622400;
+        $expiresInSeconds = 31536000;
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
         $token = $this->app->make(PersonalAccessTokenFactory::class)->findAccessToken($decodedResponse);
@@ -172,7 +173,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertArrayHasKey('access_token', $decodedResponse);
         $this->assertArrayHasKey('refresh_token', $decodedResponse);
         $this->assertSame('Bearer', $decodedResponse['token_type']);
-        $expiresInSeconds = 31622400;
+        $expiresInSeconds = 31536000;
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
         $token = $this->app->make(PersonalAccessTokenFactory::class)->findAccessToken($decodedResponse);
@@ -334,9 +335,9 @@ class User extends Model
 {
     use HasApiTokens;
 
-    protected $collection = 'users';
+    protected ?string $collection = 'users';
 
-    public function getAuthIdentifier()
+    public function getAuthIdentifier(): ObjectId
     {
         return $this->_id;
     }

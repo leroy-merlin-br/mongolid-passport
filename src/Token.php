@@ -10,7 +10,7 @@ class Token extends Model
     /**
      * {@inheritdoc}
      */
-    protected $collection = 'oauth_access_tokens';
+    protected ?string $collection = 'oauth_access_tokens';
 
     /**
      * Get the client that the token belongs to.
