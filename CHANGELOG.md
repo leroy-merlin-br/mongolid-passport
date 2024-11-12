@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/passport/compare/v12.3.0...12.x)
+## [Unreleased](https://github.com/laravel/passport/compare/v12.3.1...12.x)
+
+## [v12.3.1](https://github.com/laravel/passport/compare/v12.3.0...v12.3.1) - 2024-11-11
+
+* Update logo to support dark/light theme by [@milewski](https://github.com/milewski) in https://github.com/laravel/passport/pull/1787
+* Fix repeated word "the" in upgrade guide by [@caendesilva](https://github.com/caendesilva) in https://github.com/laravel/passport/pull/1798
 
 ## [v12.3.0](https://github.com/laravel/passport/compare/v12.2.1...v12.3.0) - 2024-08-05
 
