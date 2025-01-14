@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/passport/compare/v12.3.1...12.x)
+## [Unreleased](https://github.com/laravel/passport/compare/v12.4.0...12.x)
+
+## [v12.4.0](https://github.com/laravel/passport/compare/v12.3.1...v12.4.0) - 2025-01-13
+
+* [12.x] Supports PHP 8.4 by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/passport/pull/1799
 
 ## [v12.3.1](https://github.com/laravel/passport/compare/v12.3.0...v12.3.1) - 2024-11-11
 
