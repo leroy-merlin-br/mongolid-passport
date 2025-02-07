@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a4e2758a8d867577041e21531478bbf",
+    "content-hash": "2c7356ae27bde0d7e025a66a1e785a3c",
     "packages": [
         {
             "name": "brick/math",
@@ -2044,16 +2044,16 @@
         },
         {
             "name": "leroy-merlin-br/mongolid",
-            "version": "v3.x-dev",
+            "version": "dev-chore/bump-packages-fix",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leroy-merlin-br/mongolid.git",
-                "reference": "7f13a3a018aafe8c9b40acaebd49ed2d53898551"
+                "reference": "f933688be691cff84094279830e336a8e9416e75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/7f13a3a018aafe8c9b40acaebd49ed2d53898551",
-                "reference": "7f13a3a018aafe8c9b40acaebd49ed2d53898551",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/f933688be691cff84094279830e336a8e9416e75",
+                "reference": "f933688be691cff84094279830e336a8e9416e75",
                 "shasum": ""
             },
             "require": {
@@ -2073,7 +2073,6 @@
             "suggest": {
                 "leroy-merlin-br/mongolid-laravel": "Easy, powerful and ultrafast MongoDB ODM for Laravel."
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -2114,9 +2113,9 @@
             ],
             "support": {
                 "issues": "https://github.com/leroy-merlin-br/mongolid/issues",
-                "source": "https://github.com/leroy-merlin-br/mongolid/tree/v3.x"
+                "source": "https://github.com/leroy-merlin-br/mongolid/tree/chore/bump-packages-fix"
             },
-            "time": "2025-02-05T13:38:17+00:00"
+            "time": "2025-02-06T13:31:03+00:00"
         },
         {
             "name": "leroy-merlin-br/mongolid-laravel",
@@ -2124,19 +2123,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leroy-merlin-br/mongolid-laravel.git",
-                "reference": "a45cce4127710e08d8e6fea7a8fd68cb67e7db76"
+                "reference": "b4a8e63d84693d0202bce8812ff4614c66212e5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/a45cce4127710e08d8e6fea7a8fd68cb67e7db76",
-                "reference": "a45cce4127710e08d8e6fea7a8fd68cb67e7db76",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/b4a8e63d84693d0202bce8812ff4614c66212e5d",
+                "reference": "b4a8e63d84693d0202bce8812ff4614c66212e5d",
                 "shasum": ""
             },
             "require": {
                 "illuminate/auth": "^9.0 || ^10.0",
                 "illuminate/queue": "^9.0 || ^10.0",
                 "illuminate/support": "^9.0 || ^10.0",
-                "leroy-merlin-br/mongolid": "v3.x-dev",
+                "leroy-merlin-br/mongolid": "chore/bump-packages-fix-dev",
                 "php": "^8.0"
             },
             "require-dev": {
@@ -2195,7 +2194,7 @@
                 "issues": "https://github.com/leroy-merlin-br/mongolid-laravel/issues",
                 "source": "https://github.com/leroy-merlin-br/mongolid-laravel/tree/chore/bump-packages"
             },
-            "time": "2025-02-05T15:56:31+00:00"
+            "time": "2025-02-06T13:41:54+00:00"
         },
         {
             "name": "mongodb/mongodb",
