@@ -2048,12 +2048,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leroy-merlin-br/mongolid.git",
-                "reference": "8d05be8f116ec225918b196da1d6ac9afd8d1f75"
+                "reference": "6b202db89e5ad1e4ed3b16dd0dd411bcf2e8340a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/8d05be8f116ec225918b196da1d6ac9afd8d1f75",
-                "reference": "8d05be8f116ec225918b196da1d6ac9afd8d1f75",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/6b202db89e5ad1e4ed3b16dd0dd411bcf2e8340a",
+                "reference": "6b202db89e5ad1e4ed3b16dd0dd411bcf2e8340a",
                 "shasum": ""
             },
             "require": {
@@ -2115,7 +2115,7 @@
                 "issues": "https://github.com/leroy-merlin-br/mongolid/issues",
                 "source": "https://github.com/leroy-merlin-br/mongolid/tree/chore/bump-packages-fix"
             },
-            "time": "2025-02-13T14:40:09+00:00"
+            "time": "2025-02-13T19:03:35+00:00"
         },
         {
             "name": "leroy-merlin-br/mongolid-laravel",
@@ -2123,12 +2123,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leroy-merlin-br/mongolid-laravel.git",
-                "reference": "70e41377c98456a9339338f9684240045b82837a"
+                "reference": "102e9bd7ba6b755baf18c9afbcbeb0a5ca2f912b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/70e41377c98456a9339338f9684240045b82837a",
-                "reference": "70e41377c98456a9339338f9684240045b82837a",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/102e9bd7ba6b755baf18c9afbcbeb0a5ca2f912b",
+                "reference": "102e9bd7ba6b755baf18c9afbcbeb0a5ca2f912b",
                 "shasum": ""
             },
             "require": {
@@ -2139,6 +2139,7 @@
                 "php": "^8.0"
             },
             "require-dev": {
+                "ext-mongodb": "*",
                 "leroy-merlin-br/coding-standard": "^3.1.0",
                 "mockery/mockery": "^1.5.1",
                 "orchestra/testbench": "^7.0 || ^8.0",
@@ -2194,7 +2195,7 @@
                 "issues": "https://github.com/leroy-merlin-br/mongolid-laravel/issues",
                 "source": "https://github.com/leroy-merlin-br/mongolid-laravel/tree/chore/bump-packages"
             },
-            "time": "2025-02-13T14:41:26+00:00"
+            "time": "2025-02-13T19:04:59+00:00"
         },
         {
             "name": "mongodb/mongodb",
