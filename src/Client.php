@@ -2,6 +2,7 @@
 
 namespace Laravel\Passport;
 
+use Mongolid\Cursor\CursorInterface;
 use Mongolid\Util\LocalDateTime;
 use MongolidLaravel\LegacyMongolidModel as Model;
 
@@ -10,40 +11,34 @@ class Client extends Model
     /**
      * {@inheritdoc}
      */
-    protected $collection = 'oauth_clients';
+    protected ?string $collection = 'oauth_clients';
 
     /**
      * The guarded attributes on the model.
-     *
-     * @var array
      */
-    protected $guarded = [];
+    protected array $guarded = [];
 
     /**
      * The attributes excluded from the model's JSON form.
-     *
-     * @var array
      */
-    protected $hidden = [
+    protected array $hidden = [
         'secret',
     ];
 
     /**
      * The temporary plain-text client secret.
-     *
-     * @var string|null
      */
-    protected $plainSecret;
+    protected ?string $plainSecret;
 
     /**
      * {@inheritdoc}
      */
-    public $mutable = true;
+    public bool $mutable = true;
 
     /**
      * Get the user that the client belongs to.
      */
-    public function user()
+    public function user(): void
     {
         $provider = $this->provider ?: config('auth.guards.api.provider');
 
@@ -54,11 +49,9 @@ class Client extends Model
     }
 
     /**
-     * Get all of the authentication codes for the client.
-     *
-     * @return \Mongolid\Cursor\CursorInterface
+     * Get all the authentication codes for the client.
      */
-    public function authCodes()
+    public function authCodes(): CursorInterface
     {
         $authCodeModel = Passport::authCodeModel();
 
@@ -66,13 +59,9 @@ class Client extends Model
     }
 
     /**
-     * Get all of the tokens that belong to the client.
-     *
-     * @param array $query
-     *
-     * @return \Mongolid\Cursor\CursorInterface
+     * Get all the tokens that belong to the client.
      */
-    public function tokens(array $query = [])
+    public function tokens(array $query = []): CursorInterface
     {
         $tokenModel = Passport::tokenModel();
 
@@ -85,20 +74,16 @@ class Client extends Model
      * The temporary non-hashed client secret.
      *
      * This is only available once during the request that created the client.
-     *
-     * @return string|null
      */
-    public function getPlainSecretAttribute()
+    public function getPlainSecretAttribute(): ?string
     {
         return $this->plainSecret;
     }
 
     /**
      * Set the value of the secret attribute.
-     *
-     * @param  string|null  $value
      */
-    public function setSecretAttribute($value): string
+    public function setSecretAttribute(?string $value): string
     {
         $this->plainSecret = $value;
 
@@ -116,30 +101,24 @@ class Client extends Model
 
     /**
      * Determine if the client is a "first party" client.
-     *
-     * @return bool
      */
-    public function firstParty()
+    public function firstParty(): bool
     {
         return $this->personal_access_client || $this->password_client;
     }
 
     /**
      * Determine if the client should skip the authorization prompt.
-     *
-     * @return bool
      */
-    public function skipsAuthorization()
+    public function skipsAuthorization(): bool
     {
         return false;
     }
 
     /**
      * Determine if the client is a confidential client.
-     *
-     * @return bool
      */
-    public function confidential()
+    public function confidential(): bool
     {
         return ! empty($this->secret);
     }

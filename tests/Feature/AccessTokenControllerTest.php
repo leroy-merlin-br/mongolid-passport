@@ -13,6 +13,7 @@ use Laravel\Passport\PersonalAccessTokenFactory;
 use Laravel\Passport\Token;
 use Laravel\Passport\TokenRepository;
 use Lcobucci\JWT\Configuration;
+use MongoDB\BSON\ObjectId;
 use MongolidLaravel\LegacyMongolidModel as Model;
 
 class AccessTokenControllerTest extends PassportTestCase
@@ -334,14 +335,14 @@ class User extends Model
 {
     use HasApiTokens;
 
-    protected $collection = 'users';
+    protected ?string $collection = 'users';
 
-    public function getAuthIdentifier()
+    public function getAuthIdentifier(): ObjectId
     {
         return $this->_id;
     }
 
-    public function getAuthPassword()
+    public function getAuthPassword(): mixed
     {
         return $this->password;
     }
@@ -352,12 +353,12 @@ class IdTokenResponse extends \League\OAuth2\Server\ResponseTypes\BearerTokenRes
     /**
      * @var string Id token.
      */
-    protected $idToken;
+    protected string $idToken;
 
     /**
      * @param  string  $idToken
      */
-    public function __construct($idToken)
+    public function __construct(string $idToken)
     {
         $this->idToken = $idToken;
     }

@@ -9,7 +9,7 @@ class AuthCode extends Model
     /**
      * {@inheritdoc}
      */
-    protected $collection = 'oauth_auth_codes';
+    protected ?string $collection = 'oauth_auth_codes';
 
     /**
      * Get the client that owns the authentication code.

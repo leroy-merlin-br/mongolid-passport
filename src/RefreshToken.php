@@ -9,14 +9,12 @@ class RefreshToken extends Model
     /**
      * {@inheritdoc}
      */
-    protected $collection = 'oauth_refresh_tokens';
+    protected ?string $collection = 'oauth_refresh_tokens';
 
     /**
      * The guarded attributes on the model.
-     *
-     * @var array
      */
-    protected $guarded = [];
+    protected array $guarded = [];
 
     /**
      * Get the access token that the refresh token belongs to.
@@ -28,10 +26,8 @@ class RefreshToken extends Model
 
     /**
      * Revoke the token instance.
-     *
-     * @return bool
      */
-    public function revoke()
+    public function revoke(): bool
     {
         $this->fill(['revoked' => true], true);
 
@@ -40,10 +36,8 @@ class RefreshToken extends Model
 
     /**
      * Determine if the token is a transient JWT token.
-     *
-     * @return bool
      */
-    public function transient()
+    public function transient(): bool
     {
         return false;
     }

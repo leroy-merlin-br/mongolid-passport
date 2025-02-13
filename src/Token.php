@@ -10,24 +10,20 @@ class Token extends Model
     /**
      * {@inheritdoc}
      */
-    protected $collection = 'oauth_access_tokens';
+    protected ?string $collection = 'oauth_access_tokens';
 
     /**
      * Get the client that the token belongs to.
-     *
-     * @return Client|null
      */
-    public function client()
+    public function client(): ?Client
     {
         return $this->referencesOne(Client::class, 'client_id');
     }
 
     /**
      * Get the user that the token belongs to.
-     *
-     * @return Authenticatable|null
      */
-    public function user()
+    public function user(): ?Authenticatable
     {
         $provider = config('auth.guards.api.provider');
 
@@ -38,11 +34,8 @@ class Token extends Model
 
     /**
      * Determine if the token has a given scope.
-     *
-     * @param  string  $scope
-     * @return bool
      */
-    public function can($scope)
+    public function can(string $scope): bool
     {
         if (in_array('*', $this->scopes)) {
             return true;
@@ -63,11 +56,8 @@ class Token extends Model
 
     /**
      * Resolve all possible scopes.
-     *
-     * @param  string  $scope
-     * @return array
      */
-    protected function resolveInheritedScopes($scope)
+    protected function resolveInheritedScopes(string $scope): array
     {
         $parts = explode(':', $scope);
 
@@ -84,21 +74,16 @@ class Token extends Model
 
     /**
      * Determine if the token is missing a given scope.
-     *
-     * @param  string  $scope
-     * @return bool
      */
-    public function cant($scope)
+    public function cant(string $scope): bool
     {
         return ! $this->can($scope);
     }
 
     /**
      * Revoke the token instance.
-     *
-     * @return bool
      */
-    public function revoke()
+    public function revoke(): bool
     {
         $this->fill(['revoked' => true], true);
 
@@ -107,10 +92,8 @@ class Token extends Model
 
     /**
      * Determine if the token is a transient JWT token.
-     *
-     * @return bool
      */
-    public function transient()
+    public function transient(): bool
     {
         return false;
     }
