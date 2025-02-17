@@ -37,7 +37,7 @@ abstract class PassportTestCase extends TestCase
         parent::tearDown();
     }
 
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
         $config = $app->make(Repository::class);
 
@@ -64,7 +64,7 @@ abstract class PassportTestCase extends TestCase
         ]);
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             PassportServiceProvider::class,
@@ -74,10 +74,8 @@ abstract class PassportTestCase extends TestCase
 
     /**
      * Get the Mongolid user model class name.
-     *
-     * @return string|null
      */
-    protected function getUserClass()
+    protected function getUserClass(): ?string
     {
         return \Laravel\Passport\Tests\Stubs\User::class;
     }

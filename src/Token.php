@@ -22,8 +22,10 @@ class Token extends Model
 
     /**
      * Get the user that the token belongs to.
+     *
+     * @return Authenticatable|null
      */
-    public function user(): ?Authenticatable
+    public function user()
     {
         $provider = config('auth.guards.api.provider');
 
