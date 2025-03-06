@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c7356ae27bde0d7e025a66a1e785a3c",
+    "content-hash": "6dba8d48aed036bcfd8a285172d945e3",
     "packages": [
         {
             "name": "brick/math",
@@ -2123,19 +2123,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leroy-merlin-br/mongolid-laravel.git",
-                "reference": "29357d6b8ef2cb49f740a05b42954ab594924265"
+                "reference": "5159bdd94f675edcdf1fbe478f924546baf6011d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/29357d6b8ef2cb49f740a05b42954ab594924265",
-                "reference": "29357d6b8ef2cb49f740a05b42954ab594924265",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/5159bdd94f675edcdf1fbe478f924546baf6011d",
+                "reference": "5159bdd94f675edcdf1fbe478f924546baf6011d",
                 "shasum": ""
             },
             "require": {
                 "illuminate/auth": "^9.0 || ^10.0",
                 "illuminate/queue": "^9.0 || ^10.0",
                 "illuminate/support": "^9.0 || ^10.0",
-                "leroy-merlin-br/mongolid": "chore/bump-packages-fix-dev",
+                "leroy-merlin-br/mongolid": "dev-chore/bump-packages-fix",
                 "mongodb/mongodb": "~1.17.0",
                 "php": "^8.0"
             },
@@ -2196,7 +2196,7 @@
                 "issues": "https://github.com/leroy-merlin-br/mongolid-laravel/issues",
                 "source": "https://github.com/leroy-merlin-br/mongolid-laravel/tree/chore/bump-packages"
             },
-            "time": "2025-02-20T16:23:18+00:00"
+            "time": "2025-03-06T13:50:46+00:00"
         },
         {
             "name": "mongodb/mongodb",
@@ -6948,16 +6948,16 @@
         },
         {
             "name": "orchestra/sidekick",
-            "version": "v1.0.4",
+            "version": "v1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/sidekick.git",
-                "reference": "95e056508a5990480fc9a67cacf1119b58d8d233"
+                "reference": "3e4a497ff3f9d9ab920fa92629d40abbbd07c5ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/sidekick/zipball/95e056508a5990480fc9a67cacf1119b58d8d233",
-                "reference": "95e056508a5990480fc9a67cacf1119b58d8d233",
+                "url": "https://api.github.com/repos/orchestral/sidekick/zipball/3e4a497ff3f9d9ab920fa92629d40abbbd07c5ce",
+                "reference": "3e4a497ff3f9d9ab920fa92629d40abbbd07c5ce",
                 "shasum": ""
             },
             "require": {
@@ -6994,30 +6994,30 @@
             "description": "Packages Toolkit Utilities and Helpers for Laravel",
             "support": {
                 "issues": "https://github.com/orchestral/sidekick/issues",
-                "source": "https://github.com/orchestral/sidekick/tree/v1.0.4"
+                "source": "https://github.com/orchestral/sidekick/tree/v1.0.5"
             },
-            "time": "2025-02-26T09:16:37+00:00"
+            "time": "2025-03-03T11:08:57+00:00"
         },
         {
             "name": "orchestra/testbench",
-            "version": "v7.52.0",
+            "version": "v7.53.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench.git",
-                "reference": "13506000aaaab674d0fbae98d9cc13bafdda2b96"
+                "reference": "5be88fd0069af4ca37e23689b07154fa921f3a2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench/zipball/13506000aaaab674d0fbae98d9cc13bafdda2b96",
-                "reference": "13506000aaaab674d0fbae98d9cc13bafdda2b96",
+                "url": "https://api.github.com/repos/orchestral/testbench/zipball/5be88fd0069af4ca37e23689b07154fa921f3a2e",
+                "reference": "5be88fd0069af4ca37e23689b07154fa921f3a2e",
                 "shasum": ""
             },
             "require": {
                 "fakerphp/faker": "^1.21",
                 "laravel/framework": "^9.52.20",
                 "mockery/mockery": "^1.5.1",
-                "orchestra/testbench-core": "^7.53.0",
-                "orchestra/workbench": "^7.17.2",
+                "orchestra/testbench-core": "^7.54.0",
+                "orchestra/workbench": "^7.17.3",
                 "php": "^8.0",
                 "phpunit/phpunit": "^9.5.10",
                 "symfony/process": "^6.0.9",
@@ -7048,42 +7048,43 @@
             ],
             "support": {
                 "issues": "https://github.com/orchestral/testbench/issues",
-                "source": "https://github.com/orchestral/testbench/tree/v7.52.0"
+                "source": "https://github.com/orchestral/testbench/tree/v7.53.0"
             },
-            "time": "2025-02-19T00:59:58+00:00"
+            "time": "2025-03-06T10:54:57+00:00"
         },
         {
             "name": "orchestra/testbench-core",
-            "version": "v7.53.0",
+            "version": "v7.54.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench-core.git",
-                "reference": "daf2b5b1eac5a721fbb7b2f7166d14d8ebc6f84e"
+                "reference": "053fc75d1a3c924c49294981bf30a93ab6c943e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/daf2b5b1eac5a721fbb7b2f7166d14d8ebc6f84e",
-                "reference": "daf2b5b1eac5a721fbb7b2f7166d14d8ebc6f84e",
+                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/053fc75d1a3c924c49294981bf30a93ab6c943e1",
+                "reference": "053fc75d1a3c924c49294981bf30a93ab6c943e1",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.2",
-                "orchestra/sidekick": "^1.0.2",
+                "orchestra/sidekick": "^1.0.5",
                 "php": "^8.0",
+                "symfony/deprecation-contracts": "^2.5|^3.0",
                 "symfony/polyfill-php83": "^1.31"
             },
             "conflict": {
-                "brianium/paratest": "<6.4.0 || >=7.0.0",
-                "laravel/framework": "<9.52.18 || >=10.0.0",
-                "laravel/serializable-closure": "<1.3.0 || >=2.0.0",
-                "nunomaduro/collision": "<6.2.0 || >=7.0.0",
-                "orchestra/testbench-dusk": "<7.50.0 || >=8.0.0",
+                "brianium/paratest": "<6.4.0|>=7.0.0",
+                "laravel/framework": "<9.52.20|>=10.0.0",
+                "laravel/serializable-closure": "<1.3.0|>=2.0.0",
+                "nunomaduro/collision": "<6.2.0|>=7.0.0",
+                "orchestra/testbench-dusk": "<7.50.0|>=8.0.0",
                 "orchestra/workbench": "<1.0.0",
-                "phpunit/phpunit": "<9.5.10 || >=10.0.0"
+                "phpunit/phpunit": "<9.5.10|>=10.0.0"
             },
             "require-dev": {
                 "fakerphp/faker": "^1.21",
-                "laravel/framework": "^9.52.18",
+                "laravel/framework": "^9.52.20",
                 "laravel/pint": "^1.5",
                 "mockery/mockery": "^1.5.1",
                 "phpstan/phpstan": "^2.1",
@@ -7097,7 +7098,7 @@
                 "brianium/paratest": "Allow using parallel testing (^6.4).",
                 "ext-pcntl": "Required to use all features of the console signal trapping.",
                 "fakerphp/faker": "Allow using Faker for testing (^1.21).",
-                "laravel/framework": "Required for testing (^9.52.18).",
+                "laravel/framework": "Required for testing (^9.52.20).",
                 "mockery/mockery": "Allow using Mockery for testing (^1.5.1).",
                 "nunomaduro/collision": "Allow using Laravel style tests output and parallel testing (^6.2).",
                 "orchestra/testbench-browser-kit": "Allow using legacy Laravel BrowserKit for testing (^7.0).",
@@ -7149,31 +7150,31 @@
                 "issues": "https://github.com/orchestral/testbench/issues",
                 "source": "https://github.com/orchestral/testbench-core"
             },
-            "time": "2025-02-18T23:52:49+00:00"
+            "time": "2025-03-06T09:58:19+00:00"
         },
         {
             "name": "orchestra/workbench",
-            "version": "v7.17.2",
+            "version": "v7.17.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/workbench.git",
-                "reference": "6605c68de243f44c30aaf9f948e02bd3b085fd9d"
+                "reference": "7c7d398c8e5179549de14e1d7bce899a48ebd7e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/workbench/zipball/6605c68de243f44c30aaf9f948e02bd3b085fd9d",
-                "reference": "6605c68de243f44c30aaf9f948e02bd3b085fd9d",
+                "url": "https://api.github.com/repos/orchestral/workbench/zipball/7c7d398c8e5179549de14e1d7bce899a48ebd7e2",
+                "reference": "7c7d398c8e5179549de14e1d7bce899a48ebd7e2",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.2",
                 "fakerphp/faker": "^1.21",
-                "laravel/framework": "^9.52.18",
+                "laravel/framework": "^9.52.20",
                 "laravel/tinker": "^2.8.2",
                 "nunomaduro/collision": "^6.2",
-                "orchestra/canvas": "^7.11.1",
-                "orchestra/sidekick": "^1.0.2",
-                "orchestra/testbench-core": "^7.53.0",
+                "orchestra/canvas": "^7.12.0",
+                "orchestra/sidekick": "^1.0.5",
+                "orchestra/testbench-core": "^7.54.0",
                 "php": "^8.0",
                 "symfony/polyfill-php83": "^1.31",
                 "symfony/process": "^6.0.9",
@@ -7214,9 +7215,9 @@
             ],
             "support": {
                 "issues": "https://github.com/orchestral/workbench/issues",
-                "source": "https://github.com/orchestral/workbench/tree/v7.17.2"
+                "source": "https://github.com/orchestral/workbench/tree/v7.17.3"
             },
-            "time": "2025-02-19T00:38:55+00:00"
+            "time": "2025-03-06T10:32:46+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7338,16 +7339,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.19",
+            "version": "1.12.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "c42ba9bab7a940ed00092ecb1c77bad98896d789"
+                "reference": "3240b1972042c7f73cf1045e879ea5bd5f761bb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c42ba9bab7a940ed00092ecb1c77bad98896d789",
-                "reference": "c42ba9bab7a940ed00092ecb1c77bad98896d789",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3240b1972042c7f73cf1045e879ea5bd5f761bb7",
+                "reference": "3240b1972042c7f73cf1045e879ea5bd5f761bb7",
                 "shasum": ""
             },
             "require": {
@@ -7392,7 +7393,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-19T15:42:21+00:00"
+            "time": "2025-03-05T13:37:43+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
