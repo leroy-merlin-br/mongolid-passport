@@ -2123,12 +2123,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/leroy-merlin-br/mongolid-laravel.git",
-                "reference": "5159bdd94f675edcdf1fbe478f924546baf6011d"
+                "reference": "77d2745fc2bbfc9376145310c18741e98121405a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/5159bdd94f675edcdf1fbe478f924546baf6011d",
-                "reference": "5159bdd94f675edcdf1fbe478f924546baf6011d",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/77d2745fc2bbfc9376145310c18741e98121405a",
+                "reference": "77d2745fc2bbfc9376145310c18741e98121405a",
                 "shasum": ""
             },
             "require": {
@@ -2136,11 +2136,9 @@
                 "illuminate/queue": "^9.0 || ^10.0",
                 "illuminate/support": "^9.0 || ^10.0",
                 "leroy-merlin-br/mongolid": "dev-chore/bump-packages-fix",
-                "mongodb/mongodb": "~1.17.0",
                 "php": "^8.0"
             },
             "require-dev": {
-                "ext-mongodb": "^1.17.0",
                 "leroy-merlin-br/coding-standard": "^3.1.0",
                 "mockery/mockery": "^1.5.1",
                 "orchestra/testbench": "^7.0 || ^8.0",
@@ -2196,7 +2194,7 @@
                 "issues": "https://github.com/leroy-merlin-br/mongolid-laravel/issues",
                 "source": "https://github.com/leroy-merlin-br/mongolid-laravel/tree/chore/bump-packages"
             },
-            "time": "2025-03-06T13:50:46+00:00"
+            "time": "2025-03-11T17:48:39+00:00"
         },
         {
             "name": "mongodb/mongodb",
@@ -7339,16 +7337,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.20",
+            "version": "1.12.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "3240b1972042c7f73cf1045e879ea5bd5f761bb7"
+                "reference": "14276fdef70575106a3392a4ed553c06a984df28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3240b1972042c7f73cf1045e879ea5bd5f761bb7",
-                "reference": "3240b1972042c7f73cf1045e879ea5bd5f761bb7",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/14276fdef70575106a3392a4ed553c06a984df28",
+                "reference": "14276fdef70575106a3392a4ed553c06a984df28",
                 "shasum": ""
             },
             "require": {
@@ -7393,7 +7391,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-05T13:37:43+00:00"
+            "time": "2025-03-09T09:24:50+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
