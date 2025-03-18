@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df09496c70f6d34d3addbf982d9c3366",
+    "content-hash": "1ee98eaa43523551bddbe0ac79ccb30d",
     "packages": [
         {
             "name": "brick/math",
@@ -822,65 +822,6 @@
                 }
             ],
             "time": "2023-08-27T10:19:19+00:00"
-        },
-        {
-            "name": "jean85/pretty-package-versions",
-            "version": "2.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Jean85/pretty-package-versions.git",
-                "reference": "ae547e455a3d8babd07b96966b17d7fd21d9c6af"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Jean85/pretty-package-versions/zipball/ae547e455a3d8babd07b96966b17d7fd21d9c6af",
-                "reference": "ae547e455a3d8babd07b96966b17d7fd21d9c6af",
-                "shasum": ""
-            },
-            "require": {
-                "composer-runtime-api": "^2.0.0",
-                "php": "^7.1|^8.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.17",
-                "jean85/composer-provided-replaced-stub-package": "^1.0",
-                "phpstan/phpstan": "^0.12.66",
-                "phpunit/phpunit": "^7.5|^8.5|^9.4",
-                "vimeo/psalm": "^4.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Jean85\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alessandro Lai",
-                    "email": "alessandro.lai85@gmail.com"
-                }
-            ],
-            "description": "A library to get pretty versions strings of installed dependencies",
-            "keywords": [
-                "composer",
-                "package",
-                "release",
-                "versions"
-            ],
-            "support": {
-                "issues": "https://github.com/Jean85/pretty-package-versions/issues",
-                "source": "https://github.com/Jean85/pretty-package-versions/tree/2.0.5"
-            },
-            "time": "2021-10-08T21:21:46+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1981,27 +1922,28 @@
         },
         {
             "name": "leroy-merlin-br/mongolid",
-            "version": "v3.7",
+            "version": "dev-feat/mongodb7-support",
             "source": {
                 "type": "git",
-                "url": "git@github.com:leroy-merlin-br/mongolid.git",
-                "reference": "b6ddd9319ce2ad5fba428d672003a0ead1ca29ed"
+                "url": "https://github.com/leroy-merlin-br/mongolid.git",
+                "reference": "040e0f471e575d4975f9006b4a84b0b333f7822b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/b6ddd9319ce2ad5fba428d672003a0ead1ca29ed",
-                "reference": "b6ddd9319ce2ad5fba428d672003a0ead1ca29ed",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid/zipball/040e0f471e575d4975f9006b4a84b0b333f7822b",
+                "reference": "040e0f471e575d4975f9006b4a84b0b333f7822b",
                 "shasum": ""
             },
             "require": {
-                "ext-mongodb": "^1.15.0",
+                "ext-ctype": "*",
+                "ext-mongodb": "^1.20.0",
                 "illuminate/container": "^9.0 || ^10.0",
                 "illuminate/support": "^9.0 || ^10.0",
-                "mongodb/mongodb": "~1.15.0",
-                "php": "^8.0"
+                "mongodb/mongodb": "^1.20.0",
+                "php": "^8.1"
             },
             "require-dev": {
-                "leroy-merlin-br/coding-standard": "^3.1.0",
+                "leroy-merlin-br/coding-standard": "^v3.1.0",
                 "mockery/mockery": "^1.2",
                 "phpunit/phpunit": "^9.0"
             },
@@ -2046,28 +1988,32 @@
                 "nosql",
                 "odm"
             ],
-            "time": "2023-10-23T12:52:18+00:00"
+            "support": {
+                "issues": "https://github.com/leroy-merlin-br/mongolid/issues",
+                "source": "https://github.com/leroy-merlin-br/mongolid/tree/feat/mongodb7-support"
+            },
+            "time": "2025-03-17T20:32:31+00:00"
         },
         {
             "name": "leroy-merlin-br/mongolid-laravel",
-            "version": "v3.7.0",
+            "version": "dev-feat/update-mongolid-lib",
             "source": {
                 "type": "git",
-                "url": "git@github.com:leroy-merlin-br/mongolid-laravel.git",
-                "reference": "acfc31cfe16e2f3d15e179654a7034dc7c15dd96"
+                "url": "https://github.com/leroy-merlin-br/mongolid-laravel.git",
+                "reference": "843db6b0808ae012b99c58bbb4b245c7edf4193b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/acfc31cfe16e2f3d15e179654a7034dc7c15dd96",
-                "reference": "acfc31cfe16e2f3d15e179654a7034dc7c15dd96",
+                "url": "https://api.github.com/repos/leroy-merlin-br/mongolid-laravel/zipball/843db6b0808ae012b99c58bbb4b245c7edf4193b",
+                "reference": "843db6b0808ae012b99c58bbb4b245c7edf4193b",
                 "shasum": ""
             },
             "require": {
                 "illuminate/auth": "^9.0 || ^10.0",
                 "illuminate/queue": "^9.0 || ^10.0",
                 "illuminate/support": "^9.0 || ^10.0",
-                "leroy-merlin-br/mongolid": "v3.7",
-                "php": "^8.0"
+                "leroy-merlin-br/mongolid": "dev-feat/mongodb7-support",
+                "php": "^8.1"
             },
             "require-dev": {
                 "leroy-merlin-br/coding-standard": "^3.1.0",
@@ -2077,17 +2023,17 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "v2.1.x-dev"
-                },
                 "laravel": {
+                    "aliases": {
+                        "MongoLid": "MongolidLaravel\\MongolidModel"
+                    },
                     "providers": [
                         "MongolidLaravel\\MongolidServiceProvider",
                         "MongolidLaravel\\MigrationServiceProvider"
-                    ],
-                    "aliases": {
-                        "MongoLid": "MongolidLaravel\\MongolidModel"
-                    }
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "v2.1.x-dev"
                 }
             },
             "autoload": {
@@ -2121,40 +2067,47 @@
                 "nosql",
                 "odm"
             ],
-            "time": "2023-10-23T15:07:19+00:00"
+            "support": {
+                "issues": "https://github.com/leroy-merlin-br/mongolid-laravel/issues",
+                "source": "https://github.com/leroy-merlin-br/mongolid-laravel/tree/feat/update-mongolid-lib"
+            },
+            "time": "2025-03-17T21:02:22+00:00"
         },
         {
             "name": "mongodb/mongodb",
-            "version": "1.15.0",
+            "version": "1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mongodb/mongo-php-library.git",
-                "reference": "3a681a3b2f2c0ebac227a3b86bb9057d0e6eb8f8"
+                "reference": "75da9ea3b63d97b05e0e8648d8c09a17bc54c0b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/3a681a3b2f2c0ebac227a3b86bb9057d0e6eb8f8",
-                "reference": "3a681a3b2f2c0ebac227a3b86bb9057d0e6eb8f8",
+                "url": "https://api.github.com/repos/mongodb/mongo-php-library/zipball/75da9ea3b63d97b05e0e8648d8c09a17bc54c0b6",
+                "reference": "75da9ea3b63d97b05e0e8648d8c09a17bc54c0b6",
                 "shasum": ""
             },
             "require": {
+                "composer-runtime-api": "^2.0",
                 "ext-hash": "*",
                 "ext-json": "*",
-                "ext-mongodb": "^1.15.0",
-                "jean85/pretty-package-versions": "^1.2 || ^2.0.1",
-                "php": "^7.2 || ^8.0",
-                "symfony/polyfill-php80": "^1.19"
+                "ext-mongodb": "^1.20.0",
+                "php": "^7.4 || ^8.0",
+                "psr/log": "^1.1.4|^2|^3",
+                "symfony/polyfill-php80": "^1.27",
+                "symfony/polyfill-php81": "^1.27"
             },
             "require-dev": {
-                "doctrine/coding-standard": "^9.0",
-                "squizlabs/php_codesniffer": "^3.6",
+                "doctrine/coding-standard": "^12.0",
+                "rector/rector": "^1.1",
+                "squizlabs/php_codesniffer": "^3.7",
                 "symfony/phpunit-bridge": "^5.2",
-                "vimeo/psalm": "^4.28"
+                "vimeo/psalm": "^5.13"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15.x-dev"
+                    "dev-master": "1.x-dev"
                 }
             },
             "autoload": {
@@ -2177,6 +2130,10 @@
                 {
                     "name": "Jeremy Mikola",
                     "email": "jmikola@gmail.com"
+                },
+                {
+                    "name": "Jérôme Tamarelle",
+                    "email": "jerome.tamarelle@mongodb.com"
                 }
             ],
             "description": "MongoDB driver library",
@@ -2189,9 +2146,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mongodb/mongo-php-library/issues",
-                "source": "https://github.com/mongodb/mongo-php-library/tree/1.15.0"
+                "source": "https://github.com/mongodb/mongo-php-library/tree/1.20.0"
             },
-            "time": "2022-11-23T04:45:35+00:00"
+            "time": "2024-09-25T12:54:08+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -9611,14 +9568,17 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "leroy-merlin-br/mongolid": 20,
+        "leroy-merlin-br/mongolid-laravel": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-json": "*",
-        "ext-mongodb": "^1.15.0"
+        "ext-mongodb": "^1.20.0"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
