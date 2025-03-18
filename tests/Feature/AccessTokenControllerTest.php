@@ -3,16 +3,14 @@
 namespace Laravel\Passport\Tests\Feature;
 
 use Carbon\CarbonImmutable;
+use DateTimeImmutable;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client;
-use Laravel\Passport\ClientRepository;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Passport\Passport;
 use Laravel\Passport\PersonalAccessTokenFactory;
 use Laravel\Passport\Token;
-use Laravel\Passport\TokenRepository;
-use Lcobucci\JWT\Configuration;
 use MongolidLaravel\LegacyMongolidModel as Model;
 
 class AccessTokenControllerTest extends PassportTestCase
@@ -25,6 +23,8 @@ class AccessTokenControllerTest extends PassportTestCase
     public function testGettingAccessTokenWithClientCredentialsGrant()
     {
         $this->withoutExceptionHandling();
+
+        Passport::tokensExpireIn(new DateTimeImmutable('+1 day'));
 
         $user = new User();
         $user->email = 'foo@gmail.com';
@@ -64,7 +64,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertArrayHasKey('expires_in', $decodedResponse);
         $this->assertArrayHasKey('access_token', $decodedResponse);
         $this->assertSame('Bearer', $decodedResponse['token_type']);
-        $expiresInSeconds = 31622400;
+        $expiresInSeconds = 86400;
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
         $token = $this->app->make(PersonalAccessTokenFactory::class)->findAccessToken($decodedResponse);
@@ -130,6 +130,8 @@ class AccessTokenControllerTest extends PassportTestCase
     {
         $this->withoutExceptionHandling();
 
+        Passport::tokensExpireIn(new DateTimeImmutable('+1 day'));
+
         $password = 'foobar123';
         $user = new User();
         $user->email = 'foo@gmail.com';
@@ -172,7 +174,7 @@ class AccessTokenControllerTest extends PassportTestCase
         $this->assertArrayHasKey('access_token', $decodedResponse);
         $this->assertArrayHasKey('refresh_token', $decodedResponse);
         $this->assertSame('Bearer', $decodedResponse['token_type']);
-        $expiresInSeconds = 31622400;
+        $expiresInSeconds = 86400;
         $this->assertEqualsWithDelta($expiresInSeconds, $decodedResponse['expires_in'], 5);
 
         $token = $this->app->make(PersonalAccessTokenFactory::class)->findAccessToken($decodedResponse);
