@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": ">=8.0 <8.4",
         "ext-json": "*",
         "ext-mongodb": "^1.20.0",
         "firebase/php-jwt": "^6.3.1",
