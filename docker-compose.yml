@@ -9,7 +9,7 @@ services:
       - .:/var/www/html
 
   db:
-    image: mongo:5.0
+    image: mongo:7.0
     command: mongod
     volumes:
       - db:/data/db
