@@ -15,11 +15,25 @@ use Psr\Http\Message\ServerRequestInterface;
 class Passport
 {
     /**
+     * Indicates if Passport should validate the permissions of its encryption keys.
+     *
+     * @var bool
+     */
+    public static $validateKeyPermissions = false;
+
+    /**
      * Indicates if the implicit grant type is enabled.
      *
      * @var bool|null
      */
     public static $implicitGrantEnabled = false;
+
+    /**
+     * Indicates if the password grant type is enabled.
+     *
+     * @var bool|null
+     */
+    public static $passwordGrantEnabled = false;
 
     /**
      * The default scope.
@@ -122,13 +136,6 @@ class Passport
     public static $refreshTokenModel = 'Laravel\Passport\RefreshToken';
 
     /**
-     * Indicates if Passport migrations will be run.
-     *
-     * @var bool
-     */
-    public static $runsMigrations = true;
-
-    /**
      * Indicates if Passport should unserializes cookies.
      *
      * @var bool
@@ -185,6 +192,18 @@ class Passport
     public static function enableImplicitGrant()
     {
         static::$implicitGrantEnabled = true;
+
+        return new static;
+    }
+
+    /**
+     * Enable the password grant type.
+     *
+     * @return static
+     */
+    public static function enablePasswordGrant()
+    {
+        static::$passwordGrantEnabled = true;
 
         return new static;
     }
@@ -262,16 +281,18 @@ class Passport
     /**
      * Get or set when access tokens expire.
      *
-     * @param  \DateTimeInterface|null  $date
+     * @param  \DateTimeInterface|\DateInterval|null  $date
      * @return \DateInterval|static
      */
-    public static function tokensExpireIn(DateTimeInterface $date = null)
+    public static function tokensExpireIn(DateTimeInterface|DateInterval|null $date = null)
     {
         if (is_null($date)) {
             return static::$tokensExpireIn ?? new DateInterval('P1Y');
         }
 
-        static::$tokensExpireIn = Carbon::now()->diff($date);
+        static::$tokensExpireIn = $date instanceof DateTimeInterface
+            ? Carbon::now()->diff($date)
+            : $date;
 
         return new static;
     }
@@ -279,16 +300,18 @@ class Passport
     /**
      * Get or set when refresh tokens expire.
      *
-     * @param  \DateTimeInterface|null  $date
+     * @param  \DateTimeInterface|\DateInterval|null  $date
      * @return \DateInterval|static
      */
-    public static function refreshTokensExpireIn(DateTimeInterface $date = null)
+    public static function refreshTokensExpireIn(DateTimeInterface|DateInterval|null $date = null)
     {
         if (is_null($date)) {
             return static::$refreshTokensExpireIn ?? new DateInterval('P1Y');
         }
 
-        static::$refreshTokensExpireIn = Carbon::now()->diff($date);
+        static::$refreshTokensExpireIn = $date instanceof DateTimeInterface
+            ? Carbon::now()->diff($date)
+            : $date;
 
         return new static;
     }
@@ -296,16 +319,18 @@ class Passport
     /**
      * Get or set when personal access tokens expire.
      *
-     * @param  \DateTimeInterface|null  $date
+     * @param  \DateTimeInterface|\DateInterval|null  $date
      * @return \DateInterval|static
      */
-    public static function personalAccessTokensExpireIn(DateTimeInterface $date = null)
+    public static function personalAccessTokensExpireIn(DateTimeInterface|DateInterval|null $date = null)
     {
         if (is_null($date)) {
             return static::$personalAccessTokensExpireIn ?? new DateInterval('P1Y');
         }
 
-        static::$personalAccessTokensExpireIn = Carbon::now()->diff($date);
+        static::$personalAccessTokensExpireIn = $date instanceof DateTimeInterface
+            ? Carbon::now()->diff($date)
+            : $date;
 
         return new static;
     }
@@ -655,18 +680,6 @@ class Passport
     public static function ignoreRoutes()
     {
         static::$registersRoutes = false;
-
-        return new static;
-    }
-
-    /**
-     * Configure Passport to not register its migrations.
-     *
-     * @return static
-     */
-    public static function ignoreMigrations()
-    {
-        static::$runsMigrations = false;
 
         return new static;
     }

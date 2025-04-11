@@ -31,9 +31,11 @@ class Client extends Model
     /**
      * The temporary plain-text client secret.
      *
+     * This is only available during the request that created the client.
+     *
      * @var string|null
      */
-    protected $plainSecret;
+    public $plainSecret;
 
     /**
      * {@inheritdoc}
@@ -142,6 +144,31 @@ class Client extends Model
     public function confidential()
     {
         return ! empty($this->secret);
+    }
+
+    /**
+     * Get the current connection name for the model.
+     *
+     * @return string|null
+     */
+    public function getConnectionName()
+    {
+        return $this->connection ?? config('passport.connection');
+    }
+
+    /**
+     * Determine if the client has the given grant type.
+     *
+     * @param  string  $grantType
+     * @return bool
+     */
+    public function hasGrantType($grantType)
+    {
+        if (! $this->grant_types || ! is_array($this->grant_types)) {
+            return true;
+        }
+
+        return in_array($grantType, $this->grant_types);
     }
 
     /**
