@@ -1,6 +1,122 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/passport/compare/v11.8.3...11.x)
+## [Unreleased](https://github.com/laravel/passport/compare/v12.4.1...12.x)
+
+## [v12.4.1](https://github.com/laravel/passport/compare/v12.4.0...v12.4.1) - 2025-01-28
+
+* Supports Laravel 12 by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/passport/pull/1803
+
+## [v12.4.0](https://github.com/laravel/passport/compare/v12.3.1...v12.4.0) - 2025-01-13
+
+* [12.x] Supports PHP 8.4 by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/passport/pull/1799
+
+## [v12.3.1](https://github.com/laravel/passport/compare/v12.3.0...v12.3.1) - 2024-11-11
+
+* Update logo to support dark/light theme by [@milewski](https://github.com/milewski) in https://github.com/laravel/passport/pull/1787
+* Fix repeated word "the" in upgrade guide by [@caendesilva](https://github.com/caendesilva) in https://github.com/laravel/passport/pull/1798
+
+## [v12.3.0](https://github.com/laravel/passport/compare/v12.2.1...v12.3.0) - 2024-08-05
+
+* [12.x] Add access token revoked event by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1776
+
+## [v12.2.1](https://github.com/laravel/passport/compare/v12.2.0...v12.2.1) - 2024-07-10
+
+* [12.x] Fix purge command by [@hafezdivandari](https://github.com/hafezdivandari) in https://github.com/laravel/passport/pull/1772
+
+## [v12.2.0](https://github.com/laravel/passport/compare/v12.1.0...v12.2.0) - 2024-04-17
+
+* [12.x] Add `refreshToken` relation to `Token` model by [@gdebrauwer](https://github.com/gdebrauwer) in https://github.com/laravel/passport/pull/1739
+
+## [v12.1.0](https://github.com/laravel/passport/compare/v12.0.3...v12.1.0) - 2024-04-15
+
+* [12.x] Make Passport's database connection configurable by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1738
+
+## [v12.0.3](https://github.com/laravel/passport/compare/v12.0.2...v12.0.3) - 2024-04-05
+
+* Adjust newFactory method visibility by [@brandonfarber](https://github.com/brandonfarber) in https://github.com/laravel/passport/pull/1735
+
+## [v12.0.2](https://github.com/laravel/passport/compare/v12.0.1...v12.0.2) - 2024-03-21
+
+* [12.x] Make commands lazy by [@timacdonald](https://github.com/timacdonald) in https://github.com/laravel/passport/pull/1731
+* [12.x] Allow token "expires in" to be defined as date interval by [@jacobmllr95](https://github.com/jacobmllr95) in https://github.com/laravel/passport/pull/1733
+
+## [v12.0.1](https://github.com/laravel/passport/compare/v12.0.0...v12.0.1) - 2024-03-14
+
+* [12.x] Cast session lifetime to int by [@kindslayer](https://github.com/kindslayer) in https://github.com/laravel/passport/pull/1727
+* [12.x] Fixes used version of L9 by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/passport/pull/1730
+
+## [v12.0.0](https://github.com/laravel/passport/compare/v11.10.6...v12.0.0) - 2024-03-12
+
+* [12.x] Adds Laravel 11 support by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/passport/pull/1702
+* [12.x] Disable password grant by default by [@hafezdivandari](https://github.com/hafezdivandari) in https://github.com/laravel/passport/pull/1715
+* [12.x] Make `Client::$plainSecret` public by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1719
+* [12.x] Use more secure key permissions by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1721
+* [12.x] Enhance console commands by [@hafezdivandari](https://github.com/hafezdivandari) in https://github.com/laravel/passport/pull/1724
+
+## [v11.10.6](https://github.com/laravel/passport/compare/v11.10.5...v11.10.6) - 2024-03-01
+
+* Check that properties `grant_types` and  `scopes` exist by [@uintaam](https://github.com/uintaam) in https://github.com/laravel/passport/pull/1722
+
+## [v11.10.5](https://github.com/laravel/passport/compare/v11.10.4...v11.10.5) - 2024-02-09
+
+* [11.x] Fix getting/setting client scopes and grant types by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1717
+
+## [v11.10.4](https://github.com/laravel/passport/compare/v11.10.2...v11.10.4) - 2024-01-30
+
+* Consistently retrieve client uuids value from Passport by [@rojtjo](https://github.com/rojtjo) in https://github.com/laravel/passport/pull/1711
+* [11.x] Allow developers to disable the password grant type by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1712
+
+## [v11.10.2](https://github.com/laravel/passport/compare/v11.10.1...v11.10.2) - 2024-01-17
+
+* Add getScopesAttribute and getScopesAttribute methods by [@uintaam](https://github.com/uintaam) in https://github.com/laravel/passport/pull/1709
+
+## [v11.10.1](https://github.com/laravel/passport/compare/v11.10.0...v11.10.1) - 2024-01-10
+
+* [11.x] Allow unsetting a user's access token by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1698
+* [11.x] Add getGrantTypesAttribute method to fix Eloquent strict mode error by [@gdebrauwer](https://github.com/gdebrauwer) in https://github.com/laravel/passport/pull/1705
+
+## [v11.10.0](https://github.com/laravel/passport/compare/v11.9.2...v11.10.0) - 2023-11-02
+
+- [11.x] Named static methods for middleware by [@michaelnabil230](https://github.com/michaelnabil230) in https://github.com/laravel/passport/pull/1695
+- Simplify Conditional Statement by [@michaelnabil230](https://github.com/michaelnabil230) in https://github.com/laravel/passport/pull/1696
+
+## [v11.9.2](https://github.com/laravel/passport/compare/v11.9.1...v11.9.2) - 2023-10-16
+
+- Add return to revokeRefreshTokensByAccessTokenId method by [@aminkhoshzahmat](https://github.com/aminkhoshzahmat) in https://github.com/laravel/passport/pull/1693
+
+## [v11.9.1](https://github.com/laravel/passport/compare/v11.9.0...v11.9.1) - 2023-09-01
+
+- [11.x] Allow scope repository to be constructed without parameters by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1686
+
+## [v11.9.0](https://github.com/laravel/passport/compare/v11.8.8...v11.9.0) - 2023-08-29
+
+- [11.x] Add the ability to limit scopes by client by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1682
+- [11.x] Add support for inherited scopes when limiting scopes on clients by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1683
+
+## [v11.8.8](https://github.com/laravel/passport/compare/v11.8.7...v11.8.8) - 2023-07-07
+
+- Add generics to client factory by [@axlon](https://github.com/axlon) in https://github.com/laravel/passport/pull/1669
+- Update composer.json by [@Smoggert](https://github.com/Smoggert) in https://github.com/laravel/passport/pull/1674
+- Update composer.json by [@drhoussem](https://github.com/drhoussem) in https://github.com/laravel/passport/pull/1677
+
+## [v11.8.7](https://github.com/laravel/passport/compare/v11.8.6...v11.8.7) - 2023-04-28
+
+- Revert "[11.x] Add Provider Guard to ClientRepository for Personal Access Clients" by @driesvints in https://github.com/laravel/passport/pull/1658
+
+## [v11.8.6](https://github.com/laravel/passport/compare/v11.8.5...v11.8.6) - 2023-04-24
+
+- Add Provider Guard to ClientRepository for Personal Access Clients by @michaelnabil230 in https://github.com/laravel/passport/pull/1655
+
+## [v11.8.5](https://github.com/laravel/passport/compare/v11.8.4...v11.8.5) - 2023-04-04
+
+- Allow `lcobucci/jwt` v5 and cleaned up version constraints by @GrahamCampbell in https://github.com/laravel/passport/pull/1649
+- Pass user identifier through to finalize scopes in personal access grant by @GrahamCampbell in https://github.com/laravel/passport/pull/1650
+
+## [v11.8.4](https://github.com/laravel/passport/compare/v11.8.3...v11.8.4) - 2023-03-18
+
+- Removed deprecated `dates` property from `RefreshToken` model by @siarheipashkevich in https://github.com/laravel/passport/pull/1645
+- Removed deprecated `dates` property from `AuthCode` model by @siarheipashkevich in https://github.com/laravel/passport/pull/1644
+- Fix doc block types by @hafezdivandari in https://github.com/laravel/passport/pull/1647
 
 ## [v11.8.3](https://github.com/laravel/passport/compare/v11.8.2...v11.8.3) - 2023-03-01
 
