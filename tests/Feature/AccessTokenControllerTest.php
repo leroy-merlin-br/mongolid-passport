@@ -130,6 +130,8 @@ class AccessTokenControllerTest extends PassportTestCase
     {
         $this->withoutExceptionHandling();
 
+        Passport::enablePasswordGrant();
+
         Passport::tokensExpireIn(new DateTimeImmutable('+1 day'));
 
         $password = 'foobar123';
@@ -188,6 +190,8 @@ class AccessTokenControllerTest extends PassportTestCase
 
     public function testGettingAccessTokenWithPasswordGrantWithInvalidPassword()
     {
+        Passport::enablePasswordGrant();
+
         $password = 'foobar123';
         $user = new User();
         $user->email = 'foo@gmail.com';
@@ -240,6 +244,8 @@ class AccessTokenControllerTest extends PassportTestCase
 
     public function testGettingAccessTokenWithPasswordGrantWithInvalidClientSecret()
     {
+        Passport::enablePasswordGrant();
+
         $password = 'foobar123';
         $user = new User();
         $user->email = 'foo@gmail.com';
@@ -365,7 +371,7 @@ class IdTokenResponse extends \League\OAuth2\Server\ResponseTypes\BearerTokenRes
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getExtraParams(\League\OAuth2\Server\Entities\AccessTokenEntityInterface $accessToken)
     {

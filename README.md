@@ -1,8 +1,7 @@
-<STYLE type="text/css">
-    P {text-align: center}
-</STYLE>
-<p>
-<a href="https://github.com/leroy-merlin-br/mongolid-passport/actions?query=workflow%3ATests"><img src="https://github.com/leroy-merlin-br/mongolid-passport/workflows/Tests/badge.svg" alt="Build Status"></a>
+<p align="center"><img width="368" height="60" src="/art/logo.svg" alt="Logo Laravel Passport"></p>
+
+<p align="center">
+<a href="https://github.com/leroy-merlin-br/mongolid-passport/actions?query=workflow%3ATests"><img src="https://github.com/leroy-merlin-br/mongolid-passport/workflows/tests/badge.svg" alt="Build Status"></a>
 <a href="https://packagist.org/packages/leroy-merlin-br/mongolid-passport"><img src="https://poser.pugx.org/leroy-merlin-br/mongolid-passport/d/total.svg" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/leroy-merlin-br/mongolid-passport"><img src="https://poser.pugx.org/leroy-merlin-br/mongolid-passport/v/stable.svg" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/leroy-merlin-br/mongolid-passport"><img src="https://poser.pugx.org/leroy-merlin-br/mongolid-passport/license.svg" alt="License"></a>
@@ -21,6 +20,7 @@ Documentation for Passport can be found on the [Laravel website](https://laravel
 
 | mongolid-passport | laravel-passport | mongolid-laravel | mongolid |
 |-------------------|------------------|------------------|----------|
+| 13.0.0            | 12.4.2           | 3.8.0            | 3.8.x    |
 | 12.3.0            | 11.8.4           | 3.8.0            | 3.8.x    |
 | 12.0.0            | 11.8.4           | 3.5.0            | 3.5.x    |
 | 11.1.0            | 10.4.1           | 3.4.0            | 3.4.x    |

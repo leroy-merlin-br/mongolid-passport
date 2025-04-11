@@ -31,9 +31,11 @@ class Client extends Model
     /**
      * The temporary plain-text client secret.
      *
+     * This is only available during the request that created the client.
+     *
      * @var string|null
      */
-    protected $plainSecret;
+    public $plainSecret;
 
     /**
      * {@inheritdoc}
@@ -142,6 +144,16 @@ class Client extends Model
     public function confidential()
     {
         return ! empty($this->secret);
+    }
+
+    /**
+     * Get the current connection name for the model.
+     *
+     * @return string|null
+     */
+    public function getConnectionName()
+    {
+        return $this->connection ?? config('passport.connection');
     }
 
     /**
