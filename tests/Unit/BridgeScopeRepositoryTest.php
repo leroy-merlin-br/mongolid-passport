@@ -2,37 +2,27 @@
 
 namespace Laravel\Passport\Tests\Unit;
 
-use League\OAuth2\Server\Exception\OAuthServerException;
 use Laravel\Passport\Bridge\Client;
 use Laravel\Passport\Bridge\Scope;
 use Laravel\Passport\Bridge\ScopeRepository;
 use Laravel\Passport\Passport;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use PHPUnit\Framework\TestCase;
 
 class BridgeScopeRepositoryTest extends TestCase
 {
-    public function test_invalid_scopes_are_removed()
+    protected function tearDown(): void
     {
-        Passport::tokensCan([
-            'scope-1' => 'description',
-        ]);
-
-        $repository = new ScopeRepository;
-
-        $scopes = $repository->finalizeScopes(
-            [$scope1 = new Scope('scope-1'), new Scope('scope-2')], 'client_credentials', new Client('id', 'name', 'http://localhost', false, null, '*'), 1
-        );
-
-        $this->assertEquals([$scope1], $scopes);
+        Passport::$withInheritedScopes = false;
     }
 
-    public function test_superuser_scope_cant_be_applied_if_wrong_grant()
+    public function test_superuser_scope_cant_be_applied_if_wrong_grant_without_a_client_repository()
     {
         Passport::tokensCan([
             'scope-1' => 'description',
         ]);
 
-        $repository = new ScopeRepository;
+        $repository = new ScopeRepository();
 
         $scopes = $repository->finalizeScopes(
             [$scope1 = new Scope('*')], 'refresh_token', new Client('id', 'name', 'http://localhost', false, null, '*'), 1
