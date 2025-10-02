@@ -15,6 +15,9 @@ use MongolidLaravel\LegacyMongolidModel as Model;
 
 class AccessTokenControllerTest extends PassportTestCase
 {
+    /**
+     * Teste teste
+     */
     protected function getUserClass()
     {
         return User::class;
