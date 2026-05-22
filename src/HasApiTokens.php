@@ -64,8 +64,12 @@ trait HasApiTokens
      */
     public function createToken($name, array $scopes = [])
     {
+        $userId = method_exists($this, 'getAuthIdentifier')
+            ? $this->getAuthIdentifier()
+            : (method_exists($this, 'getKey') ? $this->getKey() : $this->_id);
+
         return Container::getInstance()->make(PersonalAccessTokenFactory::class)->make(
-            $this->getKey(), $name, $scopes
+            $userId, $name, $scopes
         );
     }
 

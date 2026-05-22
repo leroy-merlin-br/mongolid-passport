@@ -18,33 +18,33 @@
         }
     ],
     "require": {
-        "php": ">=8.0 <8.4",
+        "php": ">=8.2",
         "ext-json": "*",
         "ext-mongodb": "^1.20.0",
-        "firebase/php-jwt": "^6.3.1",
-        "illuminate/auth": "^9.0|^10.0",
-        "illuminate/console": "^9.0|^10.0",
-        "illuminate/container": "^9.0|^10.0",
-        "illuminate/contracts": "^9.0|^10.0",
-        "illuminate/cookie": "^9.0|^10.0",
-        "illuminate/database": "^9.0|^10.0",
-        "illuminate/encryption": "^9.0|^10.0",
-        "illuminate/http": "^9.0|^10.0",
-        "illuminate/support": "^9.0|^10.0",
+        "firebase/php-jwt": "^7.0",
+        "illuminate/auth": "^9.0|^10.0|^11.0",
+        "illuminate/console": "^9.0|^10.0|^11.0",
+        "illuminate/container": "^9.0|^10.0|^11.0",
+        "illuminate/contracts": "^9.0|^10.0|^11.0",
+        "illuminate/cookie": "^9.0|^10.0|^11.0",
+        "illuminate/database": "^9.0|^10.0|^11.0",
+        "illuminate/encryption": "^9.0|^10.0|^11.0",
+        "illuminate/http": "^9.0|^10.0|^11.0",
+        "illuminate/support": "^9.0|^10.0|^11.0",
         "lcobucci/jwt": "^3.4|^4.0",
         "league/oauth2-server": "^8.2",
-        "leroy-merlin-br/mongolid": "v3.8.1",
-        "leroy-merlin-br/mongolid-laravel": "v3.8.1",
+        "leroy-merlin-br/mongolid": "v3.8.2",
+        "leroy-merlin-br/mongolid-laravel": "v3.9.0",
         "mongodb/mongodb": "^1.20.0",
         "nyholm/psr7": "^1.3",
         "phpseclib/phpseclib": "^2.0|^3.0",
-        "symfony/psr-http-message-bridge": "^2.0"
+        "symfony/psr-http-message-bridge": "^2.1|^6.0|^7.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
-        "orchestra/testbench": "^7.0|^8.0",
+        "orchestra/testbench": "^9.17",
         "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^9.3"
+        "phpunit/phpunit": "^9.6.10|^10.5|^11.5"
     },
     "autoload": {
         "psr-4": {
@@ -71,7 +71,7 @@
         "sort-packages": true
     },
     "replace": {
-        "laravel/passport": "11.*"
+        "laravel/passport": "12.*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

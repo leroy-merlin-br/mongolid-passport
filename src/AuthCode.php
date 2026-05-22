@@ -16,6 +16,6 @@ class AuthCode extends Model
      */
     public function client()
     {
-        return $this->referencesOne(Client::class, 'client_id');
+        return $this->referencesOne(Passport::clientModel(), 'client_id');
     }
 }

@@ -8,6 +8,7 @@ use Laravel\Passport\Bridge\AccessToken;
 use Laravel\Passport\Bridge\AccessTokenRepository;
 use Laravel\Passport\Bridge\Client;
 use Laravel\Passport\Bridge\Scope;
+use Laravel\Passport\Events\AccessTokenRevoked;
 use Laravel\Passport\TokenRepository;
 use Mockery as m;
 use MongoDB\BSON\UTCDateTime;
@@ -65,5 +66,33 @@ class BridgeAccessTokenRepositoryTest extends TestCase
         $this->assertEquals($client, $token->getClient());
         $this->assertEquals($scopes, $token->getScopes());
         $this->assertSame($userIdentifier, $token->getUserIdentifier());
+    }
+
+    public function test_dispatches_event_when_access_token_is_revoked()
+    {
+        $tokenRepository = m::mock(TokenRepository::class);
+        $events = m::mock(Dispatcher::class);
+
+        $tokenRepository->shouldReceive('revokeAccessToken')->once()->with('token-id')->andReturn(true);
+        $events->shouldReceive('dispatch')->once()->with(m::on(function ($event) {
+            return $event instanceof AccessTokenRevoked && $event->tokenId === 'token-id';
+        }));
+
+        $repository = new AccessTokenRepository($tokenRepository, $events);
+
+        $repository->revokeAccessToken('token-id');
+    }
+
+    public function test_does_not_dispatch_event_when_access_token_revocation_fails()
+    {
+        $tokenRepository = m::mock(TokenRepository::class);
+        $events = m::mock(Dispatcher::class);
+
+        $tokenRepository->shouldReceive('revokeAccessToken')->once()->with('token-id')->andReturn(false);
+        $events->shouldNotReceive('dispatch');
+
+        $repository = new AccessTokenRepository($tokenRepository, $events);
+
+        $repository->revokeAccessToken('token-id');
     }
 }

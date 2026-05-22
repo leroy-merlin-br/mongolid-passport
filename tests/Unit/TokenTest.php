@@ -14,10 +14,13 @@ class TokenTest extends TestCase
         parent::tearDown();
 
         Passport::$withInheritedScopes = false;
+        Passport::useRefreshTokenModel(\Laravel\Passport\RefreshToken::class);
     }
 
     public function test_token_can_determine_if_it_has_scopes()
     {
+        Passport::$withInheritedScopes = false;
+
         $token = new Token();
         $token->fill(['scopes' => ['user']]);
 
@@ -79,4 +82,35 @@ class TokenTest extends TestCase
             'admin:webhooks:read',
         ], $inheritedScopes);
     }
+
+    public function test_token_can_resolve_its_refresh_token()
+    {
+        Passport::useRefreshTokenModel(RefreshTokenModelStub::class);
+
+        RefreshTokenModelStub::$lastQuery = null;
+
+        $token = new Token();
+        $token->_id = 'access-token-id';
+
+        $refreshToken = $token->refreshToken();
+
+        $this->assertSame(['access_token_id' => 'access-token-id'], RefreshTokenModelStub::$lastQuery);
+        $this->assertInstanceOf(RefreshTokenRecordStub::class, $refreshToken);
+    }
+}
+
+class RefreshTokenModelStub
+{
+    public static $lastQuery;
+
+    public static function first($query)
+    {
+        static::$lastQuery = $query;
+
+        return new RefreshTokenRecordStub;
+    }
+}
+
+class RefreshTokenRecordStub
+{
 }

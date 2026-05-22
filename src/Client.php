@@ -47,7 +47,7 @@ class Client extends Model
     {
         $provider = $this->provider ?: config('auth.guards.api.provider');
 
-        $this->referencesOne(
+        return $this->referencesOne(
             config("auth.providers.{$provider}.model"),
             'user_id'
         );
@@ -132,6 +132,67 @@ class Client extends Model
     public function skipsAuthorization()
     {
         return false;
+    }
+
+    /**
+     * Determine if the client has the given grant type.
+     *
+     * @param  string  $grantType
+     * @return bool
+     */
+    public function hasGrantType($grantType)
+    {
+        if (! is_array($this->grant_types ?? null)) {
+            return true;
+        }
+
+        return in_array($grantType, $this->grant_types);
+    }
+
+    /**
+     * Determine whether the client has the given scope.
+     *
+     * @param  string  $scope
+     * @return bool
+     */
+    public function hasScope($scope)
+    {
+        if (! is_array($this->scopes ?? null)) {
+            return true;
+        }
+
+        $scopes = Passport::$withInheritedScopes
+            ? $this->resolveInheritedScopes($scope)
+            : [$scope];
+
+        foreach ($scopes as $scope) {
+            if (in_array($scope, $this->scopes)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Resolve all possible scopes.
+     *
+     * @param  string  $scope
+     * @return array
+     */
+    protected function resolveInheritedScopes($scope)
+    {
+        $parts = explode(':', $scope);
+
+        $partsCount = count($parts);
+
+        $scopes = [];
+
+        for ($i = 1; $i <= $partsCount; $i++) {
+            $scopes[] = implode(':', array_slice($parts, 0, $i));
+        }
+
+        return $scopes;
     }
 
     /**

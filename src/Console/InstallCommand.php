@@ -33,8 +33,12 @@ class InstallCommand extends Command
         $provider = in_array('mongolid', array_keys(config('auth.providers'))) ? 'mongolid' : null;
 
         $this->call('passport:keys', ['--force' => $this->option('force'), '--length' => $this->option('length')]);
+        $this->call('vendor:publish', ['--tag' => 'passport-migrations']);
 
         $this->call('passport:client', ['--personal' => true, '--name' => config('app.name').' Personal Access Client']);
-        $this->call('passport:client', ['--password' => true, '--name' => config('app.name').' Password Grant Client', '--provider' => $provider]);
+
+        if (Passport::$passwordGrantEnabled) {
+            $this->call('passport:client', ['--password' => true, '--name' => config('app.name').' Password Grant Client', '--provider' => $provider]);
+        }
     }
 }

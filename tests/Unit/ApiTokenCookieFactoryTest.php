@@ -28,7 +28,7 @@ class ApiTokenCookieFactoryTest extends TestCase
             'secure' => true,
             'same_site' => 'lax',
         ]);
-        $encrypter = new Encrypter(str_repeat('a', 16));
+        $encrypter = new Encrypter(str_repeat('a', 32), 'AES-256-CBC');
         $factory = new ApiTokenCookieFactory($config, $encrypter);
 
         $cookie = $factory->make(1, 'token');
@@ -39,7 +39,7 @@ class ApiTokenCookieFactoryTest extends TestCase
     public function test_cookie_can_be_successfully_created_when_using_a_custom_encryption_key()
     {
         Passport::encryptTokensUsing(function (EncrypterContract $encrypter) {
-            return $encrypter->getKey().'.mykey';
+            return $encrypter->getKey().'.passport-jwt-test-key';
         });
 
         $config = m::mock(Repository::class);
@@ -50,7 +50,7 @@ class ApiTokenCookieFactoryTest extends TestCase
             'secure' => true,
             'same_site' => 'lax',
         ]);
-        $encrypter = new Encrypter(str_repeat('a', 16));
+        $encrypter = new Encrypter(str_repeat('a', 32), 'AES-256-CBC');
         $factory = new ApiTokenCookieFactory($config, $encrypter);
 
         $cookie = $factory->make(1, 'token');
@@ -58,6 +58,6 @@ class ApiTokenCookieFactoryTest extends TestCase
         $this->assertInstanceOf(Cookie::class, $cookie);
 
         // Revert to the default encryption method
-        Passport::encryptTokensUsing(null);
+        Passport::$tokenEncryptionKeyCallback = null;
     }
 }

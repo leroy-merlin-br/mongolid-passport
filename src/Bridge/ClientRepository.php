@@ -34,7 +34,7 @@ class ClientRepository implements ClientRepositoryInterface
         $record = $this->clients->findActive($clientIdentifier);
 
         if (! $record) {
-            return;
+            return null;
         }
 
         return new Client(
@@ -73,7 +73,7 @@ class ClientRepository implements ClientRepositoryInterface
      */
     protected function handlesGrant($record, $grantType)
     {
-        if (is_array($record->grant_types) && ! in_array($grantType, $record->grant_types)) {
+        if (! $record->hasGrantType($grantType)) {
             return false;
         }
 

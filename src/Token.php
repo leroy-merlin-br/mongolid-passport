@@ -19,7 +19,19 @@ class Token extends Model
      */
     public function client()
     {
-        return $this->referencesOne(Client::class, 'client_id');
+        return $this->referencesOne(Passport::clientModel(), 'client_id');
+    }
+
+    /**
+     * Get the refresh token associated with the token.
+     *
+     * @return \\Laravel\\Passport\\RefreshToken|null
+     */
+    public function refreshToken()
+    {
+        return Passport::refreshTokenModel()::first([
+            'access_token_id' => (string) $this->_id,
+        ]);
     }
 
     /**
