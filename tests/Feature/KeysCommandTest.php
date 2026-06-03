@@ -2,16 +2,14 @@
 
 namespace Laravel\Passport\Tests\Feature;
 
-use Mockery as m;
-
 class KeysCommandTest extends PassportTestCase
 {
     protected function tearDown(): void
     {
-        m::close();
-
         @unlink(self::PUBLIC_KEY);
         @unlink(self::PRIVATE_KEY);
+
+        parent::tearDown();
     }
 
     public function testPrivateAndPublicKeysAreGenerated()
@@ -24,6 +22,6 @@ class KeysCommandTest extends PassportTestCase
     {
         $this->artisan('passport:keys')
             ->assertFailed()
-            ->expectsOutput('Encryption keys already exist. Use the --force option to overwrite them.');
+            ->expectsOutputToContain('Encryption keys already exist. Use the --force option to overwrite them.');
     }
 }

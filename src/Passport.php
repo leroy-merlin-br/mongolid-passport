@@ -22,6 +22,13 @@ class Passport
     public static $implicitGrantEnabled = false;
 
     /**
+     * Indicates if the password grant type is enabled.
+     *
+     * @var bool|null
+     */
+    public static $passwordGrantEnabled = true;
+
+    /**
      * The default scope.
      *
      * @var string
@@ -190,6 +197,18 @@ class Passport
     }
 
     /**
+     * Enable the password grant type.
+     *
+     * @return static
+     */
+    public static function enablePasswordGrant()
+    {
+        static::$passwordGrantEnabled = true;
+
+        return new static;
+    }
+
+    /**
      * Set the default scope(s). Multiple scopes may be an array or specified delimited by spaces.
      *
      * @param  array|string  $scope
@@ -245,6 +264,8 @@ class Passport
             if (isset(static::$scopes[$id])) {
                 return new Scope($id, static::$scopes[$id]);
             }
+
+            return null;
         })->filter()->values()->all();
     }
 
@@ -262,16 +283,18 @@ class Passport
     /**
      * Get or set when access tokens expire.
      *
-     * @param  \DateTimeInterface|null  $date
+     * @param  \DateTimeInterface|\DateInterval|null  $date
      * @return \DateInterval|static
      */
-    public static function tokensExpireIn(DateTimeInterface $date = null)
+    public static function tokensExpireIn(DateTimeInterface|DateInterval|null $date = null)
     {
         if (is_null($date)) {
             return static::$tokensExpireIn ?? new DateInterval('P1Y');
         }
 
-        static::$tokensExpireIn = Carbon::now()->diff($date);
+        static::$tokensExpireIn = $date instanceof DateTimeInterface
+            ? Carbon::now()->diff($date)
+            : $date;
 
         return new static;
     }
@@ -279,16 +302,18 @@ class Passport
     /**
      * Get or set when refresh tokens expire.
      *
-     * @param  \DateTimeInterface|null  $date
+     * @param  \DateTimeInterface|\DateInterval|null  $date
      * @return \DateInterval|static
      */
-    public static function refreshTokensExpireIn(DateTimeInterface $date = null)
+    public static function refreshTokensExpireIn(DateTimeInterface|DateInterval|null $date = null)
     {
         if (is_null($date)) {
             return static::$refreshTokensExpireIn ?? new DateInterval('P1Y');
         }
 
-        static::$refreshTokensExpireIn = Carbon::now()->diff($date);
+        static::$refreshTokensExpireIn = $date instanceof DateTimeInterface
+            ? Carbon::now()->diff($date)
+            : $date;
 
         return new static;
     }
@@ -296,16 +321,18 @@ class Passport
     /**
      * Get or set when personal access tokens expire.
      *
-     * @param  \DateTimeInterface|null  $date
+     * @param  \DateTimeInterface|\DateInterval|null  $date
      * @return \DateInterval|static
      */
-    public static function personalAccessTokensExpireIn(DateTimeInterface $date = null)
+    public static function personalAccessTokensExpireIn(DateTimeInterface|DateInterval|null $date = null)
     {
         if (is_null($date)) {
             return static::$personalAccessTokensExpireIn ?? new DateInterval('P1Y');
         }
 
-        static::$personalAccessTokensExpireIn = Carbon::now()->diff($date);
+        static::$personalAccessTokensExpireIn = $date instanceof DateTimeInterface
+            ? Carbon::now()->diff($date)
+            : $date;
 
         return new static;
     }
@@ -611,7 +638,7 @@ class Passport
     /**
      * Specify the callback that should be invoked to generate encryption keys for encrypting JWT tokens.
      *
-     * @param  callable  $callback
+     * @param  callable|null  $callback
      * @return static
      */
     public static function encryptTokensUsing($callback)
@@ -629,9 +656,9 @@ class Passport
      */
     public static function tokenEncryptionKey(Encrypter $encrypter)
     {
-        return is_callable(static::$tokenEncryptionKeyCallback) ?
-            (static::$tokenEncryptionKeyCallback)($encrypter) :
-            $encrypter->getKey();
+        return is_callable(static::$tokenEncryptionKeyCallback)
+            ? (static::$tokenEncryptionKeyCallback)($encrypter)
+            : $encrypter->getKey();
     }
 
     /**

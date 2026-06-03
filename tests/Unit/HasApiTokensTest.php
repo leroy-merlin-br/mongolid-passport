@@ -37,6 +37,22 @@ class HasApiTokensTest extends TestCase
 
         $user->createToken('name', ['scopes']);
     }
+
+    public function test_token_can_be_created_for_mongolid_models_without_get_key()
+    {
+        $container = new Container;
+        Container::setInstance($container);
+        $container->instance(PersonalAccessTokenFactory::class, $factory = m::mock());
+        $factory->shouldReceive('make')->once()->with('mongo-user-id', 'name', ['scopes']);
+
+        $user = new class {
+            use HasApiTokens;
+
+            public $_id = 'mongo-user-id';
+        };
+
+        $user->createToken('name', ['scopes']);
+    }
 }
 
 class HasApiTokensTestStub
