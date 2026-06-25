@@ -21,7 +21,8 @@ Documentation for Passport can be found on the [Laravel website](https://laravel
 
 | mongolid-passport | laravel-passport | mongolid-laravel | mongolid |
 |-------------------|------------------|------------------|----------|
-| 13.0.0            | 12.4.0           | 3.9.x            | 3.8.2    |
+| 14.0.0            | 12.4.3           | 4.0.0            | 4.1.0    |
+| 13.0.0            | 12.4.0           | 3.9.0            | 3.8.2    |
 | 12.3.0            | 11.8.4           | 3.8.0            | 3.8.1    |
 | 12.0.0            | 11.8.4           | 3.5.0            | 3.5.x    |
 | 11.1.0            | 10.4.1           | 3.4.0            | 3.4.x    |
